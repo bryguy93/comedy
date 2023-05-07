@@ -18,9 +18,8 @@ test.describe('COMEDY MOB 24', () => {
     test('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
-        await page.waitForTimeout(navigation.slowmo)
 
-        if (!await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
             console.log('Bidness as usual')
            }
            else{
@@ -36,8 +35,8 @@ test.describe('COMEDY MOB 24', () => {
                     let url = 'https://api.pushover.net/1/messages.json'
                     let token = 'aimu5mr4v19hb7v975px2361fnrfii'
                     let user = 'uctcbm15r5ij32tpkzg8hmg3gnpauj'
-                    let tempp = 'client_credentials'  
                     const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/comedy-mob-east-1' } )
+                    await page.waitForTimeout(navigation.slowmo)
                     
                   } catch (error) {
                         console.log(error)
@@ -45,11 +44,9 @@ test.describe('COMEDY MOB 24', () => {
                     }
            }
         
-
         await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
-
-        const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
-        asyncWriteFile('\n' + currentFormText)
+        //const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
+        //asyncWriteFile('\n' + currentFormText)
         
     })
 })
@@ -68,9 +65,8 @@ test.describe('COMEDY MOB EAST', () => {
     test('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
-        await page.waitForTimeout(navigation.slowmo)
 
-        if (!await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
             console.log('Bidness as usual')
            }
            else{
@@ -86,8 +82,8 @@ test.describe('COMEDY MOB EAST', () => {
                     let url = 'https://api.pushover.net/1/messages.json'
                     let token = 'aimu5mr4v19hb7v975px2361fnrfii'
                     let user = 'uctcbm15r5ij32tpkzg8hmg3gnpauj'
-                    let tempp = 'client_credentials'  
                     const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/comedy-mob-east' } )
+                    await page.waitForTimeout(navigation.slowmo)
                     
                   } catch (error) {
                         console.log(error)
@@ -95,17 +91,12 @@ test.describe('COMEDY MOB EAST', () => {
                     }
            }
         
-
         await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
-
-        const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
-        asyncWriteFile('\n' + currentFormText)
+        //const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
+        //asyncWriteFile('\n' + currentFormText)
         
     })
-
-
 })
-
 
 test.describe('COMEDY MOB MONDAY', () => {
 
@@ -120,9 +111,8 @@ test.describe('COMEDY MOB MONDAY', () => {
     test('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
-        await page.waitForTimeout(navigation.slowmo)
 
-        if (!await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
             console.log('Bidness as usual')
            }
            else{
@@ -138,8 +128,8 @@ test.describe('COMEDY MOB MONDAY', () => {
                     let url = 'https://api.pushover.net/1/messages.json'
                     let token = 'aimu5mr4v19hb7v975px2361fnrfii'
                     let user = 'uctcbm15r5ij32tpkzg8hmg3gnpauj'
-                    let tempp = 'client_credentials'  
                     const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/monday-night-mob' } )
+                    await page.waitForTimeout(navigation.slowmo)
                     
                   } catch (error) {
                         console.log(error)
@@ -147,13 +137,8 @@ test.describe('COMEDY MOB MONDAY', () => {
                     }
            }
         
-
         await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
-
-        const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
-        asyncWriteFile('\n' + currentFormText)
-        
+        //const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
+        //asyncWriteFile('\n' + currentFormText)
     })
-
-
 })

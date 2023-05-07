@@ -81,16 +81,16 @@
                     {
                       "workerIndex": 0,
                       "status": "passed",
-                      "duration": 4238,
+                      "duration": 2772,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Go time\n"
+                          "text": "Bidness as usual\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T13:07:07.936Z",
+                      "startTime": "2023-05-07T13:47:11.614Z",
                       "attachments": [
                         {
                           "name": "video",
@@ -128,7 +128,7 @@
         {
           "title": "COMEDY MOB EAST",
           "file": "comedy/comedyMob24.spec.ts",
-          "line": 58,
+          "line": 55,
           "column": 6,
           "specs": [
             {
@@ -146,16 +146,16 @@
                     {
                       "workerIndex": 0,
                       "status": "passed",
-                      "duration": 2774,
+                      "duration": 2249,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Go time\n"
+                          "text": "Bidness as usual\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T13:07:12.664Z",
+                      "startTime": "2023-05-07T13:47:14.711Z",
                       "attachments": [
                         {
                           "name": "video",
@@ -185,7 +185,7 @@
               ],
               "id": "44ea2309647098d41474-4a05d7d912f2d2f13ffd",
               "file": "comedy/comedyMob24.spec.ts",
-              "line": 68,
+              "line": 65,
               "column": 9
             }
           ]
@@ -193,7 +193,7 @@
         {
           "title": "COMEDY MOB MONDAY",
           "file": "comedy/comedyMob24.spec.ts",
-          "line": 110,
+          "line": 101,
           "column": 6,
           "specs": [
             {
@@ -211,16 +211,16 @@
                     {
                       "workerIndex": 0,
                       "status": "passed",
-                      "duration": 3646,
+                      "duration": 2119,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Go time\n"
+                          "text": "Bidness as usual\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T13:07:15.440Z",
+                      "startTime": "2023-05-07T13:47:16.961Z",
                       "attachments": [
                         {
                           "name": "video",
@@ -250,7 +250,7 @@
               ],
               "id": "44ea2309647098d41474-1ed3ced2796e8da3a4a7",
               "file": "comedy/comedyMob24.spec.ts",
-              "line": 120,
+              "line": 111,
               "column": 9
             }
           ]

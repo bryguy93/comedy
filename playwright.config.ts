@@ -18,7 +18,7 @@ const config: PlaywrightTestConfig = {
   },
   fullyParallel: !true,
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : 2,
+  workers: process.env.CI ? 1 : 1,
   reporter: process.env.CI ? [["junit", {
     outputFile: "results.xml"
   }]] : [["json", {
@@ -27,7 +27,7 @@ const config: PlaywrightTestConfig = {
     open: "on-failure"
   }]],
   use: {
-    headless: process.env.CI ? true : false,
+    headless: process.env.CI ? true : true,
     baseURL: "https://bookcart.azurewebsites.net/",
     // actionTimeout: 2 * 60 * 1000,
     trace: process.env.CI ? "off" : "on",
