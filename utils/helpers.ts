@@ -36,7 +36,8 @@ export const epochUnixTimestamp = (): number => {
 
 export const setEnvironment = (enviro: string): string => {
     
-    const environment = envi(enviro).toUpperCase()
+    //const environment = envi(enviro).toUpperCase()
+    const environment = enviro
         
     let enviroURL: string
 
