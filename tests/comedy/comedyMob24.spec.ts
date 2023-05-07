@@ -14,13 +14,15 @@ test.describe('COMEDY MOB 24', () => {
     test.beforeEach(async ({ page }) => {
         hooks = new Hooks(page)
         await hooks.Comedy24setup()
+        console.log(hooks.comedyMob24url)
+        
     })
 
     test('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
 
-        if (!await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
             console.log('Bidness as usual')
            }
            else{
@@ -75,13 +77,15 @@ test.describe('COMEDY MOB EAST', () => {
     test.beforeEach(async ({ page }) => {
         hooks = new Hooks(page)
         await hooks.ComedyEastsetup()
+        console.log(hooks.comedyMobEasturl)
+        
     })
 
     test('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
 
-        if (!await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
             console.log('Bidness as usual')
            }
            else{
@@ -137,13 +141,15 @@ test.describe('COMEDY MOB MONDAY', () => {
         
         hooks = new Hooks(page)
         await hooks.ComedyMondaysetup()
+        console.log(hooks.comedyMobMondayurl)
+        
     })
 
     test('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
 
-        if (!await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
             console.log('Bidness as usual')
            }
            else{
@@ -160,10 +166,13 @@ test.describe('COMEDY MOB MONDAY', () => {
                     let token = process.env.pushover_token
                     let user = process.env.pushover_user
 
+                    console.log('token: ' + token)
+
                     if(token === undefined){
                         const dotenv = require('dotenv');
                         dotenv.config()
                         token = process.env.pushoverToken
+                        console.log('token: ' + token)
                     }
                     
                     if(user === undefined){

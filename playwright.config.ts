@@ -17,8 +17,8 @@ const config: PlaywrightTestConfig = {
     timeout: 5000
   },
   fullyParallel: !true,
-  retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : 1,
+  retries: process.env.CI ? 0 : 0,
+  workers: process.env.CI ? 3 : 1,
   reporter: process.env.CI ? [["junit", {
     outputFile: "results.xml"
   }]] : [["json", {
