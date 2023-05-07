@@ -63,7 +63,7 @@
         {
           "title": "COMEDY MOB 24",
           "file": "comedy/comedyMob24.spec.ts",
-          "line": 8,
+          "line": 9,
           "column": 6,
           "specs": [
             {
@@ -73,62 +73,41 @@
               "tests": [
                 {
                   "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip"
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
-                      "status": "passed",
-                      "duration": 2772,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Bidness as usual\n"
-                        }
-                      ],
+                      "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T13:47:11.614Z",
-                      "attachments": [
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks-chromium/video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks-chromium/trace.zip"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks-chromium/trace-1.zip"
-                        },
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks-chromium/test-finished-1.png"
-                        }
-                      ]
+                      "startTime": "2023-05-07T14:21:50.111Z",
+                      "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
               "id": "44ea2309647098d41474-706d0fb2eae3c189738b",
               "file": "comedy/comedyMob24.spec.ts",
-              "line": 18,
-              "column": 9
+              "line": 19,
+              "column": 10
             }
           ]
         },
         {
           "title": "COMEDY MOB EAST",
           "file": "comedy/comedyMob24.spec.ts",
-          "line": 55,
+          "line": 56,
           "column": 6,
           "specs": [
             {
@@ -138,62 +117,41 @@
               "tests": [
                 {
                   "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip"
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
-                      "status": "passed",
-                      "duration": 2249,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
-                      "stdout": [
-                        {
-                          "text": "Bidness as usual\n"
-                        }
-                      ],
+                      "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T13:47:14.711Z",
-                      "attachments": [
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-EAST-On-the-minute-checks-chromium/video.webm"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-EAST-On-the-minute-checks-chromium/trace.zip"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-EAST-On-the-minute-checks-chromium/trace-1.zip"
-                        },
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-EAST-On-the-minute-checks-chromium/test-finished-1.png"
-                        }
-                      ]
+                      "startTime": "2023-05-07T14:21:50.112Z",
+                      "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
               "id": "44ea2309647098d41474-4a05d7d912f2d2f13ffd",
               "file": "comedy/comedyMob24.spec.ts",
-              "line": 65,
-              "column": 9
+              "line": 66,
+              "column": 10
             }
           ]
         },
         {
           "title": "COMEDY MOB MONDAY",
           "file": "comedy/comedyMob24.spec.ts",
-          "line": 101,
+          "line": 102,
           "column": 6,
           "specs": [
             {
@@ -211,16 +169,16 @@
                     {
                       "workerIndex": 0,
                       "status": "passed",
-                      "duration": 2119,
+                      "duration": 3453,
                       "errors": [],
                       "stdout": [
                         {
-                          "text": "Bidness as usual\n"
+                          "text": "Go time\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T13:47:16.961Z",
+                      "startTime": "2023-05-07T14:21:50.112Z",
                       "attachments": [
                         {
                           "name": "video",
@@ -250,7 +208,7 @@
               ],
               "id": "44ea2309647098d41474-1ed3ced2796e8da3a4a7",
               "file": "comedy/comedyMob24.spec.ts",
-              "line": 111,
+              "line": 112,
               "column": 9
             }
           ]

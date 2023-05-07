@@ -9,7 +9,8 @@ jobs:
       - run:
           name: Download dependency
           environment:
-            SECRET_KEY: SECRET_KEY 
+            pushover_token: aimu5mr4v19hb7v975px2361fnrfii
+            pushover_user: uctcbm15r5ij32tpkzg8hmg3gnpauj
           command: npm ci
       - run:
           name: Run tests

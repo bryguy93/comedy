@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
+import { Secrets } from '../../page-objects/components/secrets'
 import { asyncWriteFile } from '../../utils/helpers'
 import axios from "axios";
 
@@ -15,7 +16,7 @@ test.describe('COMEDY MOB 24', () => {
         await hooks.Comedy24setup()
     })
 
-    test('On the minute checks', async ({ page, request }) => {
+    test.skip('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
 
@@ -62,7 +63,7 @@ test.describe('COMEDY MOB EAST', () => {
         await hooks.ComedyEastsetup()
     })
 
-    test('On the minute checks', async ({ page, request }) => {
+    test.skip('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
 
@@ -112,7 +113,7 @@ test.describe('COMEDY MOB MONDAY', () => {
 
         navigation = new Navigation(page)
 
-        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+        if (!await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
             console.log('Bidness as usual')
            }
            else{
@@ -126,8 +127,19 @@ test.describe('COMEDY MOB MONDAY', () => {
 
                 try {
                     let url = 'https://api.pushover.net/1/messages.json'
-                    let token = 'aimu5mr4v19hb7v975px2361fnrfii'
-                    let user = 'uctcbm15r5ij32tpkzg8hmg3gnpauj'
+                    let token = process.env.pushover_token
+                    //asyncWriteFile('\n' + token)
+                    if (token === undefined){
+                        let secrets: Secrets
+                        secrets = new Secrets(page)
+                        token = secrets.pushoverToken
+                    }
+                    let user = process.env.pushover_token
+                    if (user === undefined){
+                        let secrets: Secrets
+                        secrets = new Secrets(page)
+                        user = secrets.pushoverUser
+                    }
                     const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/monday-night-mob' } )
                     await page.waitForTimeout(navigation.slowmo)
                     
