@@ -90,7 +90,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T14:42:58.788Z",
+                      "startTime": "2023-05-07T15:33:24.842Z",
                       "attachments": []
                     }
                   ],
@@ -134,7 +134,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T14:42:58.788Z",
+                      "startTime": "2023-05-07T15:33:24.843Z",
                       "attachments": []
                     }
                   ],
@@ -169,7 +169,7 @@
                     {
                       "workerIndex": 0,
                       "status": "passed",
-                      "duration": 3983,
+                      "duration": 3542,
                       "errors": [],
                       "stdout": [
                         {
@@ -178,7 +178,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T14:42:58.788Z",
+                      "startTime": "2023-05-07T15:33:24.843Z",
                       "attachments": [
                         {
                           "name": "video",
@@ -208,7 +208,7 @@
               ],
               "id": "44ea2309647098d41474-1ed3ced2796e8da3a4a7",
               "file": "comedy/comedyMob24.spec.ts",
-              "line": 113,
+              "line": 114,
               "column": 9
             }
           ]

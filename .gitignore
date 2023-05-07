@@ -3,3 +3,4 @@ node_modules/
 /playwright-report/
 /playwright/.cache/
 /page-objects/components/secrets.ts
+/page-objects/components/secrets.env
