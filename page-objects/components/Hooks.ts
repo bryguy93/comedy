@@ -2,7 +2,7 @@ import { Page } from '@playwright/test'
 import { AbstractPage } from '../AbstractPage'
 import { LoginPage } from '../LoginPage'
 import { DataPage } from '../DataPage'
-import { envi, asyncWriteFile } from '../../utils/helpers'
+import { asyncWriteFile } from '../../utils/helpers'
 
 export class Hooks extends AbstractPage{
 
@@ -15,7 +15,7 @@ export class Hooks extends AbstractPage{
 
     constructor(page: Page){
         super(page) // call a constructor from the class from which it extends from
-        this.enviro = envi("TEST_ENVIRO_CLI")
+        //this.enviro = envi("TEST_ENVIRO_CLI")
         const environment = this.enviro.toUpperCase()
 
         // Need to implement secret environment file for usernames/passwords come CI time.
