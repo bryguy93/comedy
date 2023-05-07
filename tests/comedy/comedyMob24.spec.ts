@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { Secrets } from '../../page-objects/components/secrets'
+//import { Secrets } from '../../page-objects/components/secrets'
 import { asyncWriteFile } from '../../utils/helpers'
 import axios from "axios";
+import { Secrets } from '../../page-objects/components/secrets';
 
 
 test.describe('COMEDY MOB 24', () => {
@@ -130,15 +131,27 @@ test.describe('COMEDY MOB MONDAY', () => {
                     let token = process.env.pushover_token
                     //asyncWriteFile('\n' + token)
                     if (token === undefined){
-                        let secrets: Secrets
-                        secrets = new Secrets(page)
-                        token = secrets.pushoverToken
+
+                        //import('../../page-objects/components/secrets').then(oof => {
+                          //  let secrets: oof.Secrets
+                            //secrets = new Secrets(page)
+                            //token = secrets.pushoverToken
+                          //});
+
+                        const seecrets = await import('../../page-objects/components/secrets')
+                        let oof: Secrets
+                        oof = new Secrets(page)
+                        token = oof.pushoverToken
+ 
                     }
                     let user = process.env.pushover_token
                     if (user === undefined){
-                        let secrets: Secrets
-                        secrets = new Secrets(page)
-                        user = secrets.pushoverUser
+                        //let secrets: Secrets
+                        //secrets = new Secrets(page)
+                        //user = secrets.pushoverUser
+                        let oofs: Secrets
+                        oofs = new Secrets(page)
+                        user = oofs.pushoverUser
                     }
                     const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/monday-night-mob' } )
                     await page.waitForTimeout(navigation.slowmo)
