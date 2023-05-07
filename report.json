@@ -1,0 +1,262 @@
+{
+  "config": {
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/boyola/repos/comedy/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/boyola/repos/comedy/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "tests/comedy/comedyMob24.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "report.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "open": "on-failure"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 15000
+    },
+    "configFile": "/Users/boyola/repos/comedy/playwright.config.ts",
+    "rootDir": "/Users/boyola/repos/comedy/tests",
+    "quiet": false,
+    "shard": null,
+    "updateSnapshots": "missing",
+    "version": "1.29.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "comedy/comedyMob24.spec.ts",
+      "file": "comedy/comedyMob24.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "COMEDY MOB 24",
+          "file": "comedy/comedyMob24.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "On the minute checks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 4238,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Go time\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2023-05-07T13:07:07.936Z",
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks-chromium/video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks-chromium/trace.zip"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks-chromium/trace-1.zip"
+                        },
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "44ea2309647098d41474-706d0fb2eae3c189738b",
+              "file": "comedy/comedyMob24.spec.ts",
+              "line": 18,
+              "column": 9
+            }
+          ]
+        },
+        {
+          "title": "COMEDY MOB EAST",
+          "file": "comedy/comedyMob24.spec.ts",
+          "line": 58,
+          "column": 6,
+          "specs": [
+            {
+              "title": "On the minute checks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 2774,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Go time\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2023-05-07T13:07:12.664Z",
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-EAST-On-the-minute-checks-chromium/video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-EAST-On-the-minute-checks-chromium/trace.zip"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-EAST-On-the-minute-checks-chromium/trace-1.zip"
+                        },
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-EAST-On-the-minute-checks-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "44ea2309647098d41474-4a05d7d912f2d2f13ffd",
+              "file": "comedy/comedyMob24.spec.ts",
+              "line": 68,
+              "column": 9
+            }
+          ]
+        },
+        {
+          "title": "COMEDY MOB MONDAY",
+          "file": "comedy/comedyMob24.spec.ts",
+          "line": 110,
+          "column": 6,
+          "specs": [
+            {
+              "title": "On the minute checks",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 3646,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Go time\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2023-05-07T13:07:15.440Z",
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-MONDAY-On-the-minute-checks-chromium/video.webm"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-MONDAY-On-the-minute-checks-chromium/trace.zip"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-MONDAY-On-the-minute-checks-chromium/trace-1.zip"
+                        },
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-MONDAY-On-the-minute-checks-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "44ea2309647098d41474-1ed3ced2796e8da3a4a7",
+              "file": "comedy/comedyMob24.spec.ts",
+              "line": 120,
+              "column": 9
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

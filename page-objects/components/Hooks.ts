@@ -11,6 +11,8 @@ export class Hooks extends AbstractPage{
     readonly password: string
     readonly comedyMob24url: string
     readonly Testurl: string
+    readonly comedyMobEasturl: string
+    readonly comedyMobMondayurl: string
 
 
     constructor(page: Page){
@@ -21,6 +23,8 @@ export class Hooks extends AbstractPage{
         // Need to implement secret environment file for usernames/passwords come CI time.
         this.comedyMob24url = "https://www.comedymob.com/comedy-mob-east-1"
         this.Testurl = 'https://6thboroughcomedy.com/test'
+        this.comedyMobEasturl = 'https://www.comedymob.com/comedy-mob-east'
+        this.comedyMobMondayurl = 'https://www.comedymob.com/monday-night-mob'
         //this.url = "https://www.comedymob.com/monday-night-mob"
         
         
@@ -49,6 +53,29 @@ export class Hooks extends AbstractPage{
         await this.page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').locator('html').waitFor()
         
     }
+
+    async ComedyEastsetup(){
+        let loginPage: LoginPage
+        let dataPage: DataPage
+        loginPage = new LoginPage(this.page)
+        dataPage = new DataPage(this.page)
+        
+        await this.page.goto(this.comedyMobEasturl)
+        await this.page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').locator('html').waitFor()
+        
+    }
+
+    async ComedyMondaysetup(){
+        let loginPage: LoginPage
+        let dataPage: DataPage
+        loginPage = new LoginPage(this.page)
+        dataPage = new DataPage(this.page)
+        
+        await this.page.goto(this.comedyMobMondayurl)
+        await this.page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').locator('html').waitFor()
+        
+    }
+    
 
     async logIn(){
         let loginPage: LoginPage

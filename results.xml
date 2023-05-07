@@ -1,0 +1,18 @@
+<testsuites id="" name="" tests="3" failures="0" skipped="2" errors="0" time="5.505116000175476">
+<testsuite name="comedy/comedyMob24.spec.ts" timestamp="1683461883106" hostname="" tests="3" failures="0" skipped="2" time="4.292" errors="0">
+<testcase name="COMEDY Comedy Mob Final Test" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY › Comedy Mob Final Test" time="4.292">
+<system-out>
+<![CDATA[Bidness as usual
+]]>
+</system-out>
+</testcase>
+<testcase name="COMEDY Positive Test" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY › Positive Test" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="COMEDY SMS" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY › SMS" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>
