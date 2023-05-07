@@ -4,13 +4,13 @@ import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 
 // Grab environment variable
-export const envi = (key: string): string => {
-    const value = process.env[key];
-    if (!value) {
-        throw Error(`No Enviro var found for ${ key } - run cli with arg --enviro=`)
-    }
-    return value;
-}
+//export const envi = (key: string): string => {
+  //  const value = process.env[key];
+    //if (!value) {
+      //  throw Error(`No Enviro var found for ${ key } - run cli with arg --enviro=`)
+//    }
+  //  return value;
+//}
 
 //add dashes to a raw phone number -> format of 911 call queue
 export const convertPhoneToQueue = (key: string): string => {
