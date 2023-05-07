@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-//import { Secrets } from '../../page-objects/components/secrets'
 import { asyncWriteFile } from '../../utils/helpers'
 import axios from "axios";
 
@@ -17,11 +16,11 @@ test.describe('COMEDY MOB 24', () => {
         await hooks.Comedy24setup()
     })
 
-    test.skip('On the minute checks', async ({ page, request }) => {
+    test('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
 
-        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+        if (!await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
             console.log('Bidness as usual')
            }
            else{
@@ -34,9 +33,23 @@ test.describe('COMEDY MOB 24', () => {
                 //        .then(message => console.log(message.sid));
 
                 try {
-                    let url = 'https://api.pushover.net/1/messages.json'
-                    let token = 'aimu5mr4v19hb7v975px2361fnrfii'
-                    let user = 'uctcbm15r5ij32tpkzg8hmg3gnpauj'
+                    let url = 'https://api.pushover.net/1/messages.json'                    
+                    let token = process.env.pushover_token
+                    let user = process.env.pushover_user
+
+                    if(token === undefined){
+                        const dotenv = require('dotenv');
+                        dotenv.config()
+                        token = process.env.pushoverToken
+                    }
+                    
+                    if(user === undefined){
+                        const dotenv = require('dotenv');
+                        dotenv.config()
+                        user = process.env.pushoverUser
+                        asyncWriteFile('\n' + user)
+                    }
+
                     const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/comedy-mob-east-1' } )
                     await page.waitForTimeout(navigation.slowmo)
                     
@@ -64,11 +77,11 @@ test.describe('COMEDY MOB EAST', () => {
         await hooks.ComedyEastsetup()
     })
 
-    test.skip('On the minute checks', async ({ page, request }) => {
+    test('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
 
-        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+        if (!await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
             console.log('Bidness as usual')
            }
            else{
@@ -82,8 +95,23 @@ test.describe('COMEDY MOB EAST', () => {
 
                 try {
                     let url = 'https://api.pushover.net/1/messages.json'
-                    let token = 'aimu5mr4v19hb7v975px2361fnrfii'
-                    let user = 'uctcbm15r5ij32tpkzg8hmg3gnpauj'
+                    let token = process.env.pushover_token
+                    let user = process.env.pushover_user
+
+                    if(token === undefined){
+                        const dotenv = require('dotenv');
+                        dotenv.config()
+                        token = process.env.pushoverToken
+                    }
+                    
+                    if(user === undefined){
+                        const dotenv = require('dotenv');
+                        dotenv.config()
+                        user = process.env.pushoverUser
+                        asyncWriteFile('\n' + user)
+                    }
+
+
                     const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/comedy-mob-east' } )
                     await page.waitForTimeout(navigation.slowmo)
                     
@@ -130,16 +158,13 @@ test.describe('COMEDY MOB MONDAY', () => {
                 try {
                     let url = 'https://api.pushover.net/1/messages.json'
                     let token = process.env.pushover_token
-                    
+                    let user = process.env.pushover_user
+
                     if(token === undefined){
                         const dotenv = require('dotenv');
                         dotenv.config()
                         token = process.env.pushoverToken
-                        asyncWriteFile('\n' + token)
                     }
-
-                    let user = process.env.pushover_user
-                    asyncWriteFile('\n' + user)
                     
                     if(user === undefined){
                         const dotenv = require('dotenv');
