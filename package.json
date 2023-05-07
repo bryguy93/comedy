@@ -1,0 +1,29 @@
+{
+  "name": "playwright_rsos_poc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.29.1"
+  },
+  "scripts": {
+    "postinstall": "npx playwright install",
+    "chrometest": "npx playwright test tests/comedy/comedyMob24.spec.ts --config=playwright.config.ts --project chromium",
+    "chromeVisualTest": "TEST_ENVIRO_CLI=$npm_config_enviro npx playwright test tests/visual/visual.spec.ts --config=visual.config.ts --project chromium",
+    "tests:e2e": "playwright test --config=e2e.config.ts --project=Chromium --workers=1 ",
+    "tests:e2e:webkit": "playwright test --config=e2e.config.ts --project=Webkit",
+    "tests:e2e:allbrowsers": "playwright test --config=e2e.config.ts --workers=1"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "axios": "^1.2.3",
+    "pixelmatch": "^5.3.0",
+    "playwright-core": "^1.29.1",
+    "prettier": "^2.8.1",
+    "twilio": "^4.11.0"
+  },
+  "author": "",
+  "description": ""
+}
