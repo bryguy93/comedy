@@ -16,7 +16,7 @@ export class Hooks extends AbstractPage{
     constructor(page: Page){
         super(page) // call a constructor from the class from which it extends from
         //this.enviro = envi("TEST_ENVIRO_CLI")
-        const environment = this.enviro.toUpperCase()
+        //const environment = this.enviro.toUpperCase()
 
         // Need to implement secret environment file for usernames/passwords come CI time.
         this.comedyMob24url = "https://www.comedymob.com/comedy-mob-east-1"
