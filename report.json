@@ -68,7 +68,7 @@
           "specs": [
             {
               "title": "On the minute checks",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -80,30 +80,20 @@
                   "results": [
                     {
                       "workerIndex": 0,
-                      "status": "failed",
-                      "duration": 10090,
-                      "error": {
-                        "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\nCall log:\n  \u001b[2m- expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\u001b[2m  -   waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe width=\"760\" height=\"675\" frameborder=\"0\" scrolli…></iframe>\u001b[22m\n\u001b[2m  -   waiting for frameLocator('#player')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe id=\"player\" frameborder=\"0\" scrolling=\"auto\" all…></iframe>\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\nCall log:\n  \u001b[2m- expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\u001b[2m  -   waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe width=\"760\" height=\"675\" frameborder=\"0\" scrolli…></iframe>\u001b[22m\n\u001b[2m  -   waiting for frameLocator('#player')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe id=\"player\" frameborder=\"0\" scrolling=\"auto\" all…></iframe>\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\n    at /Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts:63:143"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts",
-                            "column": 143,
-                            "line": 63
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\nCall log:\n  \u001b[2m- expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\u001b[2m  -   waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe width=\"760\" height=\"675\" frameborder=\"0\" scrolli…></iframe>\u001b[22m\n\u001b[2m  -   waiting for frameLocator('#player')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe id=\"player\" frameborder=\"0\" scrolling=\"auto\" all…></iframe>\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\n\n\u001b[90m   at \u001b[39mcomedy/comedyMob24.spec.ts:63\n\n\u001b[0m \u001b[90m 61 |\u001b[39m            }\u001b[0m\n\u001b[0m \u001b[90m 62 |\u001b[39m         \u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 63 |\u001b[39m         \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39msoft(page\u001b[33m.\u001b[39mframeLocator(\u001b[32m'internal:attr=[title=\"Google Docs embed\"i]'\u001b[39m)\u001b[33m.\u001b[39mframeLocator(\u001b[32m'#player'\u001b[39m)\u001b[33m.\u001b[39mgetByText(\u001b[32m'is no longer'\u001b[39m ))\u001b[33m.\u001b[39mtoBeVisible()\u001b[0m\n\u001b[0m \u001b[90m    |\u001b[39m                                                                                                                                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 64 |\u001b[39m         \u001b[90m//const currentFormText = await page.frameLocator('internal:attr=[title=\"Google Docs embed\"i]').frameLocator('#player').getByText('is no longer' ).innerText()\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 65 |\u001b[39m         \u001b[90m//asyncWriteFile('\\n' + currentFormText)\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 66 |\u001b[39m         \u001b[0m\n\n\u001b[2m    at /Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts:63:143\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 2997,
+                      "errors": [],
                       "stdout": [
                         {
-                          "text": "Go time\n"
+                          "text": "https://www.comedymob.com/comedy-mob-east-1\n"
+                        },
+                        {
+                          "text": "Bidness as usual\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T16:26:41.428Z",
+                      "startTime": "2023-05-08T14:55:37.848Z",
                       "attachments": [
                         {
                           "name": "video",
@@ -123,22 +113,17 @@
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks-chromium/test-failed-1.png"
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts",
-                        "column": 143,
-                        "line": 63
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "44ea2309647098d41474-706d0fb2eae3c189738b",
               "file": "comedy/comedyMob24.spec.ts",
-              "line": 20,
+              "line": 21,
               "column": 9
             }
           ]
@@ -146,12 +131,12 @@
         {
           "title": "COMEDY MOB EAST",
           "file": "comedy/comedyMob24.spec.ts",
-          "line": 71,
+          "line": 114,
           "column": 6,
           "specs": [
             {
               "title": "On the minute checks",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -162,31 +147,21 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "status": "failed",
-                      "duration": 9373,
-                      "error": {
-                        "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\nCall log:\n  \u001b[2m- expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\u001b[2m  -   waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe width=\"760\" height=\"675\" frameborder=\"0\" scrolli…></iframe>\u001b[22m\n\u001b[2m  -   waiting for frameLocator('#player')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe id=\"player\" frameborder=\"0\" scrolling=\"auto\" all…></iframe>\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\nCall log:\n  \u001b[2m- expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\u001b[2m  -   waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe width=\"760\" height=\"675\" frameborder=\"0\" scrolli…></iframe>\u001b[22m\n\u001b[2m  -   waiting for frameLocator('#player')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe id=\"player\" frameborder=\"0\" scrolling=\"auto\" all…></iframe>\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\n    at /Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts:126:143"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts",
-                            "column": 143,
-                            "line": 126
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\nCall log:\n  \u001b[2m- expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\u001b[2m  -   waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe width=\"760\" height=\"675\" frameborder=\"0\" scrolli…></iframe>\u001b[22m\n\u001b[2m  -   waiting for frameLocator('#player')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe id=\"player\" frameborder=\"0\" scrolling=\"auto\" all…></iframe>\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\n\n\u001b[90m   at \u001b[39mcomedy/comedyMob24.spec.ts:126\n\n\u001b[0m \u001b[90m 124 |\u001b[39m            }\u001b[0m\n\u001b[0m \u001b[90m 125 |\u001b[39m         \u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 126 |\u001b[39m         \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39msoft(page\u001b[33m.\u001b[39mframeLocator(\u001b[32m'internal:attr=[title=\"Google Docs embed\"i]'\u001b[39m)\u001b[33m.\u001b[39mframeLocator(\u001b[32m'#player'\u001b[39m)\u001b[33m.\u001b[39mgetByText(\u001b[32m'is no longer'\u001b[39m ))\u001b[33m.\u001b[39mtoBeVisible()\u001b[0m\n\u001b[0m \u001b[90m     |\u001b[39m                                                                                                                                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 127 |\u001b[39m         \u001b[90m//const currentFormText = await page.frameLocator('internal:attr=[title=\"Google Docs embed\"i]').frameLocator('#player').getByText('is no longer' ).innerText()\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 128 |\u001b[39m         \u001b[90m//asyncWriteFile('\\n' + currentFormText)\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 129 |\u001b[39m         \u001b[0m\n\n\u001b[2m    at /Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts:126:143\u001b[22m"
-                        }
-                      ],
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 2434,
+                      "errors": [],
                       "stdout": [
                         {
-                          "text": "Go time\n"
+                          "text": "https://www.comedymob.com/comedy-mob-east\n"
+                        },
+                        {
+                          "text": "Bidness as usual\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T16:26:52.579Z",
+                      "startTime": "2023-05-08T14:55:41.207Z",
                       "attachments": [
                         {
                           "name": "video",
@@ -206,22 +181,17 @@
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-EAST-On-the-minute-checks-chromium/test-failed-1.png"
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-EAST-On-the-minute-checks-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts",
-                        "column": 143,
-                        "line": 126
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "44ea2309647098d41474-4a05d7d912f2d2f13ffd",
               "file": "comedy/comedyMob24.spec.ts",
-              "line": 82,
+              "line": 126,
               "column": 9
             }
           ]
@@ -229,12 +199,12 @@
         {
           "title": "COMEDY MOB MONDAY",
           "file": "comedy/comedyMob24.spec.ts",
-          "line": 133,
+          "line": 220,
           "column": 6,
           "specs": [
             {
               "title": "On the minute checks",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -245,34 +215,21 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "status": "failed",
-                      "duration": 9220,
-                      "error": {
-                        "message": "\u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\nCall log:\n  \u001b[2m- expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\u001b[2m  -   waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe width=\"760\" height=\"675\" frameborder=\"0\" scrolli…></iframe>\u001b[22m\n\u001b[2m  -   waiting for frameLocator('#player')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe id=\"player\" frameborder=\"0\" scrolling=\"auto\" all…></iframe>\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n",
-                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\nCall log:\n  \u001b[2m- expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\u001b[2m  -   waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe width=\"760\" height=\"675\" frameborder=\"0\" scrolli…></iframe>\u001b[22m\n\u001b[2m  -   waiting for frameLocator('#player')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe id=\"player\" frameborder=\"0\" scrolling=\"auto\" all…></iframe>\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\n    at /Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts:191:143"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts",
-                            "column": 143,
-                            "line": 191
-                          },
-                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\nCall log:\n  \u001b[2m- expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\u001b[2m  -   waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe width=\"760\" height=\"675\" frameborder=\"0\" scrolli…></iframe>\u001b[22m\n\u001b[2m  -   waiting for frameLocator('#player')\u001b[22m\n\u001b[2m  -   locator resolved to visible <iframe id=\"player\" frameborder=\"0\" scrolling=\"auto\" all…></iframe>\u001b[22m\n\u001b[2m  - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')\u001b[22m\n\n\n\u001b[90m   at \u001b[39mcomedy/comedyMob24.spec.ts:191\n\n\u001b[0m \u001b[90m 189 |\u001b[39m            }\u001b[0m\n\u001b[0m \u001b[90m 190 |\u001b[39m         \u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 191 |\u001b[39m         \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39msoft(page\u001b[33m.\u001b[39mframeLocator(\u001b[32m'internal:attr=[title=\"Google Docs embed\"i]'\u001b[39m)\u001b[33m.\u001b[39mframeLocator(\u001b[32m'#player'\u001b[39m)\u001b[33m.\u001b[39mgetByText(\u001b[32m'is no longer'\u001b[39m ))\u001b[33m.\u001b[39mtoBeVisible()\u001b[0m\n\u001b[0m \u001b[90m     |\u001b[39m                                                                                                                                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 192 |\u001b[39m         \u001b[90m//const currentFormText = await page.frameLocator('internal:attr=[title=\"Google Docs embed\"i]').frameLocator('#player').getByText('is no longer' ).innerText()\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 193 |\u001b[39m         \u001b[90m//asyncWriteFile('\\n' + currentFormText)\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 194 |\u001b[39m     })\u001b[0m\n\n\u001b[2m    at /Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts:191:143\u001b[22m"
-                        }
-                      ],
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 2199,
+                      "errors": [],
                       "stdout": [
                         {
-                          "text": "Go time\n"
+                          "text": "https://www.comedymob.com/monday-night-mob\n"
                         },
                         {
-                          "text": "token: aimu5mr4v19hb7v975px2361fnrfii\n"
+                          "text": "Bidness as usual\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-05-07T16:27:02.819Z",
+                      "startTime": "2023-05-08T14:55:43.642Z",
                       "attachments": [
                         {
                           "name": "video",
@@ -292,22 +249,17 @@
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-MONDAY-On-the-minute-checks-chromium/test-failed-1.png"
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-MONDAY-On-the-minute-checks-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts",
-                        "column": 143,
-                        "line": 191
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "44ea2309647098d41474-1ed3ced2796e8da3a4a7",
               "file": "comedy/comedyMob24.spec.ts",
-              "line": 145,
+              "line": 233,
               "column": 9
             }
           ]

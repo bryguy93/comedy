@@ -27,13 +27,55 @@ test.describe('COMEDY MOB 24', () => {
            }
            else{
                 console.log('Go time')
-                //const accountSid = "AC40e5aa76370c612b5bcbcdee5ca7f317";
-                //const authToken = 'a612a402ca3bca95b100fbc23c4dda65'
-                //const client = require("twilio")(accountSid, authToken);
-                //client.messages
-                //    .create({ body: 'page.url()', from: "+18882966538", to: "+12019209227" })
-                //        .then(message => console.log(message.sid));
 
+                try {
+                    //twilio creds
+                    let sid = process.env.twilioSid
+                    let apiToken = process.env.twilioApi
+                    //console.log('Twilio token: ' + apiToken)
+
+                    if(apiToken === undefined){
+                        const dotenv = require('dotenv');
+                        dotenv.config()
+                        apiToken = process.env.twilioApi
+                        //console.log('Twilio token: ' + apiToken)
+                    }
+
+                    if(sid === undefined){
+                        const dotenv = require('dotenv');
+                        dotenv.config()
+                        apiToken = process.env.twilioSid
+                    }
+
+                    const accountSid = sid
+                    const authToken = apiToken
+                    //twilio SMS
+                    const client = require("twilio")(accountSid, authToken);
+                    client.messages
+                        .create({ body: 'https://www.comedymob.com/comedy-mob-east-1', from: "+18882966538", to: "+12019209227" })
+                            .then(message => console.log(message.sid));
+                    
+                    await page.waitForTimeout(navigation.slowmo)
+
+                    //twilio VOICE CALL
+                    const client2 = require('twilio')(accountSid, authToken);
+
+                    client2.calls
+                        .create({
+                            url: 'http://demo.twilio.com/docs/voice.xml',
+                            to: '+12019209227',
+                            from: '+18882966538'
+                        })
+                        .then(call => console.log(call.sid));
+
+                    await page.waitForTimeout(navigation.slowmo)
+                    
+                  } catch (error) {
+                        console.log(error)
+                        throw new Error('Twitter request failed')
+                    }
+
+                //pushover push notifications
                 try {
                     let url = 'https://api.pushover.net/1/messages.json'                    
                     let token = process.env.pushover_token
@@ -90,13 +132,56 @@ test.describe('COMEDY MOB EAST', () => {
            }
            else{
                 console.log('Go time')
-                //const accountSid = "AC40e5aa76370c612b5bcbcdee5ca7f317";
-                //const authToken = 'a612a402ca3bca95b100fbc23c4dda65'
-                //const client = require("twilio")(accountSid, authToken);
-                //client.messages
-                //    .create({ body: 'page.url()', from: "+18882966538", to: "+12019209227" })
-                //        .then(message => console.log(message.sid));
 
+                try {
+                    //twilio creds
+                    let sid = process.env.twilioSid
+                    let apiToken = process.env.twilioApi
+                    //console.log('Twilio token: ' + apiToken)
+
+                    if(apiToken === undefined){
+                        const dotenv = require('dotenv');
+                        dotenv.config()
+                        apiToken = process.env.twilioApi
+                        //console.log('Twilio token: ' + apiToken)
+                    }
+
+                    if(sid === undefined){
+                        const dotenv = require('dotenv');
+                        dotenv.config()
+                        apiToken = process.env.twilioSid
+                    }
+
+                    const accountSid = sid
+                    const authToken = apiToken
+
+                    //twilio SMS
+                    const client = require("twilio")(accountSid, authToken);
+                    client.messages
+                        .create({ body: 'https://www.comedymob.com/comedy-mob-east', from: "+18882966538", to: "+12019209227" })
+                            .then(message => console.log(message.sid));
+                    
+                    await page.waitForTimeout(navigation.slowmo)
+
+                    //twilio VOICE CALL
+                    const client2 = require('twilio')(accountSid, authToken);
+
+                    client2.calls
+                        .create({
+                            url: 'http://demo.twilio.com/docs/voice.xml',
+                            to: '+12019209227',
+                            from: '+18882966538'
+                        })
+                        .then(call => console.log(call.sid));
+
+                    await page.waitForTimeout(navigation.slowmo)
+
+                    
+                  } catch (error) {
+                        console.log(error)
+                        throw new Error('Twitter request failed')
+                    }
+                //pushover push notifications
                 try {
                     let url = 'https://api.pushover.net/1/messages.json'
                     let token = process.env.pushover_token
@@ -154,25 +239,69 @@ test.describe('COMEDY MOB MONDAY', () => {
            }
            else{
                 console.log('Go time')
-                //const accountSid = "AC40e5aa76370c612b5bcbcdee5ca7f317";
-                //const authToken = 'a612a402ca3bca95b100fbc23c4dda65'
-                //const client = require("twilio")(accountSid, authToken);
-                //client.messages
-                //    .create({ body: 'page.url()', from: "+18882966538", to: "+12019209227" })
-                //        .then(message => console.log(message.sid));
 
+                try {
+                    //twilio creds
+                    let sid = process.env.twilioSid
+                    let apiToken = process.env.twilioApi
+                    //console.log('Twilio token: ' + apiToken)
+
+                    if(apiToken === undefined){
+                        const dotenv = require('dotenv');
+                        dotenv.config()
+                        apiToken = process.env.twilioApi
+                        //console.log('Twilio token: ' + apiToken)
+                    }
+
+                    if(sid === undefined){
+                        const dotenv = require('dotenv');
+                        dotenv.config()
+                        apiToken = process.env.twilioSid
+                    }
+
+                    const accountSid = sid
+                    const authToken = apiToken
+                    
+                    //twilio SMS
+                    const client = require("twilio")(accountSid, authToken);
+                    client.messages
+                        .create({ body: 'https://www.comedymob.com/monday-night-mob', from: "+18882966538", to: "+12019209227" })
+                            .then(message => console.log(message.sid));
+                    
+                    await page.waitForTimeout(navigation.slowmo)
+
+                    //twilio VOICE CALL
+                    const client2 = require('twilio')(accountSid, authToken);
+
+                    client2.calls
+                        .create({
+                            url: 'http://demo.twilio.com/docs/voice.xml',
+                            to: '+12019209227',
+                            from: '+18882966538'
+                        })
+                        .then(call => console.log(call.sid));
+
+                    await page.waitForTimeout(navigation.slowmo)
+                    
+                  } catch (error) {
+                        console.log(error)
+                        throw new Error('Twitter request failed')
+                    }
+
+                
+                //pushover push notifications
                 try {
                     let url = 'https://api.pushover.net/1/messages.json'
                     let token = process.env.pushover_token
                     let user = process.env.pushover_user
 
-                    console.log('token: ' + token)
+                    //console.log('Pushover Token: ' + token)
 
                     if(token === undefined){
                         const dotenv = require('dotenv');
                         dotenv.config()
                         token = process.env.pushoverToken
-                        console.log('token: ' + token)
+                        //console.log('Pushover Token: ' + token)
                     }
                     
                     if(user === undefined){

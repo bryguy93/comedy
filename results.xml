@@ -1,20 +1,20 @@
-<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="7.8491389999389645">
-<testsuite name="comedy/comedyMob24.spec.ts" timestamp="1683477563409" hostname="" tests="3" failures="0" skipped="0" time="6.626" errors="0">
-<testcase name="COMEDY MOB 24 On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB 24 › On the minute checks" time="2.852">
+<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="9.42219400024414">
+<testsuite name="comedy/comedyMob24.spec.ts" timestamp="1683557897125" hostname="" tests="3" failures="0" skipped="0" time="8.081" errors="0">
+<testcase name="COMEDY MOB 24 On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB 24 › On the minute checks" time="3.736">
 <system-out>
 <![CDATA[https://www.comedymob.com/comedy-mob-east-1
 Bidness as usual
 ]]>
 </system-out>
 </testcase>
-<testcase name="COMEDY MOB EAST On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB EAST › On the minute checks" time="1.963">
+<testcase name="COMEDY MOB EAST On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB EAST › On the minute checks" time="1.95">
 <system-out>
 <![CDATA[https://www.comedymob.com/comedy-mob-east
 Bidness as usual
 ]]>
 </system-out>
 </testcase>
-<testcase name="COMEDY MOB MONDAY On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB MONDAY › On the minute checks" time="1.811">
+<testcase name="COMEDY MOB MONDAY On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB MONDAY › On the minute checks" time="2.395">
 <system-out>
 <![CDATA[https://www.comedymob.com/monday-night-mob
 Bidness as usual
