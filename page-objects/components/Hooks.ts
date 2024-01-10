@@ -36,6 +36,7 @@ export class Hooks extends AbstractPage{
 
         console.log(this.kerasotesurl + date)
         await this.page.goto(this.kerasotesurl + date)
+        await this.page.locator('.page-header-banner').waitFor()
     }
     
     async Testsetup(){
