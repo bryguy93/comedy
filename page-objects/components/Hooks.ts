@@ -15,10 +15,10 @@ export class Hooks extends AbstractPage{
         super(page) // call a constructor from the class from which it extends from
 
         this.Testurl = 'https://6thboroughcomedy.com/test'
-        this.comedyMob24url = "https://www.comedymob.com/comedy-mob-east-1"
+        this.comedyMob24url = "https://www.comedymob.com/perform-with-us"
         this.comedyMobEasturl = 'https://www.comedymob.com/comedy-mob-east'
         this.comedyMobMondayurl = 'https://www.comedymob.com/monday-night-mob'
-        this.kerasotesurl = 'https://www.showplaceicon.com/Browsing/Cinemas/Compare?Cinemas=8875&Date=2024-01-09'
+        this.kerasotesurl = 'https://www.showplaceicon.com/Browsing/Cinemas/Compare?Cinemas=8875&Date='
 
 
         
@@ -32,11 +32,38 @@ export class Hooks extends AbstractPage{
         var mm = String(today.getMonth() + 1).padStart(2, '0')
         var yyyy = today.getFullYear()
 
-        let date = yyyy + '-' + dd + '-' + mm
+        let date = yyyy + '-' + mm + '-' + dd
 
         console.log(this.kerasotesurl + date)
-        await this.page.goto(this.kerasotesurl + date)
-        await this.page.locator('.page-header-banner').waitFor()
+        //await this.page.goto(this.kerasotesurl + date)
+        //await this.page.locator('.page-header-banner').waitFor()
+        //this.page.waitForLoadState('domcontentloaded')
+
+        const [resp]= await Promise.all([ //trigger Avive emergency
+            this.page.waitForResponse(resp => resp.url().includes('https://www.showplaceicon.com/Browsing/Cinemas/Compare?Cinemas=8875')),
+            this.page.goto(this.kerasotesurl + date),
+           ]);
+       
+        let dateTime: Date = new Date()
+        let initialTrigger: number
+        const body= await resp.text()
+        //console.log(body)
+
+        const parser = new DOMParser()
+        const htmlDoc = parser.parseFromString(body, 'text/html')
+        let times = htmlDoc.getElementsByClassName('session-time ')
+        console.log(times)
+        //initialTrigger = resp.status()
+       
+        //if( initialTrigger > 199 && initialTrigger < 300){
+          //  console.log('Avive Trigger success: ' + initialTrigger)
+            //asyncWriteFile('\n' + dateTime +' | ' + 'Avive trigger: '+' | '+ initialTrigger + ': | ' + JSON.stringify(body));
+        //} else {
+          //  console.log('Avive Trigger failed: ' + initialTrigger)
+            //asyncWriteFile('\n' + dateTime +' | ' + 'Avive trigger: '+' | '+ initialTrigger + ': | ' + JSON.stringify(body));
+        //}
+
+        //await dataPage.aviveAedReqMadeText.waitFor() 
     }
     
     async Testsetup(){
@@ -49,7 +76,9 @@ export class Hooks extends AbstractPage{
     async Comedy24setup(){
 
         await this.page.goto(this.comedyMob24url)
-        await this.page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').locator('html').waitFor()
+        await this.page.getByRole('link', { name: 'Click here to sign up for our mics' }).click();
+        this.page.waitForLoadState('domcontentloaded')
+        //await this.page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').locator('html').waitFor()
         
     }
 

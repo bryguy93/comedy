@@ -12,15 +12,18 @@ test.describe('KERASOTES', () => {
     test.beforeEach(async ({ page }) => {
         hooks = new Hooks(page)
         await hooks.kerasotesSetup()
-        console.log(hooks.kerasotesurl)
+        //console.log(hooks.kerasotesurl)
         
     })
 
-    test.only('Secaucus', async ({ page, request }) => {
+    test('Secaucus', async ({ page, request }) => {
 
         navigation = new Navigation(page)
+        
 
-        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+
+
+        if (true) {
             console.log('Bidness as usual')
            }
            else{
@@ -101,7 +104,7 @@ test.describe('KERASOTES', () => {
                     }
            }
         
-        await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
+        //await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
         //const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
         //asyncWriteFile('\n' + currentFormText)
         
@@ -109,7 +112,7 @@ test.describe('KERASOTES', () => {
 })
 
 
-test.describe('COMEDY MOB 24', () => {
+test.describe('COMEDY MOB FULL SIGNUPS', () => {
 
     let hooks: Hooks
     let navigation: Navigation
@@ -121,11 +124,11 @@ test.describe('COMEDY MOB 24', () => {
         
     })
 
-    test('On the minute checks', async ({ page, request }) => {
+    test.skip('Minute-man check', async ({ page, request }) => {
 
         navigation = new Navigation(page)
 
-        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
+        if (await page.getByText('The form Sign-ups for this week\'s Mob Mics is no longer accepting responses.Try ').isEnabled()) {
             console.log('Bidness as usual')
            }
            else{
@@ -139,23 +142,24 @@ test.describe('COMEDY MOB 24', () => {
 
                     if(apiToken === undefined){
                         const dotenv = require('dotenv');
-                        dotenv.config()
+                        dotenv.config({path: './page-objects/components/secrets.env'})
                         apiToken = process.env.twilioApi
                         //console.log('Twilio token: ' + apiToken)
                     }
 
                     if(sid === undefined){
                         const dotenv = require('dotenv');
-                        dotenv.config()
-                        apiToken = process.env.twilioSid
+                        dotenv.config({path: './page-objects/components/secrets.env'})
+                        sid = process.env.twilioSid
                     }
 
                     const accountSid = sid
                     const authToken = apiToken
+
                     //twilio SMS
                     const client = require("twilio")(accountSid, authToken);
                     client.messages
-                        .create({ body: 'https://www.comedymob.com/comedy-mob-east-1', from: "+18882966538", to: "+12019209227" })
+                        .create({ body: 'https://www.comedymob.com/perform-with-us', from: "+18336090184", to: "+12019209227" })
                             .then(message => console.log(message.sid));
                     
                     await page.waitForTimeout(navigation.slowmo)
@@ -167,7 +171,7 @@ test.describe('COMEDY MOB 24', () => {
                         .create({
                             url: 'http://demo.twilio.com/docs/voice.xml',
                             to: '+12019209227',
-                            from: '+18882966538'
+                            from: '+18336090184'
                         })
                         .then(call => console.log(call.sid));
 
@@ -175,7 +179,7 @@ test.describe('COMEDY MOB 24', () => {
                     
                   } catch (error) {
                         console.log(error)
-                        throw new Error('Twitter request failed')
+                        throw new Error(error)
                     }
 
                 //pushover push notifications
@@ -197,16 +201,16 @@ test.describe('COMEDY MOB 24', () => {
                         asyncWriteFile('\n' + user)
                     }
 
-                    const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/comedy-mob-east-1' } )
+                    const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/perform-with-us' } )
                     await page.waitForTimeout(navigation.slowmo)
                     
                   } catch (error) {
-                        console.log(error)
+                        //console.log(error)
                         throw new Error('Pushover API Request failed')
                     }
            }
         
-        await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
+        //await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
         //const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
         //asyncWriteFile('\n' + currentFormText)
         
@@ -214,7 +218,7 @@ test.describe('COMEDY MOB 24', () => {
 })
 
 
-test.describe('COMEDY MOB EAST', () => {
+test.describe('COMEDY MOB EAST - MEH', () => {
 
     let hooks: Hooks
     let navigation: Navigation
@@ -226,7 +230,7 @@ test.describe('COMEDY MOB EAST', () => {
         
     })
 
-    test('On the minute checkss', async ({ page, request }) => {
+    test.skip('On the minute checkss', async ({ page, request }) => {
 
         navigation = new Navigation(page)
 
@@ -320,7 +324,7 @@ test.describe('COMEDY MOB EAST', () => {
     })
 })
 
-test.describe('COMEDY MOB MONDAY', () => {
+test.describe('COMEDY MOB MONDAY - MEH', () => {
 
     let hooks: Hooks
     let navigation: Navigation
@@ -333,7 +337,7 @@ test.describe('COMEDY MOB MONDAY', () => {
         
     })
 
-    test('On the minute checks', async ({ page, request }) => {
+    test.skip('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
 

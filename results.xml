@@ -1,20 +1,47 @@
-<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="9.42219400024414">
-<testsuite name="comedy/comedyMob24.spec.ts" timestamp="1683557897125" hostname="" tests="3" failures="0" skipped="0" time="8.081" errors="0">
-<testcase name="COMEDY MOB 24 On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB 24 › On the minute checks" time="3.736">
+<testsuites id="" name="" tests="3" failures="1" skipped="0" errors="0" time="14.006962000012397">
+<testsuite name="comedy/comedyMob24.spec.ts" timestamp="1685457517613" hostname="" tests="3" failures="1" skipped="0" time="12.022" errors="0">
+<testcase name="COMEDY MOB 24 On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB 24 › On the minute checks" time="2.543">
 <system-out>
 <![CDATA[https://www.comedymob.com/comedy-mob-east-1
 Bidness as usual
 ]]>
 </system-out>
 </testcase>
-<testcase name="COMEDY MOB EAST On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB EAST › On the minute checks" time="1.95">
+<testcase name="COMEDY MOB EAST On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB EAST › On the minute checks" time="7.461">
+<failure message="comedyMob24.spec.ts:126:9 On the minute checks" type="FAILURE">
+<![CDATA[  [chromium] › comedy/comedyMob24.spec.ts:126:9 › COMEDY MOB EAST › On the minute checks ===========
+
+    Error: Timed out 5000ms waiting for expect(received).toBeVisible()
+    Call log:
+      - expect.toBeVisible with timeout 5000ms
+      - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')
+      -   waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame')
+      -   locator resolved to visible <iframe width="760" height="675" frameborder="0" scrolli…></iframe>
+      -   waiting for frameLocator('#player')
+      -   locator resolved to visible <iframe id="player" frameborder="0" scrolling="auto" all…></iframe>
+      - waiting for getByTitle('Google Docs embed').locator('internal:control=enter-frame').frameLocator('#player').getByText('is no longer')
+
+
+      211 |            }
+      212 |         
+    > 213 |         await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
+          |                                                                                                                                               ^
+      214 |         //const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
+      215 |         //asyncWriteFile('\n' + currentFormText)
+      216 |         
+
+        at /Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts:213:143
+]]>
+</failure>
 <system-out>
 <![CDATA[https://www.comedymob.com/comedy-mob-east
-Bidness as usual
+Go time
+CA1ea9987261a6f2fbb7738c0e6d6ec863
+SM62e1f68fe168e5dd51f988418acf5825
 ]]>
 </system-out>
 </testcase>
-<testcase name="COMEDY MOB MONDAY On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB MONDAY › On the minute checks" time="2.395">
+<testcase name="COMEDY MOB MONDAY On the minute checks" classname="[chromium] › comedy/comedyMob24.spec.ts › COMEDY MOB MONDAY › On the minute checks" time="2.018">
 <system-out>
 <![CDATA[https://www.comedymob.com/monday-night-mob
 Bidness as usual

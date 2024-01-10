@@ -12,12 +12,12 @@
     "preserveOutput": "always",
     "projects": [
       {
-        "outputDir": "C:/Users/Bryan/comedy/test-results",
+        "outputDir": "/Users/boyola/repos/comedy/test-results",
         "repeatEach": 1,
         "retries": 0,
         "id": "chromium",
         "name": "chromium",
-        "testDir": "C:/Users/Bryan/comedy/tests",
+        "testDir": "/Users/boyola/repos/comedy/tests",
         "testIgnore": [],
         "testMatch": [
           "tests/comedy/comedyMob24.spec.ts"
@@ -43,8 +43,8 @@
       "max": 5,
       "threshold": 15000
     },
-    "configFile": "C:\\Users\\Bryan\\comedy\\playwright.config.ts",
-    "rootDir": "C:/Users/Bryan/comedy/tests",
+    "configFile": "/Users/boyola/repos/comedy/playwright.config.ts",
+    "rootDir": "/Users/boyola/repos/comedy/tests",
     "quiet": false,
     "shard": null,
     "updateSnapshots": "missing",
@@ -54,20 +54,20 @@
   },
   "suites": [
     {
-      "title": "comedy\\comedyMob24.spec.ts",
+      "title": "comedy/comedyMob24.spec.ts",
       "file": "comedy/comedyMob24.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "KERASOTES",
+          "title": "COMEDY MOB 24",
           "file": "comedy/comedyMob24.spec.ts",
-          "line": 7,
+          "line": 112,
           "column": 6,
           "specs": [
             {
-              "title": "Secaucus",
+              "title": "On the minute checks111",
               "ok": false,
               "tags": [],
               "tests": [
@@ -81,73 +81,70 @@
                     {
                       "workerIndex": 0,
                       "status": "failed",
-                      "duration": 6774,
+                      "duration": 6019,
                       "error": {
                         "message": "Twitter request failed",
-                        "stack": "Error: Twitter request failed\n    at C:\\Users\\Bryan\\comedy\\tests\\comedy\\comedyMob24.spec.ts:73:31"
+                        "stack": "Error: Twitter request failed\n    at /Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts:178:31"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "C:\\Users\\Bryan\\comedy\\tests\\comedy\\comedyMob24.spec.ts",
+                            "file": "/Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts",
                             "column": 31,
-                            "line": 73
+                            "line": 178
                           },
-                          "message": "Error: Twitter request failed\n\n\u001b[90m   at \u001b[39mcomedy\\comedyMob24.spec.ts:73\n\n\u001b[0m \u001b[90m 71 |\u001b[39m                   } \u001b[36mcatch\u001b[39m (error) {\u001b[0m\n\u001b[0m \u001b[90m 72 |\u001b[39m                         console\u001b[33m.\u001b[39mlog(error)\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 73 |\u001b[39m                         \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Twitter request failed'\u001b[39m)\u001b[0m\n\u001b[0m \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 74 |\u001b[39m                     }\u001b[0m\n\u001b[0m \u001b[90m 75 |\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 76 |\u001b[39m                 \u001b[90m//pushover push notifications\u001b[39m\u001b[0m\n\n\u001b[2m    at C:\\Users\\Bryan\\comedy\\tests\\comedy\\comedyMob24.spec.ts:73:31\u001b[22m"
+                          "message": "Error: Twitter request failed\n\n\u001b[90m   at \u001b[39mcomedy/comedyMob24.spec.ts:178\n\n\u001b[0m \u001b[90m 176 |\u001b[39m                   } \u001b[36mcatch\u001b[39m (error) {\u001b[0m\n\u001b[0m \u001b[90m 177 |\u001b[39m                         console\u001b[33m.\u001b[39mlog(error)\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 178 |\u001b[39m                         \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m'Twitter request failed'\u001b[39m)\u001b[0m\n\u001b[0m \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 179 |\u001b[39m                     }\u001b[0m\n\u001b[0m \u001b[90m 180 |\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 181 |\u001b[39m                 \u001b[90m//pushover push notifications\u001b[39m\u001b[0m\n\n\u001b[2m    at /Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts:178:31\u001b[22m"
                         }
                       ],
                       "stdout": [
                         {
-                          "text": "https://www.showplaceicon.com/Browsing/Cinemas/Compare?Cinemas=8875&Date=2024-01-092024-09-01\n"
-                        },
-                        {
-                          "text": "https://www.showplaceicon.com/Browsing/Cinemas/Compare?Cinemas=8875&Date=2024-01-09\n"
+                          "text": "https://www.comedymob.com/perform-with-us\n"
                         },
                         {
                           "text": "Go time\n"
                         },
                         {
-                          "text": "Error: username is required\n    at C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4mtwilio\u001b[24m\\lib\\base\\BaseTwilio.js:41:31\n    at new Client (C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4mtwilio\u001b[24m\\lib\\base\\BaseTwilio.js:42:23)\n    at new Twilio (C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4mtwilio\u001b[24m\\lib\\rest\\Twilio.js:33:9)\n    at TwilioSDK (C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4mtwilio\u001b[24m\\lib\\index.js:40:12)\n    at C:\\Users\\Bryan\\comedy\\tests\\comedy\\comedyMob24.spec.ts:51:53\n    at C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4m@playwright\u001b[24m\\test\\lib\\workerRunner.js:376:9\n    at TestInfoImpl._runFn (C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4m@playwright\u001b[24m\\test\\lib\\testInfo.js:144:7)\n    at C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4m@playwright\u001b[24m\\test\\lib\\workerRunner.js:331:26\n    at TimeoutRunner.run (C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4mplaywright-core\u001b[24m\\lib\\utils\\timeoutRunner.js:45:14)\n    at TimeoutManager.runWithTimeout (C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4m@playwright\u001b[24m\\test\\lib\\timeoutManager.js:62:7)\n    at TestInfoImpl._runWithTimeout (C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4m@playwright\u001b[24m\\test\\lib\\testInfo.js:133:26)\n    at WorkerRunner._runTest (C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4m@playwright\u001b[24m\\test\\lib\\workerRunner.js:312:5)\n    at WorkerRunner.runTestGroup (C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4m@playwright\u001b[24m\\test\\lib\\workerRunner.js:192:11)\n    at process.<anonymous> (C:\\Users\\Bryan\\comedy\\node_modules\\\u001b[4m@playwright\u001b[24m\\test\\lib\\worker.js:74:5)\n"
+                          "text": "Error: username is required\n    at \u001b[90m/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4mtwilio\u001b[24m/lib/base/BaseTwilio.js:41:31\n    at new Client \u001b[90m(/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4mtwilio\u001b[24m/lib/base/BaseTwilio.js:42:23\u001b[90m)\u001b[39m\n    at new Twilio \u001b[90m(/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4mtwilio\u001b[24m/lib/rest/Twilio.js:33:9\u001b[90m)\u001b[39m\n    at TwilioSDK \u001b[90m(/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4mtwilio\u001b[24m/lib/index.js:40:12\u001b[90m)\u001b[39m\n    at \u001b[90m/Users/boyola/repos/comedy/\u001b[39mtests/comedy/comedyMob24.spec.ts:156:53\n    at \u001b[90m/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4m@playwright\u001b[24m/test/lib/workerRunner.js:376:9\n    at TestInfoImpl._runFn \u001b[90m(/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4m@playwright\u001b[24m/test/lib/testInfo.js:144:7\u001b[90m)\u001b[39m\n    at \u001b[90m/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4m@playwright\u001b[24m/test/lib/workerRunner.js:331:26\n    at TimeoutRunner.run \u001b[90m(/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4mplaywright-core\u001b[24m/lib/utils/timeoutRunner.js:45:14\u001b[90m)\u001b[39m\n    at TimeoutManager.runWithTimeout \u001b[90m(/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4m@playwright\u001b[24m/test/lib/timeoutManager.js:62:7\u001b[90m)\u001b[39m\n    at TestInfoImpl._runWithTimeout \u001b[90m(/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4m@playwright\u001b[24m/test/lib/testInfo.js:133:26\u001b[90m)\u001b[39m\n    at WorkerRunner._runTest \u001b[90m(/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4m@playwright\u001b[24m/test/lib/workerRunner.js:312:5\u001b[90m)\u001b[39m\n    at WorkerRunner.runTestGroup \u001b[90m(/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4m@playwright\u001b[24m/test/lib/workerRunner.js:192:11\u001b[90m)\u001b[39m\n    at process.<anonymous> \u001b[90m(/Users/boyola/repos/comedy/\u001b[39mnode_modules/\u001b[4m@playwright\u001b[24m/test/lib/worker.js:74:5\u001b[90m)\u001b[39m\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2024-01-10T02:20:11.875Z",
+                      "startTime": "2024-01-10T18:44:03.851Z",
                       "attachments": [
                         {
                           "name": "video",
                           "contentType": "video/webm",
-                          "path": "C:\\Users\\Bryan\\comedy\\test-results\\comedy-comedyMob24-KERASOTES-Secaucus-chromium\\video.webm"
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks111-chromium/video.webm"
                         },
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "C:\\Users\\Bryan\\comedy\\test-results\\comedy-comedyMob24-KERASOTES-Secaucus-chromium\\trace.zip"
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks111-chromium/trace.zip"
                         },
                         {
                           "name": "trace",
                           "contentType": "application/zip",
-                          "path": "C:\\Users\\Bryan\\comedy\\test-results\\comedy-comedyMob24-KERASOTES-Secaucus-chromium\\trace-1.zip"
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks111-chromium/trace-1.zip"
                         },
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "C:\\Users\\Bryan\\comedy\\test-results\\comedy-comedyMob24-KERASOTES-Secaucus-chromium\\test-failed-1.png"
+                          "path": "/Users/boyola/repos/comedy/test-results/comedy-comedyMob24-COMEDY-MOB-24-On-the-minute-checks111-chromium/test-failed-1.png"
                         }
                       ],
                       "errorLocation": {
-                        "file": "C:\\Users\\Bryan\\comedy\\tests\\comedy\\comedyMob24.spec.ts",
+                        "file": "/Users/boyola/repos/comedy/tests/comedy/comedyMob24.spec.ts",
                         "column": 31,
-                        "line": 73
+                        "line": 178
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "44ea2309647098d41474-616e953edbbd1183764f",
+              "id": "44ea2309647098d41474-12527fbe14b2357f05a9",
               "file": "comedy/comedyMob24.spec.ts",
-              "line": 19,
+              "line": 124,
               "column": 10
             }
           ]
