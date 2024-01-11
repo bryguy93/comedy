@@ -47,12 +47,56 @@ export class Hooks extends AbstractPage{
         let dateTime: Date = new Date()
         let initialTrigger: number
         const body= await resp.text()
-        //console.log(body)
+        // www & -time " & 133 shars
 
-        const parser = new DOMParser()
-        const htmlDoc = parser.parseFromString(body, 'text/html')
-        let times = htmlDoc.getElementsByClassName('session-time ')
-        console.log(times)
+        //let scope = body.indexOf('-time \"')  // 1
+        //console.log('Index is ' + scope)
+        //scope = body.indexOf('-time \"',scope + 1) // 2
+        //console.log('Index is ' + scope)
+
+        let scope: number = 0
+        let i: number = 0
+        let instances: number[]=[]
+        while (i != -1){
+            scope = body.indexOf('-time \"',i)
+            
+            if(scope > 0){
+                i = scope + 1
+                instances.push(scope)
+            } else{
+                i = scope
+            }
+            
+        }
+        console.log(instances)
+        console.log(instances.length)
+
+        scope = 0
+        i = 0
+        let www: number[]=[]
+        while (i != instances.length){
+            scope = body.indexOf('www',instances[i] - 133)
+            i = i + 1
+            www.push(scope) 
+        }
+        console.log(www)
+        console.log(www.length)
+
+        i = 0
+        while (i != instances.length){
+
+            let first = 'https://' + body.slice(www[i],instances[i]-16)
+            first = first.replace(/amp;/g,'')
+            console.log(first)
+            i = i + 1 
+        }
+
+        
+
+        //const parser = new DOMParser()
+        //const htmlDoc = parser.parseFromString(body, 'text/html')
+        //let times = htmlDoc.getElementsByClassName('session-time ')
+        //console.log(times)
         //initialTrigger = resp.status()
        
         //if( initialTrigger > 199 && initialTrigger < 300){
