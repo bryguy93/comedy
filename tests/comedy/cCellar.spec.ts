@@ -46,7 +46,7 @@ test.describe('COMEDY CELLAR', () => {
         let exampleArray: number[][]=[[],[]] //push()
         
        
-        while ( index != 2){ // change this to iterate for 30 days
+        while ( index != 1){ // change this to iterate for 30 days
 
             const [answer] = await Promise.all([
                 postRequest(url, headers, data),
@@ -56,7 +56,7 @@ test.describe('COMEDY CELLAR', () => {
             
             if(answer.toString().indexOf('No Comedians added yet!') == -1){ // ON EACH IN SCOPE DATES
                 console.log(dateFormatted)
-                console.log(answer)
+                console.log('html load')
                 //console.log(answer.toString().includes('No Comedians added yet!'))
                 
                 let finalIndex = answer.length
@@ -65,11 +65,6 @@ test.describe('COMEDY CELLAR', () => {
 
                 let tempIndexArrayStart: number[]=[]
                 let tempIndexArrayEnd: number[]=[]
-                let comedianNameArrayStart: number[]=[]
-                let comedianNameArrayEnd: number[]=[]
-                let comedianBioArrayStart: number[]=[]
-                let comedianBioArrayEnd: number[]=[]
-                let tempArrayIndex: number = 0
                 let i: number = htmlStringIndex
                 let tempTimeIndex: number = 0
                 while (i != -1){
@@ -84,40 +79,114 @@ test.describe('COMEDY CELLAR', () => {
                         tempTimeIndex = answer.indexOf('<span class=\\"hide-mobile\\">',i)
                         tempIndexArrayEnd.push(tempTimeIndex)
 
-                        //Look for comedian name start
-                        //IF SPECIAL SHOW, THEN THE NAME WILL PICK UP THE SHOW NAME
-                        //CONSIDER AN EXCEPTION LIST TO FILTER OUT KNOWN SHOW NAMES LIKE 'HOT SOUP' and 'THE CHEMISTRY SET'
-                        tempTimeIndex = tempTimeIndex + 1
-                        tempTimeIndex = answer.indexOf('<p><span class=\\"name\\">',tempTimeIndex)
-                        comedianNameArrayStart.push(tempTimeIndex + 24)
-
-                        //Look for comedian name end
-                        tempTimeIndex = tempTimeIndex + 1
-                        tempTimeIndex = answer.indexOf('</span>',tempTimeIndex)
-                        comedianNameArrayEnd.push(tempTimeIndex)
-                        comedianBioArrayStart.push(tempTimeIndex+7) // easily get comedian BIO start
-
-                        //Look for comedian BIO end
-                        tempTimeIndex = tempTimeIndex + 1
-                        tempTimeIndex = answer.indexOf('</p>',tempTimeIndex)
-                        comedianBioArrayEnd.push(tempTimeIndex)
-
                     } else{
                         i = tempTimeIndex
                     }
-                }
-                //     <span class=\"hide-mobile\">
-                //console.log(tempIndexArrayStart)
-                //console.log(tempIndexArrayEnd)
-                //console.log(comedianBioArrayStart)
-                //console.log(comedianBioArrayEnd)
-                let D = 0
-                while(D != tempIndexArrayStart.length){
-                console.log('Comedians ' + answer.substring(tempIndexArrayStart[D],tempIndexArrayEnd[D]))
-                D = D + 1
-                
+
+
+                    //let Def = 0
+                    //while(Def != tempIndexArrayStart.length){
+                    //console.log('START')
+                    //console.log(tempIndexArrayStart[Def],tempIndexArrayEnd[Def])
+                    //console.log('Comedians ' + answer.substring(tempIndexArrayStart[Def],tempIndexArrayEnd[Def]))
+                    //Def = Def + 1
+                    //}
+
+
+                    
+                    //console.log(substringArrayStart)
+                    //console.log(substringArrayEnd)
+                    //let De = 0
+                    //while(De != tempIndexArrayStart.length){
+                    //console.log('START')
+                    //console.log(substringArrayStart[De],substringArrayEnd[De])
+                    //console.log('Comedians ' + answer.substring(substringArrayStart[De],substringArrayEnd[De]))
+                    //De = De + 1
+                    //}
+                } // GRAB ALL THE TIMES DATA FOR THIS DAY
+
+                let De = 0
+                while(De != tempIndexArrayStart.length){
+                console.log('Comedians ' + answer.substring(tempIndexArrayStart[De],tempIndexArrayEnd[De]))
+                De = De + 1
                 }
 
+                let finalTimeArray: string[]=[]
+                for(let i = 0; i < tempIndexArrayStart.length; i++){
+                    finalTimeArray.push(answer.substring(tempIndexArrayStart[i],tempIndexArrayEnd[i]))
+                }
+                console.log(finalTimeArray)
+
+                // HERE WE HAVE ALL TIME DATA in tempIndexArrayStart and End for the current day
+                //Get substring based on collected times data
+
+                let substringArrayStart: number[]=[]
+                let substringArrayEnd: number[]=[]
+                console.log(tempIndexArrayStart.length)
+                let tempSub = tempIndexArrayStart.length - 1
+                for(let i = 0; i < tempIndexArrayStart.length; i++){
+                    //console.log('ADD: '+ tempIndexArrayEnd[i])
+                    //console.log('array lwength: ' + tempIndexArrayStart.length)
+                    substringArrayStart.push(tempIndexArrayEnd[i])
+                        
+                    if( i == tempSub ){
+                        substringArrayEnd.push(answer.length)
+                    } else{
+                        substringArrayEnd.push(tempIndexArrayStart[i+1])
+                    }
+
+                }
+                
+                let rawHtmlByTime: string[]=[]
+                for(let i = 0; i < tempIndexArrayStart.length; i++){
+                    rawHtmlByTime.push(answer.substring(substringArrayStart[i],substringArrayEnd[i]))
+                }
+
+                console.log(rawHtmlByTime.length)
+
+                //finalTimeArray[] & rawHtmlByTime[] -> NEED Name[] Bio[] Website[]*   **** may not exist. 
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //let tempIndexArrayStart: number[]=[]
+                //let tempIndexArrayEnd: number[]=[]
+                
+                let comedianNameArrayStart: number[]=[]
+                let comedianNameArrayEnd: number[]=[]
+                let comedianBioArrayStart: number[]=[]
+                let comedianBioArrayEnd: number[]=[]
+                let tempArrayIndex: number = 0
+                let a: number = htmlStringIndex
+                let tempIndex: number = 0
+                while (a != -1){
+                    //console.log('LOOPING i = ' + a)
+                    tempIndex = answer.indexOf('<p><span class=\\"name\\">',a)
+                    //console.log('Time Starting Indexes = ' + tempIndex)
+                        
+                    if(tempIndex > 0){
+                        a = tempIndex + 2
+                        comedianNameArrayStart.push(tempIndex + 24)
+                        //tempArrayIndex = tempArrayIndex + 1
+                        tempIndex = answer.indexOf('</span>',a)
+                        comedianNameArrayEnd.push(tempIndex)
+                        comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO start
+
+                        //Look for comedian BIO end
+                        tempIndex = tempIndex + 1
+                        tempIndex = answer.indexOf('</p>',tempIndex)
+                        comedianBioArrayEnd.push(tempIndex)
+
+                    } else{
+                        i = tempIndex
+                    }
+                } 
+                //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+                let D = 0
+                while(D != comedianNameArrayStart.length){
+                console.log(D + 1)
+                console.log('NAME: ' + answer.substring(comedianNameArrayStart[D],comedianNameArrayEnd[D]))
+                D = D + 1
+                }
+                //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 
 
@@ -135,7 +204,8 @@ test.describe('COMEDY CELLAR', () => {
 
                     //GO TO THE NEXT INDEX
                 //}
-            } else{console.log('No Comedians added yet for ' + dateFormatted)}
+            } // INSIDE IN SCOPE DAY
+            else{console.log('No Comedians added yet for ' + dateFormatted)}
 
             dayIndex.setDate(dayIndex.getDate() + 1)
             var dd = String(dayIndex.getDate()).padStart(2, '0')
@@ -144,7 +214,7 @@ test.describe('COMEDY CELLAR', () => {
             dateFormatted = '\"'+yyyy + '-' + mm + '-' + dd+'\"'
             data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
             index = index + 1
-        }
+        }//iterate through all days
 
 
         navigation = new Navigation(page)
