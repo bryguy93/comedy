@@ -5,6 +5,7 @@ const config: PlaywrightTestConfig = {
   testDir: './tests',
   testMatch: [
     "tests/comedy/comedyMob24.spec.ts",
+    "tests/comedy/cCellar.spec.ts",
     "tests/comedy/kerasotes.spec.ts"
     // "lighthouse/unauth.test.ts",
     // "lighthouse/auth.test.ts"
@@ -13,7 +14,7 @@ const config: PlaywrightTestConfig = {
     // "tests/addProductToCart.test.ts",
     // "tests/flipkart.test.ts"
   ],
-  timeout: 1 * 60 * 1000,
+  timeout: 1 * 15 * 1000,
   expect: {
     timeout: 5000
   },

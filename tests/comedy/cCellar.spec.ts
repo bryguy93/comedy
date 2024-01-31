@@ -1,14 +1,151 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { asyncWriteFile } from '../../utils/helpers'
+import { asyncWriteFile, postRequest } from '../../utils/helpers'
 import axios from "axios";
 
-test.describe('COMEDY MOB 24', () => {
+test.describe('COMEDY CELLAR', () => {
 
     let navigation: Navigation
 
     test('On the minute checks', async ({ page, request }) => {
+
+        //const headers2 = {
+          //  'content-type': 'application/x-www-form-urlencoded'
+        //}
+
+        const headers = { 
+            'authority': 'www.comedycellar.com', 
+            'accept': '*/*', 
+            'accept-language': 'en-US,en;q=0.9', 
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8', 
+            'origin': 'https://www.comedycellar.com', 
+            'referer': 'https://www.comedycellar.com/new-york-line-up/', 
+            'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"', 
+            'sec-ch-ua-mobile': '?0', 
+            'sec-ch-ua-platform': '"macOS"', 
+            'sec-fetch-dest': 'empty', 
+            'sec-fetch-mode': 'cors', 
+            'sec-fetch-site': 'same-origin', 
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          }
+        
+        let dayIndex: Date = new Date() //current index in day string
+        var dd = String(dayIndex.getDate()).padStart(2, '0')
+        var mm = String(dayIndex.getMonth() + 1).padStart(2, '0')
+        var yyyy = dayIndex.getFullYear()
+        let dateFormatted = '\"'+yyyy + '-' + mm + '-' + dd+'\"'
+
+
+        const url = 'https://www.comedycellar.com/lineup/api/'
+        let data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
+        //*****************************************                  ********************            ************************ */
+        let index: number = 0 //current index in day string
+        let htmlStringIndex: number = 0
+        let placeholder: number = 0
+        let exampleArray: number[][]=[[],[]] //push()
+        
+       
+        while ( index != 2){ // change this to iterate for 30 days
+
+            const [answer] = await Promise.all([
+                postRequest(url, headers, data),
+                
+            ])
+
+            
+            if(answer.toString().indexOf('No Comedians added yet!') == -1){ // ON EACH IN SCOPE DATES
+                console.log(dateFormatted)
+                console.log(answer)
+                //console.log(answer.toString().includes('No Comedians added yet!'))
+                
+                let finalIndex = answer.length
+                // Now we're iterating on each inscope date's raw HTML as String
+                //Parse string for showtime and then Comedian and loop
+
+                let tempIndexArrayStart: number[]=[]
+                let tempIndexArrayEnd: number[]=[]
+                let comedianNameArrayStart: number[]=[]
+                let comedianNameArrayEnd: number[]=[]
+                let comedianBioArrayStart: number[]=[]
+                let comedianBioArrayEnd: number[]=[]
+                let tempArrayIndex: number = 0
+                let i: number = htmlStringIndex
+                let tempTimeIndex: number = 0
+                while (i != -1){
+                    console.log('LOOPING i = ' + i)
+                    tempTimeIndex = answer.indexOf('<h2><span class=\\"bold\\">',i)
+                    console.log('Time Starting Indexes = ' + tempTimeIndex)
+                        
+                    if(tempTimeIndex > 0){
+                        i = tempTimeIndex + 2
+                        tempIndexArrayStart.push(tempTimeIndex + 25)
+                        //tempArrayIndex = tempArrayIndex + 1
+                        tempTimeIndex = answer.indexOf('<span class=\\"hide-mobile\\">',i)
+                        tempIndexArrayEnd.push(tempTimeIndex)
+
+                        //Look for comedian name start
+                        //IF SPECIAL SHOW, THEN THE NAME WILL PICK UP THE SHOW NAME
+                        //CONSIDER AN EXCEPTION LIST TO FILTER OUT KNOWN SHOW NAMES LIKE 'HOT SOUP' and 'THE CHEMISTRY SET'
+                        tempTimeIndex = tempTimeIndex + 1
+                        tempTimeIndex = answer.indexOf('<p><span class=\\"name\\">',tempTimeIndex)
+                        comedianNameArrayStart.push(tempTimeIndex + 24)
+
+                        //Look for comedian name end
+                        tempTimeIndex = tempTimeIndex + 1
+                        tempTimeIndex = answer.indexOf('</span>',tempTimeIndex)
+                        comedianNameArrayEnd.push(tempTimeIndex)
+                        comedianBioArrayStart.push(tempTimeIndex+7) // easily get comedian BIO start
+
+                        //Look for comedian BIO end
+                        tempTimeIndex = tempTimeIndex + 1
+                        tempTimeIndex = answer.indexOf('</p>',tempTimeIndex)
+                        comedianBioArrayEnd.push(tempTimeIndex)
+
+                    } else{
+                        i = tempTimeIndex
+                    }
+                }
+                //     <span class=\"hide-mobile\">
+                //console.log(tempIndexArrayStart)
+                //console.log(tempIndexArrayEnd)
+                //console.log(comedianBioArrayStart)
+                //console.log(comedianBioArrayEnd)
+                let D = 0
+                while(D != tempIndexArrayStart.length){
+                console.log('Comedians ' + answer.substring(tempIndexArrayStart[D],tempIndexArrayEnd[D]))
+                D = D + 1
+                
+                }
+
+
+
+
+                //while(htmlStringIndex != finalIndex){
+                    // <h2><span class=\"bold\">
+
+                    
+                    
+                    
+                    //LOOP
+                    // Check for showtime
+                        // Check for Comic Name
+
+
+
+                    //GO TO THE NEXT INDEX
+                //}
+            } else{console.log('No Comedians added yet for ' + dateFormatted)}
+
+            dayIndex.setDate(dayIndex.getDate() + 1)
+            var dd = String(dayIndex.getDate()).padStart(2, '0')
+            var mm = String(dayIndex.getMonth() + 1).padStart(2, '0')
+            var yyyy = dayIndex.getFullYear()
+            dateFormatted = '\"'+yyyy + '-' + mm + '-' + dd+'\"'
+            data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
+            index = index + 1
+        }
+
 
         navigation = new Navigation(page)
         var today = new Date();
@@ -17,7 +154,7 @@ test.describe('COMEDY MOB 24', () => {
         var yyyy = today.getFullYear()
         let date = yyyy + '-' + mm + '-' + dd
 
-        console.log('https://www.showplaceicon.com/Browsing/Cinemas/Compare?Cinemas=8875&Date=' + date)
+        
 
         const [resp]= await Promise.all([ //trigger Avive emergency
             page.waitForResponse(resp => resp.url().includes('https://www.showplaceicon.com/Browsing/Cinemas/Compare?Cinemas=8875')),
@@ -32,7 +169,7 @@ test.describe('COMEDY MOB 24', () => {
         let scope: number = 0
         let i: number = 0
         let instances: number[]=[]
-
+        // find all starting indexes of a string occurance
         while (i != -1){
             scope = body.indexOf('-time \"',i)
             
@@ -43,12 +180,16 @@ test.describe('COMEDY MOB 24', () => {
                 i = scope
             }
         }
+        //sanity check
         if(instances.length != await page.locator('.session-time ').count()){
             throw new Error('Show Parser is Jacked')
         }
+
         scope = 0
         i = 0
         let www: number[]=[]
+
+        // get the other end of the substring so you now isolated everything into substrings
         while (i != instances.length){
             scope = body.indexOf('www',instances[i] - 133)
             i = i + 1
@@ -56,6 +197,7 @@ test.describe('COMEDY MOB 24', () => {
         }
 
         i = 0
+        //format substring 
         while (i != instances.length){
             let first = 'https://' + body.slice(www[i],instances[i]-16)
             first = first.replace(/amp;/g,'')
@@ -75,7 +217,7 @@ test.describe('COMEDY MOB 24', () => {
            ]);
        
         //console.log(await page.locator('.session-time ').count()) // can try .innertext 
-        console.log(await page.locator('.Seating-Theatre').innerHTML())
+        //console.log(await page.locator('.Seating-Theatre').innerHTML()) **********************************************
         //console.log(await page.locator(':has-text("session-time ")').count())
         
         const body1= await resp.text()

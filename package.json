@@ -10,6 +10,7 @@
     "postinstall": "npx playwright install",
     "chrometest": "npx playwright test tests/comedy/comedyMob24.spec.ts --config=playwright.config.ts --project chromium",
     "chromek": "npx playwright test tests/comedy/kerasotes.spec.ts --config=playwright.config.ts --project chromium",
+    "chromec": "npx playwright test tests/comedy/cCellar.spec.ts --config=playwright.config.ts --project chromium",
     "chromeVisualTest": "TEST_ENVIRO_CLI=$npm_config_enviro npx playwright test tests/visual/visual.spec.ts --config=visual.config.ts --project chromium",
     "jenkinsStart": "brew services start jenkins-lts",
     "jenkinsStop": "brew services stop jenkins-lts",
