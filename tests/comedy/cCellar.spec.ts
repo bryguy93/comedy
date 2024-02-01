@@ -150,7 +150,8 @@ test.describe('COMEDY CELLAR', () => {
                 //let tempIndexArrayStart: number[]=[]
                 //let tempIndexArrayEnd: number[]=[]
 
-                let finalNames: string[]=[]
+                
+                let finalLineupArray: string[]=[]
                 let finalBio: string[]=[]
                 for(i = 0; i < finalTimeArray.length; i ++){
                     //for current index html, extract name and bio
@@ -159,33 +160,57 @@ test.describe('COMEDY CELLAR', () => {
                     let comedianBioArrayStart: number[]=[]
                     let comedianBioArrayEnd: number[]=[]
                     let tempArrayIndex: number = 0
-                    let a: number = htmlStringIndex
+                    let a: number = 0
                     let tempIndex: number = 0
                     while (a != -1){
                         //console.log('LOOPING i = ' + a)
-                        tempIndex = rawHtmlByTime[i].indexOf('<p><span class=\\"name\\">',a)
+                        tempIndex = rawHtmlByTime[i].toString().indexOf('<p><span class=\\"name\\">',a)
                         //console.log('Time Starting Indexes = ' + tempIndex)
 
                         if(tempIndex > 0){
                             a = tempIndex + 2
                             comedianNameArrayStart.push(tempIndex + 24)
                             //tempArrayIndex = tempArrayIndex + 1
-                            tempIndex = rawHtmlByTime[i].indexOf('</span>',a)
+                            tempIndex = rawHtmlByTime[i].toString().indexOf('</span>',a)
                             comedianNameArrayEnd.push(tempIndex)
                             comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO start
 
                             //Look for comedian BIO end
-                            tempIndex = tempIndex + 1
-                            tempIndex = rawHtmlByTime[i].indexOf('</p>',tempIndex)
+                            a = tempIndex + 8
+                            tempIndex = rawHtmlByTime[i].toString().indexOf('</p>',tempIndex)
                             comedianBioArrayEnd.push(tempIndex)
+                            a = tempIndex
+                            
 
                         } else{
-                            i = tempIndex
+                            a = tempIndex
                         }
                     }
+                    console.log('Starting Index: ' + comedianNameArrayStart)
+                    console.log('Ending index: ' + comedianNameArrayEnd)
 
+                    let tempString: string = ''
+                    let b: number
+                    for(b = 0; b < comedianNameArrayStart.length; b ++){
+                        tempString = tempString + rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b]) + ','
+                    }
 
-
+                    //let stringIndex: number = 0
+                    //let finalStringIndex: number
+                    //for(b = 0; b < comedianNameArrayStart.length; b ++){
+                        //finalStringIndex = tempString.indexOf(',',stringIndex + 1)
+                        //finalLineupArray.push(tempString.substring(stringIndex,finalStringIndex))
+                        //stringIndex = finalStringIndex + 1
+                        
+                    //}
+                    finalLineupArray.push(tempString)
+                    //finalLineupArray
+                    //console.log(finalTimeArray[i])
+                    //console.log(finalLineupArray)
+                    console.log(dateFormatted)
+                    for(b = 0; b < finalTimeArray.length; b ++){
+                        console.log(finalTimeArray[b] + ': '+ finalLineupArray[b])
+                    }
                 }
 
                 
@@ -193,12 +218,7 @@ test.describe('COMEDY CELLAR', () => {
                  
                 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-                //let D = 0
-                //while(D != comedianNameArrayStart.length){
-                //console.log(D + 1)
-                //console.log('NAME: ' + answer.substring(comedianNameArrayStart[D],comedianNameArrayEnd[D]))
-                //D = D + 1
-                //}
+                
                 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\//\/\//\//\\/
 
 
