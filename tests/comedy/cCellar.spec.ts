@@ -142,51 +142,64 @@ test.describe('COMEDY CELLAR', () => {
                     rawHtmlByTime.push(answer.substring(substringArrayStart[i],substringArrayEnd[i]))
                 }
 
+                console.log(finalTimeArray)
                 console.log(rawHtmlByTime.length)
 
                 //finalTimeArray[] & rawHtmlByTime[] -> NEED Name[] Bio[] Website[]*   **** may not exist. 
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 //let tempIndexArrayStart: number[]=[]
                 //let tempIndexArrayEnd: number[]=[]
-                
-                let comedianNameArrayStart: number[]=[]
-                let comedianNameArrayEnd: number[]=[]
-                let comedianBioArrayStart: number[]=[]
-                let comedianBioArrayEnd: number[]=[]
-                let tempArrayIndex: number = 0
-                let a: number = htmlStringIndex
-                let tempIndex: number = 0
-                while (a != -1){
-                    //console.log('LOOPING i = ' + a)
-                    tempIndex = answer.indexOf('<p><span class=\\"name\\">',a)
-                    //console.log('Time Starting Indexes = ' + tempIndex)
-                        
-                    if(tempIndex > 0){
-                        a = tempIndex + 2
-                        comedianNameArrayStart.push(tempIndex + 24)
-                        //tempArrayIndex = tempArrayIndex + 1
-                        tempIndex = answer.indexOf('</span>',a)
-                        comedianNameArrayEnd.push(tempIndex)
-                        comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO start
 
-                        //Look for comedian BIO end
-                        tempIndex = tempIndex + 1
-                        tempIndex = answer.indexOf('</p>',tempIndex)
-                        comedianBioArrayEnd.push(tempIndex)
+                let finalNames: string[]=[]
+                let finalBio: string[]=[]
+                for(i = 0; i < finalTimeArray.length; i ++){
+                    //for current index html, extract name and bio
+                    let comedianNameArrayStart: number[]=[]
+                    let comedianNameArrayEnd: number[]=[]
+                    let comedianBioArrayStart: number[]=[]
+                    let comedianBioArrayEnd: number[]=[]
+                    let tempArrayIndex: number = 0
+                    let a: number = htmlStringIndex
+                    let tempIndex: number = 0
+                    while (a != -1){
+                        //console.log('LOOPING i = ' + a)
+                        tempIndex = rawHtmlByTime[i].indexOf('<p><span class=\\"name\\">',a)
+                        //console.log('Time Starting Indexes = ' + tempIndex)
 
-                    } else{
-                        i = tempIndex
+                        if(tempIndex > 0){
+                            a = tempIndex + 2
+                            comedianNameArrayStart.push(tempIndex + 24)
+                            //tempArrayIndex = tempArrayIndex + 1
+                            tempIndex = rawHtmlByTime[i].indexOf('</span>',a)
+                            comedianNameArrayEnd.push(tempIndex)
+                            comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO start
+
+                            //Look for comedian BIO end
+                            tempIndex = tempIndex + 1
+                            tempIndex = rawHtmlByTime[i].indexOf('</p>',tempIndex)
+                            comedianBioArrayEnd.push(tempIndex)
+
+                        } else{
+                            i = tempIndex
+                        }
                     }
-                } 
+
+
+
+                }
+
+                
+                //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+                 
                 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-                let D = 0
-                while(D != comedianNameArrayStart.length){
-                console.log(D + 1)
-                console.log('NAME: ' + answer.substring(comedianNameArrayStart[D],comedianNameArrayEnd[D]))
-                D = D + 1
-                }
-                //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+                //let D = 0
+                //while(D != comedianNameArrayStart.length){
+                //console.log(D + 1)
+                //console.log('NAME: ' + answer.substring(comedianNameArrayStart[D],comedianNameArrayEnd[D]))
+                //D = D + 1
+                //}
+                //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\//\/\//\//\\/
 
 
 
@@ -217,89 +230,12 @@ test.describe('COMEDY CELLAR', () => {
         }//iterate through all days
 
 
-        navigation = new Navigation(page)
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0')
-        var mm = String(today.getMonth() + 1).padStart(2, '0')
-        var yyyy = today.getFullYear()
-        let date = yyyy + '-' + mm + '-' + dd
-
         
-
-        const [resp]= await Promise.all([ //trigger Avive emergency
-            page.waitForResponse(resp => resp.url().includes('https://www.showplaceicon.com/Browsing/Cinemas/Compare?Cinemas=8875')),
-            page.goto('https://www.showplaceicon.com/Browsing/Cinemas/Compare?Cinemas=8875&Date=' + date),
-           ]);
-       
-        //console.log(await page.locator('.session-time ').count()) // can try .innertext 
-        //console.log(await page.locator('.session-time ').nth(0).innerText())
-        //console.log(await page.locator(':has-text("session-time ")').count())
-        
-        const body= await resp.text()
-        let scope: number = 0
-        let i: number = 0
-        let instances: number[]=[]
-        // find all starting indexes of a string occurance
-        while (i != -1){
-            scope = body.indexOf('-time \"',i)
-            
-            if(scope > 0){
-                i = scope + 1
-                instances.push(scope)
-            } else{
-                i = scope
-            }
-        }
-        //sanity check
-        if(instances.length != await page.locator('.session-time ').count()){
-            throw new Error('Show Parser is Jacked')
-        }
-
-        scope = 0
-        i = 0
-        let www: number[]=[]
-
-        // get the other end of the substring so you now isolated everything into substrings
-        while (i != instances.length){
-            scope = body.indexOf('www',instances[i] - 133)
-            i = i + 1
-            www.push(scope) 
-        }
-
-        i = 0
-        //format substring 
-        while (i != instances.length){
-            let first = 'https://' + body.slice(www[i],instances[i]-16)
-            first = first.replace(/amp;/g,'')
-            //console.log(first)
-            i = i + 1 
-        }
-        
-        await page.locator('.session-time ').nth(0).click() // NEED MORE LOGIC TO ITERATE THROUGH ALL COUNT
-        await page.getByRole('button', { name: 'plus' }).nth(0).click()
-        await page.getByRole('button', { name: 'Next' }).isVisible()
-        
-        //Seating-Theatre
-
-        const [resp1]= await Promise.all([ //trigger Avive emergency
-            page.waitForResponse(resp1 => resp1.url().includes('https://www.showplaceicon.com/Ticketing/visSelectTickets')),
-            await page.getByRole('button', { name: 'Next' }).click(),
-           ]);
-       
-        //console.log(await page.locator('.session-time ').count()) // can try .innertext 
-        //console.log(await page.locator('.Seating-Theatre').innerHTML()) **********************************************
-        //console.log(await page.locator(':has-text("session-time ")').count())
-        
-        const body1= await resp.text()
-        let scope1: number = 0
-        let i1: number = 0
-        let instances1: number[]=[]
-        //console.log(body1)
-
         //await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
         //const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
         //asyncWriteFile('\n' + currentFormText)
-        await page.waitForTimeout(3000)
+        
+        //await page.waitForTimeout(3000)
         
     })
 })
