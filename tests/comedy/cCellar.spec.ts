@@ -3,10 +3,13 @@ import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
 import { asyncWriteFile, postRequest } from '../../utils/helpers'
 import axios from "axios";
+import mysql from 'mysql2/promise'
+import { connect } from 'http2';
+import { Connection } from 'mysql2/typings/mysql/lib/Connection';
 
 test.describe('COMEDY CELLAR', () => {
 
-    test('On the minute checks', async ({ page, request }) => {
+    test.skip('On the minute checks', async ({ page, request }) => {
 
         const headers = { 
             'authority': 'www.comedycellar.com', 
@@ -33,12 +36,14 @@ test.describe('COMEDY CELLAR', () => {
         let data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
-        let targetDays: number = 30
+        let targetDays: number = 2
         let finalLineupArray: string[]=[]
-        let finalTimeArray: string[]=[]
+        //let finalMasterTimes: string[]=[]
     
         while ( index != targetDays){ // change this to iterate for 30 days
 
+            let noComedians: boolean = false
+            let finalMasterTimes: string[]=[]
             const [answer] = await Promise.all([
                 postRequest(url, headers, data),
                 
@@ -67,7 +72,7 @@ test.describe('COMEDY CELLAR', () => {
                     }
                 } // GRAB ALL THE TIMES DATA FOR THIS DAY
 
-                //let finalTimeArray: string[]=[]
+                let finalTimeArray: string[]=[]
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
                     finalTimeArray.push(answer.substring(tempIndexArrayStart[i],tempIndexArrayEnd[i]))
                 }
@@ -105,8 +110,8 @@ test.describe('COMEDY CELLAR', () => {
                     let a: number = 0
                     let tempIndex: number = 0
                     while (a != -1){
-                        console.log(rawHtmlByTime[0])
-                        console.log(a)
+                        //console.log(rawHtmlByTime[0])
+                        //console.log(a)
                         tempIndex = rawHtmlByTime[i].toString().indexOf('<p><span class=\\"name\\">',a)
 
                         if(tempIndex > 0){
@@ -114,15 +119,14 @@ test.describe('COMEDY CELLAR', () => {
                             comedianNameArrayStart.push(tempIndex + 24)
                             tempIndex = rawHtmlByTime[i].toString().indexOf('</span>',a)
                             comedianNameArrayEnd.push(tempIndex)
-                            comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO start
+                            //comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO start
 
                             //Look for comedian BIO end
-                            a = tempIndex + 8
-                            tempIndex = rawHtmlByTime[i].toString().indexOf('</p>',tempIndex)
-                            comedianBioArrayEnd.push(tempIndex)
-                            a = tempIndex
+                            //a = tempIndex + 8
+                            //tempIndex = rawHtmlByTime[i].toString().indexOf('</p>',tempIndex)
+                            //comedianBioArrayEnd.push(tempIndex)
+                            //a = tempIndex
                             
-
                         } else{
                             a = tempIndex
                         }
@@ -141,10 +145,29 @@ test.describe('COMEDY CELLAR', () => {
 
                     
                 }
-
+                let c: number
+                // TRANSFERRRRR to a more general variable
+                for(c = 0; c < finalTimeArray.length; c ++){
+                    finalMasterTimes.push(finalTimeArray[c])
+                }
+                
                 
             } // INSIDE IN SCOPE DAY
-            else{console.log('No Comedians added yet for ' + dateFormatted)}
+            else{
+                noComedians = true
+                //console.log('No Comedians added yet for ' + dateFormatted)
+            
+            }
+
+            
+
+            if(noComedians == false){
+                let b: number
+                console.log(dateFormatted)
+                for(b = 0; b < finalMasterTimes.length; b ++){
+                    console.log(finalMasterTimes[b] + ': '+ finalLineupArray[b])
+                }
+            } else{console.log('No Comedians added yet for ' + dateFormatted)}
 
             //targetDays
             index = index + 1
@@ -155,20 +178,18 @@ test.describe('COMEDY CELLAR', () => {
                 var yyyy = dayIndex.getFullYear()
                 dateFormatted = '\"'+yyyy + '-' + mm + '-' + dd+'\"'
                 data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
-            }
-
-
-            
-            
+            }   
         }//iterate through all days
 
         //HERE
-
-        let b: number
         console.log(dateFormatted)
-        for(b = 0; b < finalTimeArray.length; b ++){
-            console.log(finalTimeArray[b] + ': '+ finalLineupArray[b])
-        }
+        console.log(finalLineupArray)
+
+        //let b: number
+        //console.log(dateFormatted)
+        //for(b = 0; b < finalMasterTimes.length; b ++){
+        //    console.log(finalMasterTimes[b] + ': '+ finalLineupArray[b])
+        //}
         
         //asyncWriteFile('\n' + currentFormText)
         //await page.waitForTimeout(3000)
@@ -181,103 +202,86 @@ test.describe('COMEDY MOB EAST', () => {
 
     let hooks: Hooks
     let navigation: Navigation
-    
-    test.beforeEach(async ({ page }) => {
-        hooks = new Hooks(page)
-        await hooks.ComedyEastsetup()
-        console.log(hooks.comedyMobEasturl)
-        
-    })
 
     test.skip('On the minute checks', async ({ page, request }) => {
 
-        navigation = new Navigation(page)
+        //get the client
+        const mysql = require('mysql2')
 
-        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
-            console.log('Bidness as usual')
-           }
-           else{
-                console.log('Go time')
+        let password = process.env.dbPassword
+        if(password === undefined){
+            console.log('retry')
+            const dotenv = require('dotenv');
+            dotenv.config({path: './page-objects/components/secrets.env'})
+            password = process.env.dbPassword
+        }
 
-                try {
-                    //twilio creds
-                    let sid = process.env.twilioSid
-                    let apiToken = process.env.twilioApi
-                    //console.log('Twilio token: ' + apiToken)
+        console.log(password)
+        // Create the connection to database
+        const connection = mysql.createConnection({
+            host: 'database-test1.c3egi00mq4df.us-east-1.rds.amazonaws.com',
+            port: 3306,
+            //ssl: 'Amazon RDS',
+            user: 'admin',
+            password: password, 
+            //database: 'database-test1',
+        })
 
-                    if(apiToken === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        apiToken = process.env.twilioApi
-                        //console.log('Twilio token: ' + apiToken)
-                    }
-
-                    if(sid === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        apiToken = process.env.twilioSid
-                    }
-
-                    const accountSid = sid
-                    const authToken = apiToken
-
-                    //twilio SMS
-                    const client = require("twilio")(accountSid, authToken);
-                    client.messages
-                        .create({ body: 'https://www.comedymob.com/comedy-mob-east', from: "+18882966538", to: "+12019209227" })
-                            .then(message => console.log(message.sid));
-                    
-                    await page.waitForTimeout(navigation.slowmo)
-
-                    //twilio VOICE CALL
-                    const client2 = require('twilio')(accountSid, authToken);
-
-                    client2.calls
-                        .create({
-                            url: 'http://demo.twilio.com/docs/voice.xml',
-                            to: '+12019209227',
-                            from: '+18882966538'
-                        })
-                        .then(call => console.log(call.sid));
-
-                    await page.waitForTimeout(navigation.slowmo)
-
-                    
-                  } catch (error) {
-                        console.log(error)
-                        throw new Error('Twitter request failed')
-                    }
-                //pushover push notifications
-                try {
-                    let url = 'https://api.pushover.net/1/messages.json'
-                    let token = process.env.pushover_token
-                    let user = process.env.pushover_user
-
-                    if(token === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        token = process.env.pushoverToken
-                    }
-                    
-                    if(user === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        user = process.env.pushoverUser
-                        asyncWriteFile('\n' + user)
-                    }
-
-
-                    const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/comedy-mob-east' } )
-                    await page.waitForTimeout(navigation.slowmo)
-                    
-                  } catch (error) {
-                        console.log(error)
-                        throw new Error('Pushover API Request failed')
-                    }
-           }
+        console.log(connection)
+        console.log('GUCCI')
+        //asyncWriteFile('\n' + currentFormText)
         
-        await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
-        //const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
+    })
+
+    test('experiment', async ({ page, request }) => {
+
+        //get the client
+        let examnple: string = 'oof'
+
+        let host = process.env.dbHost // NEED TO ADD TO CI/CD SECRETS
+        let password = process.env.dbPassword // NEED TO ADD TO CI/CD SECRETS
+        if(password === undefined){
+            const dotenv = require('dotenv');
+            dotenv.config({path: './page-objects/components/secrets.env'})
+            password = process.env.dbPassword
+        }
+        if(host === undefined){
+            const dotenv = require('dotenv');
+            dotenv.config({path: './page-objects/components/secrets.env'})
+            host = process.env.dbHost
+        }
+        
+        try {
+            const connection = await mysql.createConnection({
+                host: host,
+                port: 3306,
+                //ssl: 'Amazon RDS',
+                user: 'admin',
+                password: password, // DO NOT PUSH **************
+                database: 'pocDb'
+              // port: 3306,
+              // password: '',
+            });
+
+            const [rows, fields] = await connection.execute(
+                'SHOW DATABASES'  
+              );    
+                //'SHOW DATABASES'
+                //'CREATE TABLE pocTable (id INT AUTO_INCREMENT PRIMARY KEY, club VARCHAR(255), day VARCHAR(255), time VARCHAR(255), comedians VARCHAR(255))'
+              //'SELECT * FROM `table` WHERE `name` = ? AND `age` > ?'  
+            //['JerseyClub', '01-01-24','7:30PM','comedian1, comedian 2']
+            console.log(rows)
+            console.log('GUCCI' + examnple)
+          } catch (err) {
+            console.log(err);
+          }
+
+          
+
+          
+        
+
+        //console.log(connection)
         //asyncWriteFile('\n' + currentFormText)
         
     })
