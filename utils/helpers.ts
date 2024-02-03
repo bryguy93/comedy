@@ -23,6 +23,22 @@ export async function postRequest(url: string,header: any, data: string): Promis
   }
 }
 
+export function formatDate(today: Date): string {
+    
+  try {
+    
+    var dd = String(today.getDate()).padStart(2, '0')
+    var mm = String(today.getMonth() + 1).padStart(2, '0')
+    var yyyy = today.getFullYear()
+    let dateFormatted = '\"'+yyyy + '-' + mm + '-' + dd+'\"'
+    return dateFormatted
+    
+  } catch (error) {
+      console.log(error)
+      throw new Error(' Date formatter Failed')
+  }
+}
+
 //print to log files
 export async function asyncWriteFile(data: any) {
     let helperParams: HelperParams

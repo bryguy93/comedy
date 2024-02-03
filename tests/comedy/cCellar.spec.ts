@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { asyncWriteFile, postRequest } from '../../utils/helpers'
+import { asyncWriteFile, postRequest, formatDate } from '../../utils/helpers'
 import axios from "axios";
 import mysql from 'mysql2/promise'
 import { connect } from 'http2';
@@ -9,44 +9,33 @@ import { Connection } from 'mysql2/typings/mysql/lib/Connection';
 
 test.describe('COMEDY CELLAR', () => {
 
+    let navigation: Navigation
+
     test('On the minute checks', async ({ page, request }) => {
 
-        const headers = { 
-            'authority': 'www.comedycellar.com', 
-            'accept': '*/*', 
-            'accept-language': 'en-US,en;q=0.9', 
-            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8', 
-            'origin': 'https://www.comedycellar.com', 
-            'referer': 'https://www.comedycellar.com/new-york-line-up/', 
-            'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"', 
-            'sec-ch-ua-mobile': '?0', 
-            'sec-ch-ua-platform': '"macOS"', 
-            'sec-fetch-dest': 'empty', 
-            'sec-fetch-mode': 'cors', 
-            'sec-fetch-site': 'same-origin', 
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-          }
+        navigation = new Navigation(page)
         
-        let dayIndex: Date = new Date() //current index in day string
-        var dd = String(dayIndex.getDate()).padStart(2, '0')
-        var mm = String(dayIndex.getMonth() + 1).padStart(2, '0')
-        var yyyy = dayIndex.getFullYear()
-        let dateFormatted = '\"'+yyyy + '-' + mm + '-' + dd+'\"'
-        const url = 'https://www.comedycellar.com/lineup/api/'
-        let data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
+        const headers = navigation.comedyCellarheaders
+        const url = navigation.comedyCellarUrl        
+        
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
         let targetDays: number = 3
-        let finalLineupArray: string[]=[]  
-        //let finalMasterTimes: string[]=[]
-    
+        
+        let dayIndex: Date = new Date() //current index in day string
+        let dateFormatted = formatDate(dayIndex)
+        let data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
+
         while ( index != targetDays){ // change this to iterate for 30 days
 
             let noComedians: boolean = false
-            let finalMasterTimes: string[]=[]
+            let finalLineupArray: string[]=[]  
+            let finalTimeArray: string[]=[]
+            let finalComedianArray: string[][]=[]
+            let finalBioArray: string[][]=[]
+
             const [answer] = await Promise.all([
                 postRequest(url, headers, data),
-                
             ])
 
             if(answer.toString().indexOf('No Comedians added yet!') == -1){ // ON EACH IN SCOPE DATES
@@ -57,10 +46,11 @@ test.describe('COMEDY CELLAR', () => {
                 let tempIndexArrayEnd: number[]=[]
                 let i: number = htmlStringIndex
                 let tempTimeIndex: number = 0
-                while (i != -1){
+
+                while (i != -1){ // GRAB ALL THE TIMES substring index DATA FOR CURRENT IN SCOPE DATE
                     
                     tempTimeIndex = answer.indexOf('<h2><span class=\\"bold\\">',i)
-                        
+                    
                     if(tempTimeIndex > 0){
                         i = tempTimeIndex + 2
                         tempIndexArrayStart.push(tempTimeIndex + 25)
@@ -70,15 +60,15 @@ test.describe('COMEDY CELLAR', () => {
                     } else{
                         i = tempTimeIndex
                     }
-                } // GRAB ALL THE TIMES DATA FOR THIS DAY
-
-                let finalTimeArray: string[]=[]
+                } 
+                
+                //Leverage start and end indexes to Generate final timeslot strings array
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
                     finalTimeArray.push(answer.substring(tempIndexArrayStart[i],tempIndexArrayEnd[i]))
                 }
 
-                // HERE WE HAVE ALL TIME DATA in tempIndexArrayStart and End for the current day
-                //Get substring based on collected times data
+                // HERE WE HAVE ALL TIME SLOTS DATA in tempIndexArrayStart and End for the current day
+                //Get html substring per each time slot's starting and ending index (e.g. 1st iteration html starting index is starting index for the time to starting index of time + 1, and so on)
                 let substringArrayStart: number[]=[]
                 let substringArrayEnd: number[]=[]
                 let tempSub = tempIndexArrayStart.length - 1
@@ -94,38 +84,41 @@ test.describe('COMEDY CELLAR', () => {
 
                 }
                 
+                //Leverage start indexes to Generate final raw HTML strings array
                 let rawHtmlByTime: string[]=[]
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
                     rawHtmlByTime.push(answer.substring(substringArrayStart[i],substringArrayEnd[i]))
                 }
         
-                //let finalLineupArray: string[]=[]
-        
                 for(i = 0; i < finalTimeArray.length; i ++){
-                    //for current index html, extract name and bio
+                    //iterate through all html strings, extract name and bio
                     let comedianNameArrayStart: number[]=[]
                     let comedianNameArrayEnd: number[]=[]
                     let comedianBioArrayStart: number[]=[]
                     let comedianBioArrayEnd: number[]=[]
+                    let tempComedianArray: string[]=[]
+                    let tempBioArray: string[]=[]
                     let a: number = 0
                     let tempIndex: number = 0
+
+                    //parse for indexes of comedian name and bio ***Can add Website here if exists***
                     while (a != -1){
-                        //console.log(rawHtmlByTime[0])
-                        //console.log(a)
-                        tempIndex = rawHtmlByTime[i].toString().indexOf('<p><span class=\\"name\\">',a)
+                        
+                        tempIndex = rawHtmlByTime[i].toString().indexOf('<p><span class=\\"name\\">',a)//get comedian name starting index
 
                         if(tempIndex > 0){
                             a = tempIndex + 2
                             comedianNameArrayStart.push(tempIndex + 24)
-                            tempIndex = rawHtmlByTime[i].toString().indexOf('</span>',a)
+                            tempIndex = rawHtmlByTime[i].toString().indexOf('</span>',a) // get comedian name ending index
                             comedianNameArrayEnd.push(tempIndex)
-                            //comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO start
+                            
+                            comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO starting index
 
-                            //Look for comedian BIO end
-                            //a = tempIndex + 8
-                            //tempIndex = rawHtmlByTime[i].toString().indexOf('</p>',tempIndex)
-                            //comedianBioArrayEnd.push(tempIndex)
-                            //a = tempIndex
+                            
+                            a = tempIndex + 8  
+                            tempIndex = rawHtmlByTime[i].toString().indexOf('</p>',a) //Get comedian BIO ending index
+                            comedianBioArrayEnd.push(tempIndex)
+                            a = tempIndex // <- maube get rid of this
                             
                         } else{
                             a = tempIndex
@@ -134,50 +127,52 @@ test.describe('COMEDY CELLAR', () => {
 
                     let tempString: string = ''
                     let b: number
+                    let tempchar: string = ''
                     for(b = 0; b < comedianNameArrayStart.length; b ++){
-                        tempString = tempString + rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b])
+                        tempString = tempString + rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b]) // comedian comma delimited list
+                        tempComedianArray.push(rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b])) // new 2d comedian name array
+                        tempchar = rawHtmlByTime[i].toString().substring(comedianBioArrayStart[b],comedianBioArrayEnd[b])
+                        tempBioArray.push(tempchar.replace(/\\/g, '')) // new 2d comedian bio array AND REMOVE BACKSLASHES(LEFTOVER HTML) FROM STRING
+                        //tempBioArray.push(rawHtmlByTime[i].toString().substring(comedianBioArrayStart[b],comedianBioArrayEnd[b])) // new 2d comedian bio array
+                        
                         if(b != comedianNameArrayEnd.length - 1){
                             tempString = tempString + ','
                         }
                     }
 
                     finalLineupArray.push(tempString)
-
                     
-                }
-                let c: number
-                // TRANSFERRRRR to a more general variable
-                for(c = 0; c < finalTimeArray.length; c ++){
-                    finalMasterTimes.push(finalTimeArray[c])
-                }
-                
-                
+                    finalComedianArray.push(tempComedianArray)
+                    finalBioArray.push(tempBioArray)
+
+                }    
             } // INSIDE IN SCOPE DAY
             else{
                 noComedians = true
-                //console.log('No Comedians added yet for ' + dateFormatted)
-            
             }
 
-            
-
+            //SQL POINT
             if(noComedians == false){
                 let b: number
                 console.log(dateFormatted)
-                for(b = 0; b < finalMasterTimes.length; b ++){
-                    console.log(finalMasterTimes[b] + ': '+ finalLineupArray[b])
+                //console.log(finalComedianArray)
+                console.log(finalBioArray)
+                for(b = 0; b < finalTimeArray.length; b ++){
+                    //console.log(finalTimeArray[b] + ': '+ finalLineupArray[b])
                 }
-            } else{console.log('No Comedians added yet for ' + dateFormatted)}
 
-            console.log(dateFormatted)
-            //console.log('break')
-            //console.log(finalLineupArray)
+            // END SQL POINT - records added on a day basis, by timeslot(show)
+
+
+
+            
+            } else{console.log('No Comedians added yet for ' + dateFormatted)}
 
             // FEB 3 a/o Feb 3 ASSERTIONS
             if(index == 0){
                 
-                expect(finalMasterTimes[0] == '6:00 pm','Expected 6:00 pm but got ' + finalMasterTimes[0]).toBeTruthy()
-                expect(finalMasterTimes[finalMasterTimes.length - 1] == '12:55 am','Expected 12:55 am but got ' + finalMasterTimes[0]).toBeTruthy()
+                expect(finalTimeArray[0] == '6:00 pm','Expected 6:00 pm but got ' + finalTimeArray[0]).toBeTruthy()
+                expect(finalTimeArray[finalTimeArray.length - 1] == '12:55 am','Expected 12:55 am but got ' + finalTimeArray[0]).toBeTruthy()
                 expect(finalLineupArray[finalLineupArray.length - 1] == 'Simeon Goodson,H.Foley,Erin Jackson,Pat Burtscher,Alex Kumin,Tyler Fischer','Expected \'Simeon Goodson,H.Foley,Erin Jackson,Pat Burtscher,Alex Kumin,Tyler Fischer\' but got ' + finalLineupArray[0]).toBeTruthy()
                 expect(finalLineupArray[0] == 'Rich Aronovitch,Wali Collins,Maddie Wiener,Aminah Imani,Ethan Simmons-Patterson,Chris Turner','Expected \'Rich Aronovitch,Wali Collins,Maddie Wiener,Aminah Imani,Ethan Simmons-Patterson,Chris Turner\' pm but got ' + finalLineupArray[0]).toBeTruthy()
                 
@@ -186,27 +181,19 @@ test.describe('COMEDY CELLAR', () => {
             // FEB 5 a/o Feb 3 ASSERTIONS
             if(index == 2){
                 
-                expect(finalMasterTimes[0] == '7:00 pm','Expected 7:00 pm but got ' + finalMasterTimes[0]).toBeTruthy()
+                expect(finalTimeArray[0] == '7:00 pm','Expected 7:00 pm but got ' + finalTimeArray[0]).toBeTruthy()
                 expect(finalLineupArray[0] == 'Nick Griffin,Colin Quinn','Expected \'Nick Griffin,Colin Quinn\' pm but got ' + finalLineupArray[0]).toBeTruthy()
-                expect(finalMasterTimes[finalMasterTimes.length - 1] == '11:30 pm','Expected 11:30 pm but got ' + finalMasterTimes[0]).toBeTruthy()
+                expect(finalTimeArray[finalTimeArray.length - 1] == '11:30 pm','Expected 11:30 pm but got ' + finalTimeArray[0]).toBeTruthy()
                 expect(finalLineupArray[finalLineupArray.length - 1] == 'Simeon Goodson,Mike Feeney,Jordan Jensen,Shafi Hossain,Caitlin Peluffo,Brian Scolaro,Dave Attell','Expected \'Simeon Goodson,Mike Feeney,Jordan Jensen,Shafi Hossain,Caitlin Peluffo,Brian Scolaro,Dave Attell\' but got ' + finalLineupArray[0]).toBeTruthy()
                 
             }
 
-            //targetDays
-            index = index + 1
+            index = index + 1 // setup to iterate on the next day
             if(index != targetDays){
                 dayIndex.setDate(dayIndex.getDate() + 1)
-                var dd = String(dayIndex.getDate()).padStart(2, '0')
-                var mm = String(dayIndex.getMonth() + 1).padStart(2, '0')
-                var yyyy = dayIndex.getFullYear()
-                dateFormatted = '\"'+yyyy + '-' + mm + '-' + dd+'\"'
+                dateFormatted = formatDate(dayIndex)
                 data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
             }
-            //FYI finalMasterTimes was transferred from finalTimeArray which is declared inside the loop so it resets every day
-            //reset finalLineupArray bc it is declared outside of the master loop and is reused
-            finalLineupArray = []
-            
         }//iterate through all days
 
         //asyncWriteFile('\n' + currentFormText)
@@ -309,7 +296,7 @@ test.describe('KERASOTES', () => {
     })
 
     test.skip('On the minute checks', async ({ page, request }) => {
-
+        
         navigation = new Navigation(page)
 
         if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
