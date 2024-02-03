@@ -9,7 +9,7 @@ import { Connection } from 'mysql2/typings/mysql/lib/Connection';
 
 test.describe('COMEDY CELLAR', () => {
 
-    test.skip('On the minute checks', async ({ page, request }) => {
+    test('On the minute checks', async ({ page, request }) => {
 
         const headers = { 
             'authority': 'www.comedycellar.com', 
@@ -36,8 +36,8 @@ test.describe('COMEDY CELLAR', () => {
         let data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
-        let targetDays: number = 2
-        let finalLineupArray: string[]=[]
+        let targetDays: number = 3
+        let finalLineupArray: string[]=[]  
         //let finalMasterTimes: string[]=[]
     
         while ( index != targetDays){ // change this to iterate for 30 days
@@ -169,6 +169,30 @@ test.describe('COMEDY CELLAR', () => {
                 }
             } else{console.log('No Comedians added yet for ' + dateFormatted)}
 
+            console.log(dateFormatted)
+            //console.log('break')
+            //console.log(finalLineupArray)
+
+            // FEB 3 a/o Feb 3 ASSERTIONS
+            if(index == 0){
+                
+                expect(finalMasterTimes[0] == '6:00 pm','Expected 6:00 pm but got ' + finalMasterTimes[0]).toBeTruthy()
+                expect(finalMasterTimes[finalMasterTimes.length - 1] == '12:55 am','Expected 12:55 am but got ' + finalMasterTimes[0]).toBeTruthy()
+                expect(finalLineupArray[finalLineupArray.length - 1] == 'Simeon Goodson,H.Foley,Erin Jackson,Pat Burtscher,Alex Kumin,Tyler Fischer','Expected \'Simeon Goodson,H.Foley,Erin Jackson,Pat Burtscher,Alex Kumin,Tyler Fischer\' but got ' + finalLineupArray[0]).toBeTruthy()
+                expect(finalLineupArray[0] == 'Rich Aronovitch,Wali Collins,Maddie Wiener,Aminah Imani,Ethan Simmons-Patterson,Chris Turner','Expected \'Rich Aronovitch,Wali Collins,Maddie Wiener,Aminah Imani,Ethan Simmons-Patterson,Chris Turner\' pm but got ' + finalLineupArray[0]).toBeTruthy()
+                
+            }
+
+            // FEB 5 a/o Feb 3 ASSERTIONS
+            if(index == 2){
+                
+                expect(finalMasterTimes[0] == '7:00 pm','Expected 7:00 pm but got ' + finalMasterTimes[0]).toBeTruthy()
+                expect(finalLineupArray[0] == 'Nick Griffin,Colin Quinn','Expected \'Nick Griffin,Colin Quinn\' pm but got ' + finalLineupArray[0]).toBeTruthy()
+                expect(finalMasterTimes[finalMasterTimes.length - 1] == '11:30 pm','Expected 11:30 pm but got ' + finalMasterTimes[0]).toBeTruthy()
+                expect(finalLineupArray[finalLineupArray.length - 1] == 'Simeon Goodson,Mike Feeney,Jordan Jensen,Shafi Hossain,Caitlin Peluffo,Brian Scolaro,Dave Attell','Expected \'Simeon Goodson,Mike Feeney,Jordan Jensen,Shafi Hossain,Caitlin Peluffo,Brian Scolaro,Dave Attell\' but got ' + finalLineupArray[0]).toBeTruthy()
+                
+            }
+
             //targetDays
             index = index + 1
             if(index != targetDays){
@@ -178,19 +202,13 @@ test.describe('COMEDY CELLAR', () => {
                 var yyyy = dayIndex.getFullYear()
                 dateFormatted = '\"'+yyyy + '-' + mm + '-' + dd+'\"'
                 data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
-            }   
+            }
+            //FYI finalMasterTimes was transferred from finalTimeArray which is declared inside the loop so it resets every day
+            //reset finalLineupArray bc it is declared outside of the master loop and is reused
+            finalLineupArray = []
+            
         }//iterate through all days
 
-        //HERE
-        console.log(dateFormatted)
-        console.log(finalLineupArray)
-
-        //let b: number
-        //console.log(dateFormatted)
-        //for(b = 0; b < finalMasterTimes.length; b ++){
-        //    console.log(finalMasterTimes[b] + ': '+ finalLineupArray[b])
-        //}
-        
         //asyncWriteFile('\n' + currentFormText)
         //await page.waitForTimeout(3000)
         
@@ -198,12 +216,12 @@ test.describe('COMEDY CELLAR', () => {
 })
 
 
-test.describe('COMEDY MOB EAST', () => {
+test.describe('Mysql Connection and Queries', () => {
 
     let hooks: Hooks
     let navigation: Navigation
 
-    test.skip('On the minute checks', async ({ page, request }) => {
+    test.skip('Db experimental', async ({ page, request }) => {
 
         //get the client
         const mysql = require('mysql2')
@@ -233,7 +251,7 @@ test.describe('COMEDY MOB EAST', () => {
         
     })
 
-    test('experiment', async ({ page, request }) => {
+    test.skip('Db Connection v1', async ({ page, request }) => {
 
         //get the client
         let examnple: string = 'oof'
@@ -264,25 +282,16 @@ test.describe('COMEDY MOB EAST', () => {
             const [rows, fields] = await connection.execute(
                 'DELETE FROM `Shows` WHERE `UID`  = 2'  
               );    
-                //'SHOW DATABASES'
-                //'CREATE TABLE pocTable (id INT AUTO_INCREMENT PRIMARY KEY, club VARCHAR(255), day VARCHAR(255), time VARCHAR(255), comedians VARCHAR(255))'
-              //'SELECT * FROM `table` WHERE `name` = ? AND `age` > ?'  
-            //['JerseyClub', '01-01-24','7:30PM','comedian1, comedian 2']
+
             console.log(rows)
             console.log(fields)
-            console.log('GUCCI' + examnple)
+            
           } catch (err) {
             console.log(err);
           }
 
-          
-
-          
-        
-
         //console.log(connection)
         //asyncWriteFile('\n' + currentFormText)
-        
     })
 })
 
