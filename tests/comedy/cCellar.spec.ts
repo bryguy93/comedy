@@ -255,22 +255,21 @@ test.describe('COMEDY MOB EAST', () => {
             const connection = await mysql.createConnection({
                 host: host,
                 port: 3306,
-                //ssl: 'Amazon RDS',
                 user: 'admin',
-                password: password, // DO NOT PUSH **************
+                password: password, 
                 database: 'pocDb'
-              // port: 3306,
-              // password: '',
+              
             });
 
             const [rows, fields] = await connection.execute(
-                'SHOW DATABASES'  
+                'DELETE FROM `Shows` WHERE `UID`  = 2'  
               );    
                 //'SHOW DATABASES'
                 //'CREATE TABLE pocTable (id INT AUTO_INCREMENT PRIMARY KEY, club VARCHAR(255), day VARCHAR(255), time VARCHAR(255), comedians VARCHAR(255))'
               //'SELECT * FROM `table` WHERE `name` = ? AND `age` > ?'  
             //['JerseyClub', '01-01-24','7:30PM','comedian1, comedian 2']
             console.log(rows)
+            console.log(fields)
             console.log('GUCCI' + examnple)
           } catch (err) {
             console.log(err);
