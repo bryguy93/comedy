@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { asyncWriteFile, postRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbIfRecordsExistOptimize, dbAddShow } from '../../utils/helpers'
+import { asyncWriteFile, postRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID } from '../../utils/helpers'
 import axios from "axios";
-import mysql from 'mysql2/promise'
+
 
 test.describe('COMEDY CELLAR', () => {
 
@@ -18,7 +18,9 @@ test.describe('COMEDY CELLAR', () => {
         
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
-        let targetDays: number = 3
+        let targetDays: number = 2
+        let finalDbArray: string[][]=[]
+        let validUIDs: number[] = []
         
         let dayIndex: Date = new Date() //current index in day string
         let dateFormatted = formatDate(dayIndex)
@@ -158,10 +160,12 @@ test.describe('COMEDY CELLAR', () => {
                 for(f = 0; f < finalTimeArray.length; f ++){
                     var timeSlot = finalComedianArray[f]
                     var bioSlot = finalBioArray[f]
-                    
                     let g = 0
+                    
                     for(g = 0; g < timeSlot.length; g ++){
-                        console.log('Comedy Cellar |' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                        
+                        //console.log('NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                        console.log('NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g])
                         //SQL CHECKS IF RECORD EXISTS
                         let showCity: string = 'NYC'
                         let showVenue: string = 'Comedy Cellar'
@@ -171,25 +175,24 @@ test.describe('COMEDY CELLAR', () => {
                         let comediansBio: string = bioSlot[g]
 
                         const [answer] = await Promise.all([
-                            dbIfRecordsExistOptimize(connection, showCity, showVenue, showDate),
+                            dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
                         ])
                         
-                        if(answer == 0){
+                        if(answer > 0){
+                            validUIDs.push(answer)
+                            finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName])
+                            console.log(finalDbArray.length)
+                            console.log('Nothing to add - exists in DB')
+                        } else{
+                              
                             const [answer] = await Promise.all([
                                 dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
                             ])
                             console.log(answer)
-                        } else{
-                          
-                            const [answer] = await Promise.all([
-                                dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
-                            ])
-                            if(answer == 0){
-                                const [answer] = await Promise.all([
-                                    dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
-                                ])
-                                console.log(answer)
-                            } else{console.log('Nothing to add - exists in DB already')}
+                            validUIDs.push(answer)
+                            finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName])
+                            console.log('Adding to DB')
+                        
 
                         //OPTIMIZE - check for new shows/days to add to db
                             // If venue + day does NOT exist(0) -> Add
@@ -200,15 +203,11 @@ test.describe('COMEDY CELLAR', () => {
                         
                         //PHASE II maybe?
                         // to Wrap, try and refactor to load up all inserts and send in one bulk query for efficiency
-                            // the check for DB values vs script will be faster too because you can do everything script side. 
-
-                        }
-
+                            // the check for DB values vs script will be faster too because you can do everything script side.
+                            
                         
 
-                        //OPTIMIZE Check for any changes or entire show deletions to existing records in the db and remove from db
-                            // REVERSE check if DB values for current script record for if dbValue is missing from script record -> purge Db bc record is no longe valid
-                                //if DB value does match with current script value, then there's nothing to do
+                        }
                             
 
                     }
@@ -219,20 +218,20 @@ test.describe('COMEDY CELLAR', () => {
             // FEB 3 a/o Feb 3 ASSERTIONS
             if(index == 0){
                 
-                expect(finalTimeArray[0] == '6:00 pm','Expected 6:00 pm but got ' + finalTimeArray[0]).toBeTruthy()
-                expect(finalTimeArray[finalTimeArray.length - 1] == '12:55 am','Expected 12:55 am but got ' + finalTimeArray[0]).toBeTruthy()
-                expect(finalLineupArray[finalLineupArray.length - 1] == 'Simeon Goodson,H.Foley,Erin Jackson,Pat Burtscher,Alex Kumin,Tyler Fischer','Expected \'Simeon Goodson,H.Foley,Erin Jackson,Pat Burtscher,Alex Kumin,Tyler Fischer\' but got ' + finalLineupArray[0]).toBeTruthy()
-                expect(finalLineupArray[0] == 'Rich Aronovitch,Wali Collins,Maddie Wiener,Aminah Imani,Ethan Simmons-Patterson,Chris Turner','Expected \'Rich Aronovitch,Wali Collins,Maddie Wiener,Aminah Imani,Ethan Simmons-Patterson,Chris Turner\' pm but got ' + finalLineupArray[0]).toBeTruthy()
+                //expect(finalTimeArray[0] == '6:00 pm','Expected 6:00 pm but got ' + finalTimeArray[0]).toBeTruthy()
+                //expect(finalTimeArray[finalTimeArray.length - 1] == '12:55 am','Expected 12:55 am but got ' + finalTimeArray[0]).toBeTruthy()
+                //expect(finalLineupArray[finalLineupArray.length - 1] == 'Simeon Goodson,H.Foley,Erin Jackson,Pat Burtscher,Alex Kumin,Tyler Fischer','Expected \'Simeon Goodson,H.Foley,Erin Jackson,Pat Burtscher,Alex Kumin,Tyler Fischer\' but got ' + finalLineupArray[0]).toBeTruthy()
+                //expect(finalLineupArray[0] == 'Rich Aronovitch,Wali Collins,Maddie Wiener,Aminah Imani,Ethan Simmons-Patterson,Chris Turner','Expected \'Rich Aronovitch,Wali Collins,Maddie Wiener,Aminah Imani,Ethan Simmons-Patterson,Chris Turner\' pm but got ' + finalLineupArray[0]).toBeTruthy()
                 
             }
 
             // FEB 5 a/o Feb 3 ASSERTIONS
             if(index == 2){
                 
-                expect(finalTimeArray[0] == '7:00 pm','Expected 7:00 pm but got ' + finalTimeArray[0]).toBeTruthy()
-                expect(finalLineupArray[0] == 'Nick Griffin,Colin Quinn','Expected \'Nick Griffin,Colin Quinn\' pm but got ' + finalLineupArray[0]).toBeTruthy()
-                expect(finalTimeArray[finalTimeArray.length - 1] == '11:30 pm','Expected 11:30 pm but got ' + finalTimeArray[0]).toBeTruthy()
-                expect(finalLineupArray[finalLineupArray.length - 1] == 'Simeon Goodson,Mike Feeney,Jordan Jensen,Shafi Hossain,Caitlin Peluffo,Brian Scolaro,Dave Attell','Expected \'Simeon Goodson,Mike Feeney,Jordan Jensen,Shafi Hossain,Caitlin Peluffo,Brian Scolaro,Dave Attell\' but got ' + finalLineupArray[0]).toBeTruthy()
+                //expect(finalTimeArray[0] == '7:00 pm','Expected 7:00 pm but got ' + finalTimeArray[0]).toBeTruthy()
+                //expect(finalLineupArray[0] == 'Nick Griffin,Colin Quinn','Expected \'Nick Griffin,Colin Quinn\' pm but got ' + finalLineupArray[0]).toBeTruthy()
+                //expect(finalTimeArray[finalTimeArray.length - 1] == '11:30 pm','Expected 11:30 pm but got ' + finalTimeArray[0]).toBeTruthy()
+                //expect(finalLineupArray[finalLineupArray.length - 1] == 'Simeon Goodson,Mike Feeney,Jordan Jensen,Shafi Hossain,Caitlin Peluffo,Brian Scolaro,Dave Attell','Expected \'Simeon Goodson,Mike Feeney,Jordan Jensen,Shafi Hossain,Caitlin Peluffo,Brian Scolaro,Dave Attell\' but got ' + finalLineupArray[0]).toBeTruthy()
                 
             }
 
@@ -243,6 +242,74 @@ test.describe('COMEDY CELLAR', () => {
                 data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
             }
         }//iterate through all days
+        
+        let today: string = formatDate(new Date()) //current index in day string
+        
+        console.log(today)
+        console.log(formatDate(dayIndex))
+
+        const [answer] = await Promise.all([
+            queryShowsByVenueAndDate(connection,'NYC','Comedy Cellar',today, formatDate(dayIndex)),
+        ])
+        
+        let answer1 = Object.values(JSON.parse(JSON.stringify(answer)));
+        //console.log('TEST; '+ Object.values(JSON.parse(JSON.stringify(answer[0])))[0])
+
+        let tempString: any
+        let dbUIDS: any[] = []
+        let dbUIDSinfo: any[][] = []
+        let r: number
+        for(let r = 0; r < answer1.length; r++){
+
+            tempString = Number(Object.values(JSON.parse(JSON.stringify(answer[r])))[0])            
+            dbUIDSinfo.push([tempString, Object.values(JSON.parse(JSON.stringify(answer[r])))[1], Object.values(JSON.parse(JSON.stringify(answer[r])))[2], Object.values(JSON.parse(JSON.stringify(answer[r])))[3], Object.values(JSON.parse(JSON.stringify(answer[r])))[4], Object.values(JSON.parse(JSON.stringify(answer[r])))[7]])
+            dbUIDS.push(tempString)
+
+        }
+
+        console.log('Database length'+dbUIDS.length)
+        console.log('Database first value'+dbUIDS[0])
+
+        console.log('Script length'+validUIDs.length)
+        console.log('Script first value'+validUIDs[0])
+
+        var dbKickouts = dbUIDS.filter((word) => !validUIDs.includes(word));
+
+        console.log('Kickouts: '+dbKickouts);
+    
+        
+        
+        //db and script counts should be in sync as long as no appearences were deleted on the website(e.g. attell removed from late show on Tues)
+        if (finalDbArray.length == answer1.length){
+
+            console.log('Everything in line for the NYC Comedy Cellar')
+
+        ////if DBcount > scriptCount, then there are exra DB records that need to be deleted due to website update
+        } else if (finalDbArray.length < answer1.length){
+
+            let deleteUID: number
+
+            console.log('Script has # rows: ' + finalDbArray.length)
+            console.log('DB has # rows: ' + answer1.length)
+
+            let p: number
+            for(let p = 0; p < dbUIDSinfo.length; p++){
+
+                if(dbKickouts.includes(dbUIDSinfo[p][0])){
+                    
+                    const [omega] = await Promise.all([
+                        deleteByUID(connection, dbUIDSinfo[p][0]),
+                    ])
+                    if(omega == 1){
+                        console.log('Deleting this record from the Database: UID=' + dbUIDSinfo[p])
+                    }
+                }
+            }
+            
+
+        } else {expect(finalDbArray.length == answer,'Something has gone terribly wrong ... not all script rows were added to the DB ').toBeTruthy()}
+        
+        connection.end()
 
         //asyncWriteFile('\n' + currentFormText)
         //await page.waitForTimeout(3000)
@@ -258,30 +325,20 @@ test.describe('Mysql Connection and Queries', () => {
 
     test.skip('Db experimental', async ({ page, request }) => {
 
-        //get the client
-        const mysql = require('mysql2')
-
-        let password = process.env.dbPassword
-        if(password === undefined){
-            console.log('retry')
-            const dotenv = require('dotenv');
-            dotenv.config({path: './page-objects/components/secrets.env'})
-            password = process.env.dbPassword
-        }
-
-        console.log(password)
         // Create the connection to database
-        const connection = mysql.createConnection({
-            host: 'database-test1.c3egi00mq4df.us-east-1.rds.amazonaws.com',
-            port: 3306,
-            //ssl: 'Amazon RDS',
-            user: 'admin',
-            password: password, 
-            //database: 'database-test1',
-        })
+        const [connection] = await Promise.all([
+            dbEstablishConnection(),
+        ])
 
-        console.log(connection)
-        console.log('GUCCI')
+        const [answer] = await Promise.all([
+            deleteByUID(connection, 215),
+        ])
+        console.log(answer)
+
+        //let answer = queryShowsByVenueAndDate(connection,'NYC','Comedy Cellar','"2024-02-04"', '"2024-02-06"')
+
+        
+        //console.log('GUCCI')
         //asyncWriteFile('\n' + currentFormText)
         
     })

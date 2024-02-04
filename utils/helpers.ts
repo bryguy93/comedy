@@ -3,6 +3,7 @@ import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 import axios from "axios";
 import mysql from 'mysql2/promise'
+//import { start } from "repl";
 
 
 export async function postRequest(url: string,header: any, data: string): Promise<string> {
@@ -21,6 +22,56 @@ export async function postRequest(url: string,header: any, data: string): Promis
   } catch (error) {
       console.log(error)
       throw new Error('Cellar Helper Request Failed')
+  }
+}
+
+export async function deleteByUID(connection: any, UID: number): Promise<any> {
+    
+  try {
+
+    const [rows, fields] = await connection.execute(
+        //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '" AND Comedians.Bio = "'+ comediansBio + '")'  
+        
+        //'SELECT Shows.UID FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date BETWEEN ' + startDate + ' AND ' + endDate
+        'DELETE FROM `Shows` WHERE `UID` = "' + UID.toString() + '"'
+      );    
+    
+    
+    
+    let result = Object.values(JSON.parse(JSON.stringify(rows)));
+    //console.log('Test METHOD: ' + result[0])
+
+    if(result[1] != 1){ throw new Error('Failed to delete UID '+ UID + ' in the DB')}
+    return result[1]
+    //return rows
+
+    
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function queryShowsByVenueAndDate(connection: any, showCity: string, showVenue: string, startDate: string, endDate: string): Promise<any> {
+    
+  try {
+
+    const [rows, fields] = await connection.execute(
+        //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '" AND Comedians.Bio = "'+ comediansBio + '")'  
+        
+        //'SELECT Shows.UID FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date BETWEEN ' + startDate + ' AND ' + endDate
+        'SELECT * FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date BETWEEN ' + startDate + ' AND ' + endDate
+      );    
+    
+    //console.log(rows.counts())
+    
+    //let result = Object.values(JSON.parse(JSON.stringify(rows)));
+    //console.log('Test METHOD: ' + result[0])
+
+    //return result
+    return rows
+    
+  } catch (err) {
+    console.log(err);
   }
 }
 
@@ -45,36 +96,27 @@ export async function dbEstablishConnection(): Promise<any> {
 
 }
 
-export async function dbIfRecordsExistOptimize(connection: any, showCity: string, showVenue: string, showDate: string): Promise<any> {
-    
-  try {
-
-    const [rows, fields] = await connection.execute(
-        
-        'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ')'  
-      );    
-    
-    let result = Object.values(JSON.parse(JSON.stringify(rows[0])))[0];
-    
-    return result
-    
-  } catch (err) {
-    console.log(err);
-  }
-}
-
 export async function dbIfRecordsExist(connection: any, showCity: string, showVenue: string, showDate: string, showTime: string, comediansName: string, comediansBio: string): Promise<any> {
     
   try {
 
     const [rows, fields] = await connection.execute(
         //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '" AND Comedians.Bio = "'+ comediansBio + '")'  
-        'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '")'  
+        
+        //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '")'  
+        'SELECT Shows.UID FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '"'  
       );    
     
-    let result = Object.values(JSON.parse(JSON.stringify(rows[0])))[0];
     
+    //let temp = JSON.stringify(rows[0]
+    try{
+    let result = Object.values(JSON.parse(JSON.stringify(rows[0])))[0];
+    //console.log(rows)
+    //console.log(result)
     return result
+    } catch (err) {
+      return 0
+    }
     
   } catch (err) {
     console.log(err);
@@ -100,7 +142,7 @@ export async function dbAddShow(connection: any, showCity: string, showVenue: st
 
     let result1 = Object.values(JSON.parse(JSON.stringify(rows1)))
 
-    return 'Insert UID for Shows is: ' + result1[2]
+    return result1[2]
         
   } catch (err) {
     console.log(err);
