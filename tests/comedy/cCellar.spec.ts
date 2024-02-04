@@ -1,11 +1,9 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { asyncWriteFile, postRequest, formatDate } from '../../utils/helpers'
+import { asyncWriteFile, postRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbIfRecordsExistOptimize, dbAddShow } from '../../utils/helpers'
 import axios from "axios";
 import mysql from 'mysql2/promise'
-import { connect } from 'http2';
-import { Connection } from 'mysql2/typings/mysql/lib/Connection';
 
 test.describe('COMEDY CELLAR', () => {
 
@@ -25,6 +23,9 @@ test.describe('COMEDY CELLAR', () => {
         let dayIndex: Date = new Date() //current index in day string
         let dateFormatted = formatDate(dayIndex)
         let data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
+        const [connection] = await Promise.all([
+            dbEstablishConnection(),
+        ])
 
         while ( index != targetDays){ // change this to iterate for 30 days
 
@@ -150,22 +151,69 @@ test.describe('COMEDY CELLAR', () => {
             else{
                 noComedians = true
             }
-
-            //SQL POINT
+            
             if(noComedians == false){
-                let b: number
-                console.log(dateFormatted)
-                //console.log(finalComedianArray)
-                console.log(finalBioArray)
-                for(b = 0; b < finalTimeArray.length; b ++){
-                    //console.log(finalTimeArray[b] + ': '+ finalLineupArray[b])
+
+                let f: number
+                for(f = 0; f < finalTimeArray.length; f ++){
+                    var timeSlot = finalComedianArray[f]
+                    var bioSlot = finalBioArray[f]
+                    
+                    let g = 0
+                    for(g = 0; g < timeSlot.length; g ++){
+                        console.log('Comedy Cellar |' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                        //SQL CHECKS IF RECORD EXISTS
+                        let showCity: string = 'NYC'
+                        let showVenue: string = 'Comedy Cellar'
+                        let showDate: string = dateFormatted
+                        let showTime: string = finalTimeArray[f]
+                        let comediansName: string = timeSlot[g]
+                        let comediansBio: string = bioSlot[g]
+
+                        const [answer] = await Promise.all([
+                            dbIfRecordsExistOptimize(connection, showCity, showVenue, showDate),
+                        ])
+                        
+                        if(answer == 0){
+                            const [answer] = await Promise.all([
+                                dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+                            ])
+                            console.log(answer)
+                        } else{
+                          
+                            const [answer] = await Promise.all([
+                                dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+                            ])
+                            if(answer == 0){
+                                const [answer] = await Promise.all([
+                                    dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+                                ])
+                                console.log(answer)
+                            } else{console.log('Nothing to add - exists in DB already')}
+
+                        //OPTIMIZE - check for new shows/days to add to db
+                            // If venue + day does NOT exist(0) -> Add
+                               // else if  for entire  statement- record does NOT exist(0) -> Add
+                                  // else then record must exist and there's nothing to do
+
+                        // Start work on making BIO strings SQL statement friendly for the insert statements
+                        
+                        //PHASE II maybe?
+                        // to Wrap, try and refactor to load up all inserts and send in one bulk query for efficiency
+                            // the check for DB values vs script will be faster too because you can do everything script side. 
+
+                        }
+
+                        
+
+                        //OPTIMIZE Check for any changes or entire show deletions to existing records in the db and remove from db
+                            // REVERSE check if DB values for current script record for if dbValue is missing from script record -> purge Db bc record is no longe valid
+                                //if DB value does match with current script value, then there's nothing to do
+                            
+
+                    }
                 }
 
-            // END SQL POINT - records added on a day basis, by timeslot(show)
-
-
-
-            
             } else{console.log('No Comedians added yet for ' + dateFormatted)}
 
             // FEB 3 a/o Feb 3 ASSERTIONS
@@ -241,41 +289,23 @@ test.describe('Mysql Connection and Queries', () => {
     test.skip('Db Connection v1', async ({ page, request }) => {
 
         //get the client
-        let examnple: string = 'oof'
+        //let connection = dbEstablishConnection()
+        let showCity: string = 'XCity'
+        let showVenue: string = 'XVenue'
+        let showDate: string = '2024-02-03'
+        let showTime: string = '11:00 PM'
+        let comediansName: string = 'XName'
+        let comediansBio: string = 'XBio'
 
-        let host = process.env.dbHost // NEED TO ADD TO CI/CD SECRETS
-        let password = process.env.dbPassword // NEED TO ADD TO CI/CD SECRETS
-        if(password === undefined){
-            const dotenv = require('dotenv');
-            dotenv.config({path: './page-objects/components/secrets.env'})
-            password = process.env.dbPassword
-        }
-        if(host === undefined){
-            const dotenv = require('dotenv');
-            dotenv.config({path: './page-objects/components/secrets.env'})
-            host = process.env.dbHost
-        }
-        
-        try {
-            const connection = await mysql.createConnection({
-                host: host,
-                port: 3306,
-                user: 'admin',
-                password: password, 
-                database: 'pocDb'
-              
-            });
 
-            const [rows, fields] = await connection.execute(
-                'DELETE FROM `Shows` WHERE `UID`  = 2'  
-              );    
+        const [connection] = await Promise.all([
+            dbEstablishConnection(),
+        ])
 
-            console.log(rows)
-            console.log(fields)
-            
-          } catch (err) {
-            console.log(err);
-          }
+        const [answer] = await Promise.all([
+            dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+        ])
+        console.log(answer)
 
         //console.log(connection)
         //asyncWriteFile('\n' + currentFormText)
