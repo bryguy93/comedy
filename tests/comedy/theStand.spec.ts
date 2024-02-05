@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { postRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID } from '../../utils/helpers'
+import { getRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID } from '../../utils/helpers'
+import { error } from 'console'
 
 
 
@@ -41,12 +42,10 @@ test.describe('THE STAND', () => {
             let finalBioArray: string[][]=[]
 
             const [answer] = await Promise.all([
-                postRequest(url, headers, data),
+                getRequest(url, headers),
             ])
-
-            console.log(answer)
-
-            if(answer.toString().indexOf('No Comedians added yet!') == -1){ // ON EACH IN SCOPE DATES
+            
+            if(answer.toString().indexOf('Sorry no shows are currently scheduled for this date!') == -1){ // ON EACH IN SCOPE DATES
 
                 // Now we're iterating on each inscope date's raw HTML as String
                 //Parse string for showtime and then Comedian and loop
@@ -57,12 +56,12 @@ test.describe('THE STAND', () => {
 
                 while (i != -1){ // GRAB ALL THE TIMES substring index DATA FOR CURRENT IN SCOPE DATE
                     
-                    tempTimeIndex = answer.indexOf('<h2><span class=\\"bold\\">',i)
+                    tempTimeIndex = answer.indexOf('</span> | <span class=\\"show_date\\">',i)
                     
                     if(tempTimeIndex > 0){
                         i = tempTimeIndex + 2
-                        tempIndexArrayStart.push(tempTimeIndex + 25)
-                        tempTimeIndex = answer.indexOf('<span class=\\"hide-mobile\\">',i)
+                        tempIndexArrayStart.push(tempTimeIndex + 38)
+                        tempTimeIndex = answer.indexOf('<span> <span class=\\"list-show',i)
                         tempIndexArrayEnd.push(tempTimeIndex)
 
                     } else{
@@ -73,31 +72,50 @@ test.describe('THE STAND', () => {
                 //Leverage start and end indexes to Generate final timeslot strings array
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
                     finalTimeArray.push(answer.substring(tempIndexArrayStart[i],tempIndexArrayEnd[i]))
+                    console.log('TIMESLOTS: ' + finalTimeArray[i])
                 }
 
+
+                //console.log(tempIndexArrayStart)
+                //console.log(tempIndexArrayEnd)
+                //console.log(finalTimeArray)
                 // HERE WE HAVE ALL TIME SLOTS DATA in tempIndexArrayStart and End for the current day
                 //Get html substring per each time slot's starting and ending index (e.g. 1st iteration html starting index is starting index for the time to starting index of time + 1, and so on)
                 let substringArrayStart: number[]=[]
                 let substringArrayEnd: number[]=[]
                 let tempSub = tempIndexArrayStart.length - 1
+                
+                
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
                     
                     substringArrayStart.push(tempIndexArrayEnd[i])
+                    //console.log(substringArrayStart[i]-8)
+                    //console.log(substringArrayStart[i])
+                    //console.log(answer.substring(substringArrayStart[i] - 8,substringArrayStart[i]))
                         
                     if( i == tempSub ){
                         substringArrayEnd.push(answer.length)
                     } else{
                         substringArrayEnd.push(tempIndexArrayStart[i+1])
                     }
-
                 }
+
+                console.log('HTML substring')
+                console.log('ARRAY START: ')
+                console.log(substringArrayStart)
+                console.log('ARRAY END: ')
+                console.log(substringArrayEnd)
                 
                 //Leverage start indexes to Generate final raw HTML strings array
                 let rawHtmlByTime: string[]=[]
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
+                    //console.log('ARRAY START INDEX: ' + substringArrayStart[i])
                     rawHtmlByTime.push(answer.substring(substringArrayStart[i],substringArrayEnd[i]))
+                    console.log('/////////////////////////////////////////////////////')
+                    //console.log('RAW HTML: '+ rawHtmlByTime[2])
                 }
-        
+                
+                //iterate through timeslots/broken up html index
                 for(i = 0; i < finalTimeArray.length; i ++){
                     //iterate through all html strings, extract name and bio
                     let comedianNameArrayStart: number[]=[]
@@ -109,24 +127,31 @@ test.describe('THE STAND', () => {
                     let a: number = 0
                     let tempIndex: number = 0
 
-                    //parse for indexes of comedian name and bio ***Can add Website here if exists***
+                    //on current timeslot html, parse through whole string and save each comedian name
                     while (a != -1){
                         
-                        tempIndex = rawHtmlByTime[i].toString().indexOf('<p><span class=\\"name\\">',a)//get comedian name starting index
+                        //****************** NEW CODE */
+        //              let newTemp = rawHtmlByTime[i].toString().indexOf('\\"img-fluid\\">',a)
+                        // ----->\
+                        tempIndex = rawHtmlByTime[i].toString().indexOf('\\"img-fluid\\">',a)
+
+                        //let charRef = String.raw`\d`[0]
+                        while(rawHtmlByTime[i].charAt(tempIndex + 14) == '\\'){
+                            tempIndex = tempIndex + 15
+                            tempIndex = rawHtmlByTime[i].toString().indexOf('\\"img-fluid\\">',tempIndex)
+                        }
+                        //console.log(rawHtmlByTime[i].substring(newTemp,newTemp + 30))
+                        //console.log('The char after nameStartIndex is: ' + rawHtmlByTime[i].charAt(tempIndex + 14) + rawHtmlByTime[i].charAt(tempIndex + 15) + rawHtmlByTime[i].charAt(tempIndex + 16))
+                        //console.log('The char after nameStartIndex is: ' + rawHtmlByTime[i].charAt(newTemp + 14))
+                        //console.log('If the ^ char is < then the below v message should say skip')
 
                         if(tempIndex > 0){
                             a = tempIndex + 2
-                            comedianNameArrayStart.push(tempIndex + 24)
-                            tempIndex = rawHtmlByTime[i].toString().indexOf('</span>',a) // get comedian name ending index
+                            comedianNameArrayStart.push(tempIndex + 14)
+                            tempIndex = rawHtmlByTime[i].toString().indexOf('</div>',a) // get comedian name ending index
                             comedianNameArrayEnd.push(tempIndex)
-                            
                             comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO starting index
-
-                            
-                            a = tempIndex + 8  
-                            tempIndex = rawHtmlByTime[i].toString().indexOf('</p>',a) //Get comedian BIO ending index
-                            comedianBioArrayEnd.push(tempIndex)
-                            a = tempIndex // <- maybe
+                            a = tempIndex + 10
                             
                         } else{
                             a = tempIndex
@@ -140,17 +165,24 @@ test.describe('THE STAND', () => {
                         
                         tempString = tempString + rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b]) // comedian comma delimited list
                         tempComedianArray.push(rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b])) // new 2d comedian name array
+                        //console.log(rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b]))
+                        //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                         tempchar = rawHtmlByTime[i].toString().substring(comedianBioArrayStart[b],comedianBioArrayEnd[b])
                         tempBioArray.push(tempchar)
-                        
+                        //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
+
                         if(b != comedianNameArrayEnd.length - 1){
                             tempString = tempString + ','
                         }
                     }
 
-                    finalLineupArray.push(tempString)
-                    finalComedianArray.push(tempComedianArray)
+                    finalLineupArray.push(tempString) // single comma delimited string per time in an array(1d)
+                    //console.log(finalLineupArray) 
+                    finalComedianArray.push(tempComedianArray) // array of comedians per time in an array(2d)
+                    //console.log(finalComedianArray)
+                    //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                     finalBioArray.push(tempBioArray)
+                    //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
 
                 }    
             } // INSIDE IN SCOPE DAY
@@ -163,36 +195,49 @@ test.describe('THE STAND', () => {
                 let f: number
                 for(f = 0; f < finalTimeArray.length; f ++){
                     var timeSlot = finalComedianArray[f]
+                    //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                     var bioSlot = finalBioArray[f]
+                    //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                     let g = 0
                     
                     for(g = 0; g < timeSlot.length; g ++){
 
                         //SQL CHECKS IF RECORD EXISTS
                         let showCity: string = 'NYC'
-                        let showVenue: string = 'Comedy Cellar'
+                        let showVenue: string = 'The Stand'
                         let showDate: string = dateFormatted
                         let showTime: string = finalTimeArray[f]
                         let comediansName: string = timeSlot[g]
+                        //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                         let comediansBio: string = bioSlot[g]
+                        //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
 
+                        console.log(showCity, showVenue, showDate, showTime, comediansName)
                         const [answer] = await Promise.all([
+                            //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                             dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+                            //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                         ])
                         
                         if(answer > 0){
                             validUIDs.push(answer)
-                            finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
-                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + 'NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                            //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
+                            finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
+                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + 'NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                            //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                         } else{
                               
                             const [answer] = await Promise.all([
+                                //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                                 dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+                                //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                             ])
                             
                             validUIDs.push(answer)
-                            finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
-                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                            //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
+                            finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
+                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                            //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
 
                         //PHASE II maybe?
                         // to Wrap, try and refactor to load up all inserts and send in one bulk query for efficiency
@@ -208,7 +253,7 @@ test.describe('THE STAND', () => {
             if(index != targetDays){
                 dayIndex.setDate(dayIndex.getDate() + 1)
                 dateFormatted = formatDate(dayIndex)
-                data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
+                //data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
             }
         }//iterate through all days
         
@@ -216,7 +261,7 @@ test.describe('THE STAND', () => {
         console.log('Script range: '+ today.replace(/['"]+/g, '') + ' -> ' + formatDate(dayIndex).replace(/['"]+/g, ''))
 
         const [answer] = await Promise.all([
-            queryShowsByVenueAndDate(connection,'NYC','Comedy Cellar',today, formatDate(dayIndex)),
+            queryShowsByVenueAndDate(connection,'NYC','The Stand',today, formatDate(dayIndex)),
         ])
         
         let answer1 = Object.values(JSON.parse(JSON.stringify(answer)));
@@ -226,9 +271,12 @@ test.describe('THE STAND', () => {
         let r: number
         for(let r = 0; r < answer1.length; r++){
 
-            tempString = Number(Object.values(JSON.parse(JSON.stringify(answer[r])))[0])            
+            tempString = Number(Object.values(JSON.parse(JSON.stringify(answer[r])))[0])       
+            //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */     
             dbUIDSinfo.push([tempString, Object.values(JSON.parse(JSON.stringify(answer[r])))[1], Object.values(JSON.parse(JSON.stringify(answer[r])))[2], Object.values(JSON.parse(JSON.stringify(answer[r])))[3], Object.values(JSON.parse(JSON.stringify(answer[r])))[4], Object.values(JSON.parse(JSON.stringify(answer[r])))[7]])
+            //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
             dbUIDS.push(tempString)
+            
 
         }
 
@@ -244,7 +292,7 @@ test.describe('THE STAND', () => {
         //db and script counts should be in sync as long as no appearences were deleted on the website(e.g. attell removed from late show on Tues)
         if (finalDbArray.length == answer1.length){
 
-            console.log('Everything in line for the NYC Comedy Cellar')
+            console.log('Everything in line for the NYC The Stand')
 
         ////if DBcount > scriptCount, then there are exra DB records that need to be deleted due to website update
         } else if (finalDbArray.length < answer1.length){

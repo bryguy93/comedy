@@ -75,6 +75,7 @@ test.describe('COMEDY CELLAR', () => {
                 let substringArrayStart: number[]=[]
                 let substringArrayEnd: number[]=[]
                 let tempSub = tempIndexArrayStart.length - 1
+                
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
                     
                     substringArrayStart.push(tempIndexArrayEnd[i])

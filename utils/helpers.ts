@@ -25,26 +25,24 @@ export async function postRequest(url: string,header: any, data: string): Promis
   }
 }
 
-export async function getRequest(url: string,header: any): Promise<any> {
+export async function getRequest(url: string,header: any): Promise<string> {
     
   try {
     //let tempp = 'client_credentials'  
-    let response = await axios.post(url, header )
-    response = response[0].outerHTML
-    //let temp =  JSON.stringify(response.data['show'])
+    let response = await axios.get(url, header )
+    let temp =  JSON.stringify(response.data)
     //temp = temp.substring(1).slice(0,-1)
-    
-    
-    
     //let temp = response.data
-    return response
+    return temp
   } catch (error) {
       console.log(error)
-      throw new Error('API Post Request Failed')
+      throw new Error('API Get Request Failed')
   }
 }
 
 export async function deleteByUID(connection: any, UID: number): Promise<any> {
+
+  throw new Error("TEMP")
     
   try {
 
@@ -72,6 +70,7 @@ export async function deleteByUID(connection: any, UID: number): Promise<any> {
 
 export async function queryShowsByVenueAndDate(connection: any, showCity: string, showVenue: string, startDate: string, endDate: string): Promise<any> {
     
+  throw new Error("TEMP")
   try {
 
     const [rows, fields] = await connection.execute(
@@ -117,6 +116,7 @@ export async function dbEstablishConnection(): Promise<any> {
 
 export async function dbIfRecordsExist(connection: any, showCity: string, showVenue: string, showDate: string, showTime: string, comediansName: string, comediansBio: string): Promise<any> {
     
+  throw new Error("TEMP")
   try {
 
     const [rows, fields] = await connection.execute(
@@ -144,6 +144,7 @@ export async function dbIfRecordsExist(connection: any, showCity: string, showVe
 
 export async function dbAddShow(connection: any, showCity: string, showVenue: string, showDate: string, showTime: string, comediansName: string, comediansBio: string): Promise<any> {
     
+  throw new Error("TEMP")
   try {
 
     let insertShow = 'INSERT INTO `Shows` SET `City` = "'+ showCity +'", `Venue` = "'+ showVenue +'", `Date` = ' + showDate + ', `Time` = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' ) );'
