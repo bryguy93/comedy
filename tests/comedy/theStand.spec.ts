@@ -26,7 +26,7 @@ test.describe('THE STAND', () => {
         let dateFormatted = formatDate(dayIndex)
         let data = ''
 
-        url = url + '/' + dateFormatted
+        url = url + '/' + dateFormatted.replace(/"/g,'')
         console.log("URL USED: " + url)
         const [connection] = await Promise.all([
             dbEstablishConnection(),

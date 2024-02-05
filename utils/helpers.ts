@@ -21,7 +21,26 @@ export async function postRequest(url: string,header: any, data: string): Promis
     return temp
   } catch (error) {
       console.log(error)
-      throw new Error('Cellar Helper Request Failed')
+      throw new Error('API Post Request Failed')
+  }
+}
+
+export async function getRequest(url: string,header: any): Promise<any> {
+    
+  try {
+    //let tempp = 'client_credentials'  
+    let response = await axios.post(url, header )
+    response = response[0].outerHTML
+    //let temp =  JSON.stringify(response.data['show'])
+    //temp = temp.substring(1).slice(0,-1)
+    
+    
+    
+    //let temp = response.data
+    return response
+  } catch (error) {
+      console.log(error)
+      throw new Error('API Post Request Failed')
   }
 }
 
