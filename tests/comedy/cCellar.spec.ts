@@ -1,15 +1,15 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { asyncWriteFile, postRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID } from '../../utils/helpers'
-import axios from "axios";
+import { postRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID } from '../../utils/helpers'
+
 
 
 test.describe('COMEDY CELLAR', () => {
 
     let navigation: Navigation
 
-    test('On the minute checks', async ({ page, request }) => {
+    test('On the hour checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
         
@@ -165,7 +165,7 @@ test.describe('COMEDY CELLAR', () => {
                     for(g = 0; g < timeSlot.length; g ++){
                         
                         //console.log('NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
-                        console.log('NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g])
+
                         //SQL CHECKS IF RECORD EXISTS
                         let showCity: string = 'NYC'
                         let showVenue: string = 'Comedy Cellar'
@@ -181,8 +181,7 @@ test.describe('COMEDY CELLAR', () => {
                         if(answer > 0){
                             validUIDs.push(answer)
                             finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName])
-                            console.log(finalDbArray.length)
-                            console.log('Nothing to add - exists in DB')
+                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + 'NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g])
                         } else{
                               
                             const [answer] = await Promise.all([
@@ -191,13 +190,7 @@ test.describe('COMEDY CELLAR', () => {
                             console.log(answer)
                             validUIDs.push(answer)
                             finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName])
-                            console.log('Adding to DB')
-                        
-
-                        //OPTIMIZE - check for new shows/days to add to db
-                            // If venue + day does NOT exist(0) -> Add
-                               // else if  for entire  statement- record does NOT exist(0) -> Add
-                                  // else then record must exist and there's nothing to do
+                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g])
 
                         // Start work on making BIO strings SQL statement friendly for the insert statements
                         
@@ -205,11 +198,7 @@ test.describe('COMEDY CELLAR', () => {
                         // to Wrap, try and refactor to load up all inserts and send in one bulk query for efficiency
                             // the check for DB values vs script will be faster too because you can do everything script side.
                             
-                        
-
                         }
-                            
-
                     }
                 }
 
@@ -244,17 +233,13 @@ test.describe('COMEDY CELLAR', () => {
         }//iterate through all days
         
         let today: string = formatDate(new Date()) //current index in day string
-        
-        console.log(today)
-        console.log(formatDate(dayIndex))
+        console.log('Script range: '+ today.replace(/['"]+/g, '') + ' -> ' + formatDate(dayIndex).replace(/['"]+/g, ''))
 
         const [answer] = await Promise.all([
             queryShowsByVenueAndDate(connection,'NYC','Comedy Cellar',today, formatDate(dayIndex)),
         ])
         
         let answer1 = Object.values(JSON.parse(JSON.stringify(answer)));
-        //console.log('TEST; '+ Object.values(JSON.parse(JSON.stringify(answer[0])))[0])
-
         let tempString: any
         let dbUIDS: any[] = []
         let dbUIDSinfo: any[][] = []
@@ -267,18 +252,15 @@ test.describe('COMEDY CELLAR', () => {
 
         }
 
-        console.log('Database length'+dbUIDS.length)
-        console.log('Database first value'+dbUIDS[0])
-
-        console.log('Script length'+validUIDs.length)
-        console.log('Script first value'+validUIDs[0])
-
+        console.log('Database size: '+dbUIDS.length)
+        console.log('Script size: '+validUIDs.length)
+        
         var dbKickouts = dbUIDS.filter((word) => !validUIDs.includes(word));
 
-        console.log('Kickouts: '+dbKickouts);
+        if (dbKickouts.length > 0){
+        console.log('Kickouts: '+dbKickouts)
+        } else { console.log('No Kickouts')}
     
-        
-        
         //db and script counts should be in sync as long as no appearences were deleted on the website(e.g. attell removed from late show on Tues)
         if (finalDbArray.length == answer1.length){
 
@@ -286,8 +268,6 @@ test.describe('COMEDY CELLAR', () => {
 
         ////if DBcount > scriptCount, then there are exra DB records that need to be deleted due to website update
         } else if (finalDbArray.length < answer1.length){
-
-            let deleteUID: number
 
             console.log('Script has # rows: ' + finalDbArray.length)
             console.log('DB has # rows: ' + answer1.length)
@@ -306,11 +286,9 @@ test.describe('COMEDY CELLAR', () => {
                 }
             }
             
-
         } else {expect(finalDbArray.length == answer,'Something has gone terribly wrong ... not all script rows were added to the DB ').toBeTruthy()}
         
         connection.end()
-
         //asyncWriteFile('\n' + currentFormText)
         //await page.waitForTimeout(3000)
         
@@ -318,7 +296,7 @@ test.describe('COMEDY CELLAR', () => {
 })
 
 
-test.describe('Mysql Connection and Queries', () => {
+test.describe('Mysql Connection and Query testing', () => {
 
     let hooks: Hooks
     let navigation: Navigation
@@ -365,210 +343,6 @@ test.describe('Mysql Connection and Queries', () => {
         console.log(answer)
 
         //console.log(connection)
-        //asyncWriteFile('\n' + currentFormText)
-    })
-})
-
-test.describe('KERASOTES', () => {
-
-    let hooks: Hooks
-    let navigation: Navigation
-    
-    test.beforeEach(async ({ page }) => {
-        
-        hooks = new Hooks(page)
-        await hooks.kerasotesSetup()
-        //console.log(hooks.kerasotesSetup)
-        
-    })
-
-    test.skip('On the minute checks', async ({ page, request }) => {
-        
-        navigation = new Navigation(page)
-
-        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
-            console.log('Bidness as usual')
-           }
-           else{
-                console.log('Go time')
-
-                try {
-                    //twilio creds
-                    let sid = process.env.twilioSid
-                    let apiToken = process.env.twilioApi
-                    //console.log('Twilio token: ' + apiToken)
-
-                    if(apiToken === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        apiToken = process.env.twilioApi
-                        //console.log('Twilio token: ' + apiToken)
-                    }
-
-                    if(sid === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        apiToken = process.env.twilioSid
-                    }
-
-                    const accountSid = sid
-                    const authToken = apiToken
-                    
-                    //twilio SMS
-                    const client = require("twilio")(accountSid, authToken);
-                    client.messages
-                        .create({ body: 'https://www.comedymob.com/monday-night-mob', from: "+18882966538", to: "+12019209227" })
-                            .then(message => console.log(message.sid));
-                    
-                    await page.waitForTimeout(navigation.slowmo)
-
-                    //twilio VOICE CALL
-                    const client2 = require('twilio')(accountSid, authToken);
-
-                    client2.calls
-                        .create({
-                            url: 'http://demo.twilio.com/docs/voice.xml',
-                            to: '+12019209227',
-                            from: '+18882966538'
-                        })
-                        .then(call => console.log(call.sid));
-
-                    await page.waitForTimeout(navigation.slowmo)
-                    
-                  } catch (error) {
-                        console.log(error)
-                        throw new Error('Twitter request failed')
-                    }
-
-                
-                //pushover push notifications
-                try {
-                    let url = 'https://api.pushover.net/1/messages.json'
-                    let token = process.env.pushover_token
-                    let user = process.env.pushover_user
-
-                    //console.log('Pushover Token: ' + token)
-
-                    if(token === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        token = process.env.pushoverToken
-                        //console.log('Pushover Token: ' + token)
-                    }
-                    
-                    if(user === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        user = process.env.pushoverUser
-                        asyncWriteFile('\n' + user)
-                    }
-
-                    const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/monday-night-mob' } )
-                    await page.waitForTimeout(navigation.slowmo)
-                    
-                  } catch (error) {
-                        console.log(error)
-                        throw new Error('Pushover API Request failed')
-                    }
-           }
-        
-        await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
-        //const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
-        //asyncWriteFile('\n' + currentFormText)
-    })
-
-    test.skip('Base setup: ', async ({ page, request }) => {
-
-        navigation = new Navigation(page)
-
-        if (await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).isVisible()) {
-            console.log('Bidness as usual')
-           }
-           else{
-                console.log('Go time')
-
-                try {
-                    //twilio creds
-                    let sid = process.env.twilioSid
-                    let apiToken = process.env.twilioApi
-                    //console.log('Twilio token: ' + apiToken)
-
-                    if(apiToken === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        apiToken = process.env.twilioApi
-                        //console.log('Twilio token: ' + apiToken)
-                    }
-
-                    if(sid === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        apiToken = process.env.twilioSid
-                    }
-
-                    const accountSid = sid
-                    const authToken = apiToken
-                    
-                    //twilio SMS
-                    const client = require("twilio")(accountSid, authToken);
-                    client.messages
-                        .create({ body: 'https://www.comedymob.com/monday-night-mob', from: "+18882966538", to: "+12019209227" })
-                            .then(message => console.log(message.sid));
-                    
-                    await page.waitForTimeout(navigation.slowmo)
-
-                    //twilio VOICE CALL
-                    const client2 = require('twilio')(accountSid, authToken);
-
-                    client2.calls
-                        .create({
-                            url: 'http://demo.twilio.com/docs/voice.xml',
-                            to: '+12019209227',
-                            from: '+18882966538'
-                        })
-                        .then(call => console.log(call.sid));
-
-                    await page.waitForTimeout(navigation.slowmo)
-                    
-                  } catch (error) {
-                        console.log(error)
-                        throw new Error('Twitter request failed')
-                    }
-
-                
-                //pushover push notifications
-                try {
-                    let url = 'https://api.pushover.net/1/messages.json'
-                    let token = process.env.pushover_token
-                    let user = process.env.pushover_user
-
-                    //console.log('Pushover Token: ' + token)
-
-                    if(token === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        token = process.env.pushoverToken
-                        //console.log('Pushover Token: ' + token)
-                    }
-                    
-                    if(user === undefined){
-                        const dotenv = require('dotenv');
-                        dotenv.config()
-                        user = process.env.pushoverUser
-                        asyncWriteFile('\n' + user)
-                    }
-
-                    const response = await axios.post(url, {'token': token,'user': user, 'message': 'https://www.comedymob.com/monday-night-mob' } )
-                    await page.waitForTimeout(navigation.slowmo)
-                    
-                  } catch (error) {
-                        console.log(error)
-                        throw new Error('Pushover API Request failed')
-                    }
-           }
-        
-        await expect.soft(page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' )).toBeVisible()
-        //const currentFormText = await page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').getByText('is no longer' ).innerText()
         //asyncWriteFile('\n' + currentFormText)
     })
 })

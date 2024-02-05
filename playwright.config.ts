@@ -14,7 +14,7 @@ const config: PlaywrightTestConfig = {
     // "tests/addProductToCart.test.ts",
     // "tests/flipkart.test.ts"
   ],
-  timeout: 1 * 30 * 1000,
+  timeout: 1 * 300 * 1000,
   expect: {
     timeout: 5000
   },
