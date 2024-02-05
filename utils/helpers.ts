@@ -42,7 +42,6 @@ export async function getRequest(url: string,header: any): Promise<string> {
 
 export async function deleteByUID(connection: any, UID: number): Promise<any> {
 
-  throw new Error("TEMP")
     
   try {
 
@@ -116,7 +115,6 @@ export async function dbEstablishConnection(): Promise<any> {
 
 export async function dbIfRecordsExist(connection: any, showCity: string, showVenue: string, showDate: string, showTime: string, comediansName: string, comediansBio: string): Promise<any> {
     
-  throw new Error("TEMP")
   try {
 
     const [rows, fields] = await connection.execute(
@@ -144,7 +142,6 @@ export async function dbIfRecordsExist(connection: any, showCity: string, showVe
 
 export async function dbAddShow(connection: any, showCity: string, showVenue: string, showDate: string, showTime: string, comediansName: string, comediansBio: string): Promise<any> {
     
-  throw new Error("TEMP")
   try {
 
     let insertShow = 'INSERT INTO `Shows` SET `City` = "'+ showCity +'", `Venue` = "'+ showVenue +'", `Date` = ' + showDate + ', `Time` = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' ) );'

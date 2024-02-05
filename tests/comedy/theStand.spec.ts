@@ -212,7 +212,7 @@ test.describe('THE STAND', () => {
                         let comediansBio: string = bioSlot[g]
                         //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
 
-                        console.log(showCity, showVenue, showDate, showTime, comediansName)
+                        //console.log(showCity, showVenue, showDate, showTime, comediansName)
                         const [answer] = await Promise.all([
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                             dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
@@ -222,21 +222,21 @@ test.describe('THE STAND', () => {
                         if(answer > 0){
                             validUIDs.push(answer)
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
-                            finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
-                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + 'NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                            finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName]) // add comedianBio here
+                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + 'NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g]) // add bioSlot[g]
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                         } else{
                               
                             const [answer] = await Promise.all([
                                 //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
-                                dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+                                dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, 'PLACEHOLDER'), // add comedianBio here
                                 //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                             ])
                             
                             validUIDs.push(answer)
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
-                            finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
-                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                            finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName]) // add comedianBio here
+                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g]) // add bioSlot[g]
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
 
                         //PHASE II maybe?
