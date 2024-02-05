@@ -18,7 +18,7 @@ test.describe('COMEDY CELLAR', () => {
         
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
-        let targetDays: number = 2
+        let targetDays: number = 3
         let finalDbArray: string[][]=[]
         let validUIDs: number[] = []
         
@@ -121,7 +121,7 @@ test.describe('COMEDY CELLAR', () => {
                             a = tempIndex + 8  
                             tempIndex = rawHtmlByTime[i].toString().indexOf('</p>',a) //Get comedian BIO ending index
                             comedianBioArrayEnd.push(tempIndex)
-                            a = tempIndex // <- maube get rid of this
+                            a = tempIndex // <- maybe
                             
                         } else{
                             a = tempIndex
@@ -132,11 +132,11 @@ test.describe('COMEDY CELLAR', () => {
                     let b: number
                     let tempchar: string = ''
                     for(b = 0; b < comedianNameArrayStart.length; b ++){
+                        
                         tempString = tempString + rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b]) // comedian comma delimited list
                         tempComedianArray.push(rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b])) // new 2d comedian name array
                         tempchar = rawHtmlByTime[i].toString().substring(comedianBioArrayStart[b],comedianBioArrayEnd[b])
-                        tempBioArray.push(tempchar.replace(/\\/g, '')) // new 2d comedian bio array AND REMOVE BACKSLASHES(LEFTOVER HTML) FROM STRING
-                        //tempBioArray.push(rawHtmlByTime[i].toString().substring(comedianBioArrayStart[b],comedianBioArrayEnd[b])) // new 2d comedian bio array
+                        tempBioArray.push(tempchar)
                         
                         if(b != comedianNameArrayEnd.length - 1){
                             tempString = tempString + ','
@@ -144,7 +144,6 @@ test.describe('COMEDY CELLAR', () => {
                     }
 
                     finalLineupArray.push(tempString)
-                    
                     finalComedianArray.push(tempComedianArray)
                     finalBioArray.push(tempBioArray)
 
@@ -163,8 +162,6 @@ test.describe('COMEDY CELLAR', () => {
                     let g = 0
                     
                     for(g = 0; g < timeSlot.length; g ++){
-                        
-                        //console.log('NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
 
                         //SQL CHECKS IF RECORD EXISTS
                         let showCity: string = 'NYC'
@@ -180,20 +177,18 @@ test.describe('COMEDY CELLAR', () => {
                         
                         if(answer > 0){
                             validUIDs.push(answer)
-                            finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName])
-                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + 'NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g])
+                            finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
+                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + 'NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
                         } else{
                               
                             const [answer] = await Promise.all([
                                 dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
                             ])
-                            console.log(answer)
+                            
                             validUIDs.push(answer)
-                            finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName])
-                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g])
+                            finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
+                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
 
-                        // Start work on making BIO strings SQL statement friendly for the insert statements
-                        
                         //PHASE II maybe?
                         // to Wrap, try and refactor to load up all inserts and send in one bulk query for efficiency
                             // the check for DB values vs script will be faster too because you can do everything script side.
@@ -203,26 +198,6 @@ test.describe('COMEDY CELLAR', () => {
                 }
 
             } else{console.log('No Comedians added yet for ' + dateFormatted)}
-
-            // FEB 3 a/o Feb 3 ASSERTIONS
-            if(index == 0){
-                
-                //expect(finalTimeArray[0] == '6:00 pm','Expected 6:00 pm but got ' + finalTimeArray[0]).toBeTruthy()
-                //expect(finalTimeArray[finalTimeArray.length - 1] == '12:55 am','Expected 12:55 am but got ' + finalTimeArray[0]).toBeTruthy()
-                //expect(finalLineupArray[finalLineupArray.length - 1] == 'Simeon Goodson,H.Foley,Erin Jackson,Pat Burtscher,Alex Kumin,Tyler Fischer','Expected \'Simeon Goodson,H.Foley,Erin Jackson,Pat Burtscher,Alex Kumin,Tyler Fischer\' but got ' + finalLineupArray[0]).toBeTruthy()
-                //expect(finalLineupArray[0] == 'Rich Aronovitch,Wali Collins,Maddie Wiener,Aminah Imani,Ethan Simmons-Patterson,Chris Turner','Expected \'Rich Aronovitch,Wali Collins,Maddie Wiener,Aminah Imani,Ethan Simmons-Patterson,Chris Turner\' pm but got ' + finalLineupArray[0]).toBeTruthy()
-                
-            }
-
-            // FEB 5 a/o Feb 3 ASSERTIONS
-            if(index == 2){
-                
-                //expect(finalTimeArray[0] == '7:00 pm','Expected 7:00 pm but got ' + finalTimeArray[0]).toBeTruthy()
-                //expect(finalLineupArray[0] == 'Nick Griffin,Colin Quinn','Expected \'Nick Griffin,Colin Quinn\' pm but got ' + finalLineupArray[0]).toBeTruthy()
-                //expect(finalTimeArray[finalTimeArray.length - 1] == '11:30 pm','Expected 11:30 pm but got ' + finalTimeArray[0]).toBeTruthy()
-                //expect(finalLineupArray[finalLineupArray.length - 1] == 'Simeon Goodson,Mike Feeney,Jordan Jensen,Shafi Hossain,Caitlin Peluffo,Brian Scolaro,Dave Attell','Expected \'Simeon Goodson,Mike Feeney,Jordan Jensen,Shafi Hossain,Caitlin Peluffo,Brian Scolaro,Dave Attell\' but got ' + finalLineupArray[0]).toBeTruthy()
-                
-            }
 
             index = index + 1 // setup to iterate on the next day
             if(index != targetDays){
