@@ -63,20 +63,48 @@ test.describe('THE STAND', () => {
                 while (i != -1){ // GRAB ALL THE TIMES substring index DATA FOR CURRENT IN SCOPE DATE
                     
                     tempTimeIndex = answer.indexOf('</span> | <span class=\\"show_date\\">',i)
-                    tempRoomIndex = answer.indexOf('<span class=\\"list-show-room\\">',i)
+                    //tempRoomIndex = answer.indexOf('<span class=\\"list-show-room\\">',i)
                     
                     if(tempTimeIndex > 0){
                         i = tempTimeIndex + 2
                         tempIndexArrayStart.push(tempTimeIndex + 38)
-                        tempRoomStart.push(tempRoomIndex + 31)
+                        //tempRoomStart.push(tempRoomIndex + 31)
+                        //tempRoomStart.push(tempRoomIndex - 31)
                         tempTimeIndex = answer.indexOf('<span> <span class=\\"list-show',i)
-                        tempRoomIndex = tempRoomIndex + 30
-                        tempRoomIndex = answer.indexOf('<',tempRoomIndex)   //************** NEW CODE THAT NEEDS TO CHANGE */
+                        //tempRoomIndex = tempRoomIndex + 30
+                        //tempRoomIndex = answer.indexOf('<',tempRoomIndex)   //************** NEW CODE THAT NEEDS TO CHANGE */
                         tempIndexArrayEnd.push(tempTimeIndex)
-                        tempRoomEnd.push(tempRoomIndex) //************** NEW CODE THAT NEEDS TO CHANGE */
+
+                        //tempRoomIndex = tempRoomIndex + 200
+                        //tempRoomEnd.push(tempRoomIndex) //************** NEW CODE THAT NEEDS TO CHANGE */
 
                     } else{
                         i = tempTimeIndex
+                    }
+                } 
+
+                i = 0
+                while (i != -1){ // GRAB ALL THE TIMES substring index DATA FOR CURRENT IN SCOPE DATE
+                    
+                    //tempTimeIndex = answer.indexOf('</span> | <span class=\\"show_date\\">',i)
+                    tempRoomIndex = answer.indexOf('<span class=\\"list-show-room\\">',i)
+                    
+                    if(tempRoomIndex > 0){
+                        //i = tempTimeIndex + 2
+                        i = tempRoomIndex + 2
+                        
+                        //tempIndexArrayStart.push(tempTimeIndex + 38)
+                        tempRoomStart.push(tempRoomIndex + 31)
+                        
+                        //tempTimeIndex = answer.indexOf('<span> <span class=\\"list-show',i)
+                        tempRoomIndex = answer.indexOf('<',i)   //************** NEW CODE THAT NEEDS TO CHANGE */
+                        //tempRoomIndex = tempRoomIndex + 30
+
+                        //tempIndexArrayEnd.push(tempTimeIndex)
+                        tempRoomEnd.push(tempRoomIndex) //************** NEW CODE THAT NEEDS TO CHANGE */
+
+                    } else{
+                        i = tempRoomIndex
                     }
                 } 
                 
@@ -86,6 +114,7 @@ test.describe('THE STAND', () => {
                     console.log('TIMESLOTS: ' + finalTimeArray[i])
                 }
 
+                
                 //*************************************** */ NEW CODE
                 for(let i = 0; i < tempRoomEnd.length; i++){
                     
@@ -96,7 +125,8 @@ test.describe('THE STAND', () => {
                         console.log('ROOMS: ' + finalRoomArray[i])    
                     } else {
                         finalRoomArray.push(answer.substring(tempRoomStart[i],tempRoomEnd[i]))
-                        console.log('ROOMS: ' + finalRoomArray[i])                            
+                        console.log('ROOMS: ' + finalRoomArray[i])   
+                                              
                     }
                 }
                 //*************************************** */ NEW CODE
@@ -248,21 +278,21 @@ test.describe('THE STAND', () => {
                         if(answer > 0){
                             validUIDs.push(answer)
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
-                            finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName]) // add comedianBio here
-                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + answer + '| NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g]) // add bioSlot[g]
+                            finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName, showRoom]) // add comedianBio here***************vvvvvvv
+                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + answer + '| NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + showRoom) // add bioSlot[g]
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                         } else{
                               
                             const [answer] = await Promise.all([
                                 //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
-                                dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, 'PLACEHOLDER'), // add comedianBio here
+                                dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, showRoom), // add comedianBio here************vvvvvvvvvv
                                 //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                             ])
                             
                             validUIDs.push(answer)
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
-                            finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName]) // add comedianBio here
-                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g]) // add bioSlot[g]
+                            finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName, showRoom]) // add comedianBio here  ***************vvvvv
+                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | '+ showRoom) // add bioSlot[g]
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
 
                         //PHASE II maybe?
