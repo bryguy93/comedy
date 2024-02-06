@@ -69,7 +69,6 @@ export async function deleteByUID(connection: any, UID: number): Promise<any> {
 
 export async function queryShowsByVenueAndDate(connection: any, showCity: string, showVenue: string, startDate: string, endDate: string): Promise<any> {
     
-  throw new Error("TEMP")
   try {
 
     const [rows, fields] = await connection.execute(

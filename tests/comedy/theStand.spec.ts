@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
 import { getRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID } from '../../utils/helpers'
-import { error } from 'console'
+
 
 
 
@@ -19,7 +19,7 @@ test.describe('THE STAND', () => {
         
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
-        let targetDays: number = 1
+        let targetDays: number = 10
         let finalDbArray: string[][]=[]
         let validUIDs: number[] = []
         
@@ -100,18 +100,18 @@ test.describe('THE STAND', () => {
                     }
                 }
 
-                console.log('HTML substring')
-                console.log('ARRAY START: ')
-                console.log(substringArrayStart)
-                console.log('ARRAY END: ')
-                console.log(substringArrayEnd)
+                //console.log('HTML substring')
+                //console.log('ARRAY START: ')
+                //console.log(substringArrayStart)
+                //console.log('ARRAY END: ')
+                //console.log(substringArrayEnd)
                 
                 //Leverage start indexes to Generate final raw HTML strings array
                 let rawHtmlByTime: string[]=[]
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
                     //console.log('ARRAY START INDEX: ' + substringArrayStart[i])
                     rawHtmlByTime.push(answer.substring(substringArrayStart[i],substringArrayEnd[i]))
-                    console.log('/////////////////////////////////////////////////////')
+                    
                     //console.log('RAW HTML: '+ rawHtmlByTime[2])
                 }
                 
@@ -223,7 +223,7 @@ test.describe('THE STAND', () => {
                             validUIDs.push(answer)
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                             finalDbArray.push(['NYC', 'The Stand', dateFormatted, showTime, comediansName]) // add comedianBio here
-                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + 'NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g]) // add bioSlot[g]
+                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + answer + '| NYC | The Stand | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g]) // add bioSlot[g]
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                         } else{
                               

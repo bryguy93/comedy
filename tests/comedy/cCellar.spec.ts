@@ -75,7 +75,7 @@ test.describe('COMEDY CELLAR', () => {
                 let substringArrayStart: number[]=[]
                 let substringArrayEnd: number[]=[]
                 let tempSub = tempIndexArrayStart.length - 1
-                
+
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
                     
                     substringArrayStart.push(tempIndexArrayEnd[i])
@@ -179,7 +179,7 @@ test.describe('COMEDY CELLAR', () => {
                         if(answer > 0){
                             validUIDs.push(answer)
                             finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
-                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + 'NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + answer + '| NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
                         } else{
                               
                             const [answer] = await Promise.all([
