@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { getRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID } from '../../utils/helpers'
+import { getRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID, countShowsByVenueAndDate } from '../../utils/helpers'
 
 
 
@@ -19,7 +19,7 @@ test.describe('THE STAND', () => {
         
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
-        let targetDays: number = 30
+        let targetDays: number = 1
         let finalDbArray: string[][]=[]
         let validUIDs: number[] = []
         
@@ -294,7 +294,7 @@ test.describe('THE STAND', () => {
         //db and script counts should be in sync as long as no appearences were deleted on the website(e.g. attell removed from late show on Tues)
         if (finalDbArray.length == answer1.length){
 
-            console.log('Everything in line for the NYC The Stand')
+            console.log('Everything in line for the NYC The Stand')            
 
         ////if DBcount > scriptCount, then there are exra DB records that need to be deleted due to website update
         } else if (finalDbArray.length < answer1.length){
@@ -315,8 +315,14 @@ test.describe('THE STAND', () => {
                     }
                 }
             }
+            const [answerL] = await Promise.all([
+                countShowsByVenueAndDate(connection,'NYC','The Stand',today, formatDate(dayIndex)),
+            ])
+            let result1 = Object.values(JSON.parse(JSON.stringify(answerL[0])))[0]
+            console.log("DB now has # rows: " + result1)
+            expect(finalDbArray.length == result1,'Something has gone terribly wrong ... final cleanup did not work ').toBeTruthy()
             
-        } else {expect(finalDbArray.length == answer,'Something has gone terribly wrong ... not all script rows were added to the DB ').toBeTruthy()}
+        } else {expect(finalDbArray.length == answer1.length,'Something has gone terribly wrong ... not all script rows were added to the DB ').toBeTruthy()}
         
         connection.end()
         //asyncWriteFile('\n' + currentFormText)

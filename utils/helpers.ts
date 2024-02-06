@@ -67,6 +67,27 @@ export async function deleteByUID(connection: any, UID: number): Promise<any> {
   }
 }
 
+export async function countShowsByVenueAndDate(connection: any, showCity: string, showVenue: string, startDate: string, endDate: string): Promise<any> {
+    
+  try {
+
+    //let insertComedians = 'INSERT INTO `Comedians` SET `UID` = LAST_INSERT_ID(), `CUID` =  UUID_TO_BIN(UUID()), `Name` = "'+comediansName+'";'
+    const [rows1, fields1] = await connection.execute(
+        //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '" AND Comedians.Bio = "'+ comediansBio + '")'  
+        'SELECT COUNT(*) FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date BETWEEN ' + startDate + ' AND ' + endDate
+      );    
+
+    
+    let result1 = Object.values(JSON.parse(JSON.stringify(rows1)))
+    
+    //return result1[2]
+    return rows1
+        
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export async function queryShowsByVenueAndDate(connection: any, showCity: string, showVenue: string, startDate: string, endDate: string): Promise<any> {
     
   try {
