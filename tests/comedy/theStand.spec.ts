@@ -15,11 +15,11 @@ test.describe('THE STAND', () => {
         navigation = new Navigation(page)
         
         const headers = navigation.theStandheaders
-        let url = navigation.theStandUrl        
+        let tempUrl = navigation.theStandUrl        
         
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
-        let targetDays: number = 10
+        let targetDays: number = 30
         let finalDbArray: string[][]=[]
         let validUIDs: number[] = []
         
@@ -27,8 +27,8 @@ test.describe('THE STAND', () => {
         let dateFormatted = formatDate(dayIndex)
         let data = ''
 
-        url = url + '/' + dateFormatted.replace(/"/g,'')
-        console.log("URL USED: " + url)
+        let url = tempUrl + '/' + dateFormatted.replace(/"/g,'')
+        //console.log("URL USED: " + url)
         const [connection] = await Promise.all([
             dbEstablishConnection(),
         ])
@@ -41,6 +41,8 @@ test.describe('THE STAND', () => {
             let finalComedianArray: string[][]=[]
             let finalBioArray: string[][]=[]
 
+            url = tempUrl + '/' + dateFormatted.replace(/"/g,'')
+            //console.log("URL USED: " + url)
             const [answer] = await Promise.all([
                 getRequest(url, headers),
             ])

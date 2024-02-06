@@ -119,8 +119,10 @@ export async function dbIfRecordsExist(connection: any, showCity: string, showVe
     const [rows, fields] = await connection.execute(
         //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '" AND Comedians.Bio = "'+ comediansBio + '")'  
         
+        //'SELECT Shows.UID FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName +' AND Comedians.Bio' + comediansBio + '"'  
+        'SELECT Shows.UID FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName +'"'  
         //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '")'  
-        'SELECT Shows.UID FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '"'  
+        
       );    
     
     
@@ -144,7 +146,10 @@ export async function dbAddShow(connection: any, showCity: string, showVenue: st
   try {
 
     let insertShow = 'INSERT INTO `Shows` SET `City` = "'+ showCity +'", `Venue` = "'+ showVenue +'", `Date` = ' + showDate + ', `Time` = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' ) );'
-    let insertComedians = 'INSERT INTO `Comedians` SET `UID` = LAST_INSERT_ID(), `CUID` =  UUID_TO_BIN(UUID()), `Name` = "'+comediansName+'", `Bio` = "'+ comediansBio +'";'
+    //let insertComedians = 'INSERT INTO `Comedians` SET `UID` = LAST_INSERT_ID(), `CUID` =  UUID_TO_BIN(UUID()), `Name` = "'+comediansName+'", `Bio` = "'+ comediansBio +'";'
+    let insertComedians = 'INSERT INTO `Comedians` SET `UID` = LAST_INSERT_ID(), `CUID` =  UUID_TO_BIN(UUID()), `Name` = "'+comediansName+'";'
+    
+    
     //let insertComedians = 'INSERT INTO `Comedians` SET `UID` = LAST_INSERT_ID(), `CUID` =  UUID_TO_BIN(UUID()), `Name` = "'+comediansName+'";'
     const [rows1, fields1] = await connection.execute(
         //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '" AND Comedians.Bio = "'+ comediansBio + '")'  
