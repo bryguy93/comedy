@@ -19,7 +19,7 @@ test.describe('THE STAND', () => {
         
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
-        let targetDays: number = 1
+        let targetDays: number = 2
         let finalDbArray: string[][]=[]
         let validUIDs: number[] = []
         
@@ -38,6 +38,7 @@ test.describe('THE STAND', () => {
             let noComedians: boolean = false
             let finalLineupArray: string[]=[]  
             let finalTimeArray: string[]=[]
+            let finalRoomArray: string[]=[] //**************** NEW CODE */
             let finalComedianArray: string[][]=[]
             let finalBioArray: string[][]=[]
 
@@ -53,18 +54,26 @@ test.describe('THE STAND', () => {
                 //Parse string for showtime and then Comedian and loop
                 let tempIndexArrayStart: number[]=[]
                 let tempIndexArrayEnd: number[]=[]
+                let tempRoomStart: number[]=[]
+                let tempRoomEnd: number[]=[]
                 let i: number = htmlStringIndex
                 let tempTimeIndex: number = 0
+                let tempRoomIndex: number = 0
 
                 while (i != -1){ // GRAB ALL THE TIMES substring index DATA FOR CURRENT IN SCOPE DATE
                     
                     tempTimeIndex = answer.indexOf('</span> | <span class=\\"show_date\\">',i)
+                    tempRoomIndex = answer.indexOf('<span class=\\"list-show-room\\">',i)
                     
                     if(tempTimeIndex > 0){
                         i = tempTimeIndex + 2
                         tempIndexArrayStart.push(tempTimeIndex + 38)
+                        tempRoomStart.push(tempRoomIndex + 31)
                         tempTimeIndex = answer.indexOf('<span> <span class=\\"list-show',i)
+                        tempRoomIndex = tempRoomIndex + 30
+                        tempRoomIndex = answer.indexOf('<',tempRoomIndex)   //************** NEW CODE THAT NEEDS TO CHANGE */
                         tempIndexArrayEnd.push(tempTimeIndex)
+                        tempRoomEnd.push(tempRoomIndex) //************** NEW CODE THAT NEEDS TO CHANGE */
 
                     } else{
                         i = tempTimeIndex
@@ -77,6 +86,20 @@ test.describe('THE STAND', () => {
                     console.log('TIMESLOTS: ' + finalTimeArray[i])
                 }
 
+                //*************************************** */ NEW CODE
+                for(let i = 0; i < tempRoomEnd.length; i++){
+                    
+                    let tempRoom: string = answer.substring(tempRoomStart[i],tempRoomEnd[i])
+
+                    if(tempRoom == 'Main&nbsp;room'){
+                        finalRoomArray.push('Main Room')
+                        console.log('ROOMS: ' + finalRoomArray[i])    
+                    } else {
+                        finalRoomArray.push(answer.substring(tempRoomStart[i],tempRoomEnd[i]))
+                        console.log('ROOMS: ' + finalRoomArray[i])                            
+                    }
+                }
+                //*************************************** */ NEW CODE
 
                 //console.log(tempIndexArrayStart)
                 //console.log(tempIndexArrayEnd)
@@ -209,6 +232,7 @@ test.describe('THE STAND', () => {
                         let showVenue: string = 'The Stand'
                         let showDate: string = dateFormatted
                         let showTime: string = finalTimeArray[f]
+                        let showRoom: string = finalRoomArray[f]
                         let comediansName: string = timeSlot[g]
                         //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                         let comediansBio: string = bioSlot[g]
@@ -217,7 +241,7 @@ test.describe('THE STAND', () => {
                         //console.log(showCity, showVenue, showDate, showTime, comediansName)
                         const [answer] = await Promise.all([
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
-                            dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+                            dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime, comediansName, showRoom),
                             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                         ])
                         
