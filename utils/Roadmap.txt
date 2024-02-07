@@ -3,8 +3,8 @@ npm run chrometest --enviro=qa -- --headed --workers=1
 npm run chromeVisualTest --enviro=qa -- --workers=1 --headed
 
 V1
-- Gotham, NYCC, standup NY
-- ? comic strip, union hall, tiny cupboard
+- , NYCC, standup NY, the grisly pear
+- ? comic strip, union hall, tiny cupboard, Gotham(doesn't post lineups)
 - implement comedian rating
 
 
