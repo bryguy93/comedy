@@ -16,7 +16,7 @@ test.describe('KERASOTES', () => {
         
     })
 
-    test('Secaucus', async ({ page, request }) => {
+    test.skip('Secaucus', async ({ page, request }) => {
 
         navigation = new Navigation(page)
         

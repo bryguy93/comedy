@@ -5,6 +5,9 @@ export class Navigation{
     readonly page: Page
     readonly slowmo: number
     readonly enviroVarName: string
+
+    readonly reportDays: number
+
     readonly comedyCellarheaders
     readonly comedyCellarUrl: string
     readonly theStandheaders
@@ -15,6 +18,9 @@ export class Navigation{
         this.page = page
         this.slowmo = 1
         this.enviroVarName = 'TEST_ENVIRO_CLI'
+
+        this.reportDays = 30
+
         this.comedyCellarheaders = { 
             'authority': 'www.comedycellar.com', 
             'accept': '*/*', 

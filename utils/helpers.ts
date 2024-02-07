@@ -162,12 +162,12 @@ export async function dbIfRecordsExist(connection: any, showCity: string, showVe
   }
 }
 
-export async function dbAddShow(connection: any, showCity: string, showVenue: string, showDate: string, showTime: string, comediansName: string, showRoom: string): Promise<any> {
+export async function dbAddShow(connection: any, showCity: string, showVenue: string, showDate: string, showTime: string, showRoom: string, comediansName: string, comedianBio: string): Promise<any> {
     
   try {
 
-    let insertShow = 'INSERT INTO `Shows` SET `City` = "'+ showCity +'", `Venue` = "'+ showVenue +'", `Date` = ' + showDate + ', `Time` = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' ) );'
-    let insertComedians = 'INSERT INTO `Comedians` SET `UID` = LAST_INSERT_ID(), `CUID` =  UUID_TO_BIN(UUID()), `Name` = "'+comediansName+'", `Bio` = "'+ showRoom +'";'
+    let insertShow = 'INSERT INTO `Shows` SET `City` = "'+ showCity +'", `Venue` = "'+ showVenue +'", `Date` = ' + showDate + ', `Time` = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' ) ), `Room` = "'+ showRoom + '";'
+    let insertComedians = 'INSERT INTO `Comedians` SET `UID` = LAST_INSERT_ID(), `CUID` =  UUID_TO_BIN(UUID()), `Name` = "'+comediansName+'", `Bio` = "'+ comedianBio +'";'
     //let insertComedians = 'INSERT INTO `Comedians` SET `UID` = LAST_INSERT_ID(), `CUID` =  UUID_TO_BIN(UUID()), `Name` = "'+comediansName+'";'
     
     

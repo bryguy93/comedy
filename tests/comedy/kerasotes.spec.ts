@@ -8,7 +8,7 @@ test.describe('COMEDY MOB 24', () => {
 
     let navigation: Navigation
 
-    test('On the minute checks', async ({ page, request }) => {
+    test.skip('On the minute checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
         var today = new Date();

@@ -19,7 +19,7 @@ test.describe('THE STAND', () => {
         
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
-        let targetDays: number = 2
+        let targetDays: number = navigation.reportDays
         let finalDbArray: string[][]=[]
         let validUIDs: number[] = []
         
@@ -285,7 +285,7 @@ test.describe('THE STAND', () => {
                               
                             const [answer] = await Promise.all([
                                 //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
-                                dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, showRoom), // add comedianBio here************vvvvvvvvvv
+                                dbAddShow(connection, showCity, showVenue, showDate, showTime, showRoom, comediansName, 'BIO_PLACE_HOLDER'), // add comedianBio here************vvvvvvvvvv
                                 //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
                             ])
                             
@@ -428,7 +428,7 @@ test.describe('Mysql Connection and Query testing', () => {
         ])
 
         const [answer] = await Promise.all([
-            dbAddShow(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+            dbAddShow(connection, showCity, showVenue, showDate, showTime, 'ROOM_PLACE_HOLDER', comediansName, 'BIO_PLACE_HOLDER'),
         ])
         console.log(answer)
 
