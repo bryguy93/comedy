@@ -1,34 +1,69 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { postRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID } from '../../utils/helpers'
+import { getRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID, asyncWriteFile } from '../../utils/helpers'
 
 
 
-test.describe('COMEDY CELLAR', () => {
+test.describe('New York Comedy Club', () => {
 
     let navigation: Navigation
 
-    test('On the hour checks', async ({ page, request }) => {
+    test.skip('On the hour checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
         
-        const headers = navigation.comedyCellarheaders
-        const url = navigation.comedyCellarUrl        
+        const headers = navigation.nyccheaders
+        const url = navigation.nyccUrl        
         
         let index: number = 0 //current index in day string
         let htmlStringIndex: number = 0
         let targetDays: number = navigation.reportDays
         let finalDbArray: string[][]=[]
         let validUIDs: number[] = []
-
+        
         let dayIndex: Date = new Date() //current index in day string
         let dateFormatted = formatDate(dayIndex)
+        let tempDateFormatted = dateFormatted.slice(1,8)  // change to "YYYY-MM" format
+        let tempURL = url + tempDateFormatted
+
+        console.log(tempURL)
+        
         let data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
         const [connection] = await Promise.all([
             dbEstablishConnection(),
         ])
 
+        const [answerZ] = await Promise.all([
+            getRequest(url, headers),
+        ])
+
+        let jsonStartIndex: number
+        let jsonEndIndex: number
+
+        let K: number = 0
+        while (K != -1){ // GRAB ALL THE TIMES substring index DATA FOR CURRENT IN SCOPE DATE
+                    
+            jsonStartIndex = answerZ.indexOf('ld+json') + 16
+            jsonEndIndex = answerZ.indexOf('script>                  <!-- Google tag (gtag.js)') - 9
+
+            console.log(answerZ[jsonStartIndex])
+            console.log(answerZ[jsonEndIndex])
+            K = -1
+        }
+
+        //asyncWriteFile('\n' + answerZ)
+        connection.end()        
+        
+        
+        // successfully generate json string indices for the first month in search
+        // do a check for the last month based on the search(e.g. 30 day search goes to April, then we need to query March and April)
+        // make the while loop iterate for each month implicitly extracting json portions of each month query
+        // sanitize json strings of html stuff to make it valid json
+        // convert to json and extract shows using json syntax['eg'][0]
+        throw new Error('STOP LINE')
+
+        
         while ( index != targetDays){ // change this to iterate for 30 days
 
             let noComedians: boolean = false
@@ -38,9 +73,11 @@ test.describe('COMEDY CELLAR', () => {
             let finalBioArray: string[][]=[]
 
             const [answer] = await Promise.all([
-                postRequest(url, headers, data),
+                getRequest(url, headers),
             ])
 
+            asyncWriteFile('\n' + answer)
+            throw new Error('STOP LINE')
             if(answer.toString().indexOf('No Comedians added yet!') == -1){ // ON EACH IN SCOPE DATES
 
                 // Now we're iterating on each inscope date's raw HTML as String
@@ -208,6 +245,11 @@ test.describe('COMEDY CELLAR', () => {
             }
         }//iterate through all days
         
+        
+
+
+
+
         let today: string = formatDate(new Date()) //current index in day string
         console.log('Script range: '+ today.replace(/['"]+/g, '') + ' -> ' + formatDate(dayIndex).replace(/['"]+/g, ''))
 
@@ -223,7 +265,7 @@ test.describe('COMEDY CELLAR', () => {
         for(let r = 0; r < answer1.length; r++){
 
             tempString = Number(Object.values(JSON.parse(JSON.stringify(answer[r])))[0])            
-            dbUIDSinfo.push([tempString, Object.values(JSON.parse(JSON.stringify(answer[r])))[1], Object.values(JSON.parse(JSON.stringify(answer[r])))[2], Object.values(JSON.parse(JSON.stringify(answer[r])))[3], Object.values(JSON.parse(JSON.stringify(answer[r])))[4], Object.values(JSON.parse(JSON.stringify(answer[r])))[5], Object.values(JSON.parse(JSON.stringify(answer[r])))[6], Object.values(JSON.parse(JSON.stringify(answer[r])))[11]])
+            dbUIDSinfo.push([tempString, Object.values(JSON.parse(JSON.stringify(answer[r])))[1], Object.values(JSON.parse(JSON.stringify(answer[r])))[2], Object.values(JSON.parse(JSON.stringify(answer[r])))[3], Object.values(JSON.parse(JSON.stringify(answer[r])))[4], Object.values(JSON.parse(JSON.stringify(answer[r])))[7]])
             dbUIDS.push(tempString)
 
         }
@@ -297,7 +339,7 @@ test.describe('Mysql Connection and Query testing', () => {
         
     })
 
-    test.skip('Db Connection v1', async ({ page, request }) => {
+    test('Db Connection v1', async ({ page, request }) => {
 
         //get the client
         //let connection = dbEstablishConnection()
@@ -313,10 +355,45 @@ test.describe('Mysql Connection and Query testing', () => {
             dbEstablishConnection(),
         ])
 
-        const [answer] = await Promise.all([
-            dbAddShow(connection, showCity, showVenue, showDate, showTime, 'ROOM_PLACEHOLDER', comediansName, 'BIO_PLACE_HOLDER'),
-        ])
-        console.log(answer)
+        try {
+
+            //Comedian Ratings
+            //1
+            let best: string[] = [ 'Jessica Kirson','Mark Normand','Adrienne Iapalucci','Dave Attell','Jared Freid','Phil Hanley','Jeff Arcuri','Andre Kim','Wil Sylvince','Todd Barry', 'Sergio Chicon' ]
+            //2
+            let mid: string[] = [ 'Robert Kelly','Jim Norton','Dan Soder','Greer Barnes','Mike Cannon','Roy Wood jr','Yannis Pappas','Colin Quinn','Yamaneika Saunders','Joe List','Rosebud Baker', 'Michael Kosta' ]
+            //3
+            let least: string[] = [ 'Eagle Witt','Jim Florentine','Jordan Jensen','H.Foley','Jaye McBride','Eleanor Kerrigan','Gianmarco Soresi','Josh Johnson' ]
+
+            let i: number
+            for (i = 0; i <  best.length; i++){
+                const [rows, fields] = await connection.execute(
+                    //'SELECT Comedians.Name, COUNT(*) AS count FROM Shows, Comedians WHERE Shows.UID = Comedians.UID GROUP BY Comedians.Name ORDER BY count DESC;'
+                    'UPDATE Comedians SET Rating = "1" WHERE Name = "'+least[i]+'";'
+                );    
+            }
+            
+            //asyncWriteFile(JSON.parse(JSON.stringify(rows)) + '')
+            //console.log(rows)
+            //let result = Object.values(JSON.parse(JSON.stringify(rows)))[0];
+            //console.log('Test METHOD: ' + result)
+        
+            //if(result[1] != 1){ throw new Error('Failed to delete UID '+ UID + ' in the DB')}
+            //return result[1]
+            //return rows
+        
+            
+          } catch (err) {
+            console.log(err);
+          }
+
+
+
+        
+        //const [answer] = await Promise.all([
+          //  dbAddShow(connection, showCity, showVenue, showDate, showTime, 'ROOM_PLACEHOLDER', comediansName, 'BIO_PLACE_HOLDER'),
+        //])
+        //console.log(answer)
 
         //console.log(connection)
         //asyncWriteFile('\n' + currentFormText)

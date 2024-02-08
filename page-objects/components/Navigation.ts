@@ -12,14 +12,15 @@ export class Navigation{
     readonly comedyCellarUrl: string
     readonly theStandheaders
     readonly theStandUrl: string
-    
+    readonly nyccheaders
+    readonly nyccUrl: string
     
     constructor(page: Page){
         this.page = page
         this.slowmo = 1
         this.enviroVarName = 'TEST_ENVIRO_CLI'
 
-        this.reportDays = 30
+        this.reportDays = 1
 
         this.comedyCellarheaders = { 
             'authority': 'www.comedycellar.com', 
@@ -54,5 +55,20 @@ export class Navigation{
           }
           
         this.theStandUrl = 'https://thestandnyc.com/shows'
+        this.nyccheaders = { 
+          'authority': 'newyorkcomedyclub.com', 
+          'accept': '*/*', 
+          'accept-language': 'en-US,en;q=0.9', 
+          'referer': 'https://newyorkcomedyclub.com', 
+          'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"', 
+          'sec-ch-ua-mobile': '?0', 
+          'sec-ch-ua-platform': '"macOS"', 
+          'sec-fetch-dest': 'empty', 
+          'sec-fetch-mode': 'cors', 
+          'sec-fetch-site': 'same-origin', 
+          'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36', 
+          'x-requested-with': 'XMLHttpRequest'
+        }
+        this.nyccUrl = 'https://newyorkcomedyclub.com/calendar/'
     }
 }

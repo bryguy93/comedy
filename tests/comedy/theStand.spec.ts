@@ -329,7 +329,7 @@ test.describe('THE STAND', () => {
 
             tempString = Number(Object.values(JSON.parse(JSON.stringify(answer[r])))[0])       
             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */     
-            dbUIDSinfo.push([tempString, Object.values(JSON.parse(JSON.stringify(answer[r])))[1], Object.values(JSON.parse(JSON.stringify(answer[r])))[2], Object.values(JSON.parse(JSON.stringify(answer[r])))[3], Object.values(JSON.parse(JSON.stringify(answer[r])))[4], Object.values(JSON.parse(JSON.stringify(answer[r])))[7]])
+            dbUIDSinfo.push([tempString, Object.values(JSON.parse(JSON.stringify(answer[r])))[1], Object.values(JSON.parse(JSON.stringify(answer[r])))[2], Object.values(JSON.parse(JSON.stringify(answer[r])))[3], Object.values(JSON.parse(JSON.stringify(answer[r])))[4], Object.values(JSON.parse(JSON.stringify(answer[r])))[5], Object.values(JSON.parse(JSON.stringify(answer[r])))[6], Object.values(JSON.parse(JSON.stringify(answer[r])))[11]])
             //********** HAVENT TOUCH THIS BUT NEED TO GET RID OF BIO */
             dbUIDS.push(tempString)
             

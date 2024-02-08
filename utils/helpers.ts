@@ -96,7 +96,9 @@ export async function queryShowsByVenueAndDate(connection: any, showCity: string
         //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '" AND Comedians.Bio = "'+ comediansBio + '")'  
         
         //'SELECT Shows.UID FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date BETWEEN ' + startDate + ' AND ' + endDate
+        
         'SELECT * FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date BETWEEN ' + startDate + ' AND ' + endDate
+        //'SELECT * FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date BETWEEN ' + startDate + ' AND ' + endDate
       );    
     
     //console.log(rows.counts())

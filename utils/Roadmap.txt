@@ -12,8 +12,65 @@ V2
 - make insert one sql statement for faster bulk processing
 - add 'Room' to comedy cellar(e.g. village underground, phat black etc ...)
 - add 'Bio' to The Stand
-
+- add shows without lineup? e.g. hot soup 
 
 
     - to all
     add website, image, description(venue)
+
+
+SQL - ///////////////////////////////////////////////////////////////////////////////////////////
+Shows Ordered by Comedian lineup ratings:
+SELECT Shows.Venue, Shows.Date, Shows.Time, Shows.Comedians, SUM(Comedians.Rating) AS Ratingtotal FROM Shows, Comedians WHERE Shows.UID = Comedians.UID AND Comedians.Rating > 0 GROUP BY Shows.Venue, Shows.Date, Shows.Time ORDER BY Ratingtotal DESC;
+
+
+INSERT INTO `Shows` SET `City` = "testCity1", `Venue` = "testClub", `Date` = "2024-02-02", `Time` = TIME( STR_TO_DATE( '10:00 PM', '%h:%i %p' ) );
+
+INSERT INTO `Comedians` SET `UID` = 1, `CUID` =  UUID_TO_BIN(UUID()), Name` = "Comedienne Name", `Bio` = "long blah bio", `Website` = "testSiteNice";
+---
+BEGIN;
+INSERT INTO `Shows` SET `City` = "wCity", `Venue` = "wVenue", `Date` = "2024-02-03", `Time` = TIME( STR_TO_DATE( '10:00 PM', '%h:%i %p' ) );
+INSERT INTO `Comedians` SET `UID` = LAST_INSERT_ID(), `CUID` =  UUID_TO_BIN(UUID()), `Name` = "wName", `Bio` = "wBio", `Website` = "wWeb";
+COMMIT;
+---
+SELECT Shows.UID, Shows.City, Shows.Venue, Shows.Date, Comedians.Name, Comedians.Bio
+FROM Shows, Comedians
+WHERE Shows.UID = Comedians.UID
+GROUP BY Shows.UID
+
+DELETE FROM `Shows` WHERE `UID`  = 'valuse'
+
+-> \d;
+
+
+//////////////////////////////////////////////////////////////////////////////////
+DB Schema
+
+CREATE TABLE Shows 
+(
+     UID int NOT NULL AUTO_INCREMENT,
+     City varchar(255),
+     Venue varchar(255),
+     Room varchar(255),
+     Date DATE,
+     Time TIME,
+     Website varchar(2083),
+     Image varchar(2083),
+     Description varchar(255),
+     Comedians varchar(255),
+     PRIMARY KEY (UID)
+);
+
+CREATE TABLE Comedians 
+(
+     UID int,
+     CUID BINARY(16) NOT NULL,
+     Name varchar(255),
+     Bio varchar(255),
+     Website varchar(2083),
+     Image varchar(2083),
+     Rating int,
+     PRIMARY KEY (CUID),
+     FOREIGN KEY (UID) REFERENCES Shows(UID)
+     ON DELETE CASCADE
+);

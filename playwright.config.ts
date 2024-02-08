@@ -7,6 +7,7 @@ const config: PlaywrightTestConfig = {
     "tests/comedy/comedyMob24.spec.ts",
     "tests/comedy/cCellar.spec.ts",
     "tests/comedy/theStand.spec.ts",
+    "tests/comedy/NYCC.spec.ts",
     "tests/comedy/kerasotes.spec.ts"
     // "lighthouse/unauth.test.ts",
     // "lighthouse/auth.test.ts"

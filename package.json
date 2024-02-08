@@ -15,6 +15,7 @@
     "chromeAll": "npx playwright test tests/comedy --config=playwright.config.ts --project chromium",
     "chromec": "npx playwright test tests/comedy/cCellar.spec.ts --config=playwright.config.ts --project chromium",
     "chromes": "npx playwright test tests/comedy/theStand.spec.ts --config=playwright.config.ts --project chromium",
+    "chromenycc": "npx playwright test tests/comedy/NYCC.spec.ts --config=playwright.config.ts --project chromium",
     
     "chromeVisualTest": "TEST_ENVIRO_CLI=$npm_config_enviro npx playwright test tests/visual/visual.spec.ts --config=visual.config.ts --project chromium",
     "jenkinsStart": "brew services start jenkins-lts",
