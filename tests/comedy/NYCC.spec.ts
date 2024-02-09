@@ -9,7 +9,7 @@ test.describe('New York Comedy Club', () => {
 
     let navigation: Navigation
 
-    test.skip('On the hour checks', async ({ page, request }) => {
+    test('On the hour checks', async ({ page, request }) => {
 
         navigation = new Navigation(page)
         
@@ -22,7 +22,8 @@ test.describe('New York Comedy Club', () => {
         let finalDbArray: string[][]=[]
         let validUIDs: number[] = []
         
-        let dayIndex: Date = new Date() //current index in day string
+        let dayIndex: Date = new Date()  //current index in day string
+        //dayIndex.setDate(dayIndex.getDate() + 60)
         let dateFormatted = formatDate(dayIndex)
         let tempDateFormatted = dateFormatted.slice(1,8)  // change to "YYYY-MM" format
         let tempURL = url + tempDateFormatted
@@ -41,18 +42,92 @@ test.describe('New York Comedy Club', () => {
         let jsonStartIndex: number
         let jsonEndIndex: number
 
-        let K: number = 0
+        let K: number = -1
         while (K != -1){ // GRAB ALL THE TIMES substring index DATA FOR CURRENT IN SCOPE DATE
                     
             jsonStartIndex = answerZ.indexOf('ld+json') + 16
-            jsonEndIndex = answerZ.indexOf('script>                  <!-- Google tag (gtag.js)') - 9
+            console.log('Start; ' + jsonStartIndex)
+            jsonEndIndex = answerZ.indexOf('script>                  <!-- Google tag (gtag.js)') - 8
+            console.log('end: ' + jsonEndIndex)
+            //jsonEndIndex = 3340
 
+            let tempJson: string = answerZ.substring(jsonStartIndex, jsonEndIndex).replace(/\\n?/g, '')
+            //tempJson = tempJson.replace(/<div dir=\\"\\"auto\\"\\"><br></div><div dir=\\"\\"auto\\"\\">Want a spot on the mic? Send an email to <a href=\\"\\"mailto\\":\\"ComedyMob@gmail.com\\"\\" target=\\"\\"_blank\\"\\">ComedyMob@gmail.com</a> right the hell now. Line-ups fill up FAST!</div><div dir=\\"\\"auto\\"\\"><br></div><br><br><br>\\"/g,'')
+            tempJson = tempJson.replace(/<div dir=\\"\\"auto\\"\\"><br></g,'')
+                                                 tempJson = tempJson.replace(/ Send an email to <a href=\\"\\"mailto\\":\\"ComedyMob@gmail.com\\"\\" target=\\"\\"_blank\\"\\">ComedyMob@gmail.com</g,'')
+            tempJson = tempJson.replace(/div dir="auto"/g,'')       
+            tempJson = tempJson.replace(/p dir="auto"/,'')
+            tempJson = tempJson.replace(/href="mailto:ComedyMob@gmail.com" target="_blank"/g,'')                                          
+            tempJson = tempJson.replace(/<div dir=\\"auto\\">Want a spot on the mic? Send an email to /g,'')     
+            tempJson = tempJson.replace(/<a href=\\"mailto:ComedyMob@gmail.com\\" target=\\"_blank\\">ComedyMob@gmail.com/g,'')     
+            //tempJson = tempJson.replace(//g,'')     
+
+            //<div dir="auto">Want a spot on the mic? Send an email to                                                                                                                                                                                                                                                                     tempJson = tempJson.replace(/ right the hell now. Line-ups fill up FAST!</g,'')
+                                                                                                                                                                                                                                                                          tempJson = tempJson.replace(/<div dir=\\"\\"auto\\"\\"><br>/g,'')
+                                                                                                                                                                                                                                                                                                              tempJson = tempJson.replace(/<br><br><br>\\"/g,'')
+            //let tempJson2: string = answerZ.substring(jsonStartIndex, jsonEndIndex)
+            //let tempJson2: string = answerZ.substring(318275,jsonEndIndex)
+            //tempJson = tempJson.substring(1)
+            //let newstr: string = ''
+
+            //for (let i = 0; i < tempJson.length; i++){
+              //  if (!(tempJson[i] == "\\n" || tempJson[i] == "\r")){
+                //    newstr += tempJson[i];
+               // }
+            //}
+            
             console.log(answerZ[jsonStartIndex])
             console.log(answerZ[jsonEndIndex])
+            console.log(tempJson)
+            //console.log('START: ' + tempJson.replace(/\\n?/g, ''))
+            //console.log('END: ' + tempJson2.replace(/\\n?/g, ''))
+            asyncWriteFile('\n' + tempJson)
+        
             K = -1
         }
 
-        //asyncWriteFile('\n' + answerZ)
+
+        jsonStartIndex = answerZ.indexOf('ld+json') + 16
+        console.log('Start; ' + jsonStartIndex)
+        jsonEndIndex = answerZ.indexOf('script>                  <!-- Google tag (gtag.js)') - 8
+        console.log('end: ' + jsonEndIndex)
+        let tempJson: string = answerZ.substring(jsonStartIndex, jsonEndIndex).replace(/\\n?/g, '')
+
+        let tempTimeIndex: number
+        let tempTimeIndex2: number
+        let tempIndexDescStart: number[]=[]
+        let tempIndexDescEnd: number[]=[]
+
+        // CLEANSE DESCRIPTION OF QUOTES(")
+        let M: number = 0 
+        while (M != -1){ // GRAB ALL description Indexes(within the quotes;    "[start] DESCRIPTION [end]"    )
+                    
+            tempTimeIndex = tempJson.indexOf('"description":',M)
+            console.log('loop start: ' +tempTimeIndex)
+                    
+            if(tempTimeIndex > 0){
+                M = tempTimeIndex + 5
+                tempTimeIndex2 = tempJson.indexOf('"organizer": {',M)
+                console.log('end: ' +tempTimeIndex2)
+
+                let tempSubString = tempJson.substring(tempTimeIndex + 16,tempTimeIndex2 - 8).replace(/['"]+/g, '')
+                tempJson = tempJson.replace(tempJson.substring(tempTimeIndex + 16,tempTimeIndex2 - 8), tempSubString)
+                asyncWriteFile('\n')
+                asyncWriteFile('\n' + tempSubString)
+                tempIndexDescStart.push(tempTimeIndex + 16)
+                tempIndexDescEnd.push(tempTimeIndex2 - 8)
+                M = tempTimeIndex2
+            } else{
+                M = tempTimeIndex
+            }
+        }
+
+        
+        
+        asyncWriteFile('\n' + 'START JSON')
+        
+        asyncWriteFile('\n' + tempJson)
+        
         connection.end()        
         
         
@@ -339,7 +414,7 @@ test.describe('Mysql Connection and Query testing', () => {
         
     })
 
-    test('Db Connection v1', async ({ page, request }) => {
+    test.skip('Db Connection v1', async ({ page, request }) => {
 
         //get the client
         //let connection = dbEstablishConnection()

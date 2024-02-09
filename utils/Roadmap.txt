@@ -3,7 +3,7 @@ npm run chrometest --enviro=qa -- --headed --workers=1
 npm run chromeVisualTest --enviro=qa -- --workers=1 --headed
 
 V1
-- , NYCC, standup NY, the grisly pear
+- , NYCC, standup NY, the grisly pear, st mark's comedy club
 - ? comic strip, union hall, tiny cupboard, Gotham(doesn't post lineups)
 - implement comedian rating
 
