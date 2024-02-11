@@ -3,16 +3,19 @@ npm run chrometest --enviro=qa -- --headed --workers=1
 npm run chromeVisualTest --enviro=qa -- --workers=1 --headed
 
 V1
-- , NYCC, standup NY, the grisly pear, st mark's comedy club
+- , standup NY & st mark's comedy club ('graphql' api req - will need AI to get names from images ), the grisly pear, 
 - ? comic strip, union hall, tiny cupboard, Gotham(doesn't post lineups)
-- implement comedian rating
+- 
 
 
 V2
+- add automatic Rating application on every run
 - make insert one sql statement for faster bulk processing
 - add 'Room' to comedy cellar(e.g. village underground, phat black etc ...)
 - add 'Bio' to The Stand
 - add shows without lineup? e.g. hot soup 
+- establish known comedian list to flag aliases(e.g. the comedy cellar)
+- get google trend rating for each comedian
 
 
     - to all
@@ -22,11 +25,16 @@ V2
 SQL - ///////////////////////////////////////////////////////////////////////////////////////////
 Shows Ordered by Comedian lineup ratings:
 SELECT Shows.Venue, Shows.Date, Shows.Time, Shows.Comedians, SUM(Comedians.Rating) AS Ratingtotal FROM Shows, Comedians WHERE Shows.UID = Comedians.UID AND Comedians.Rating > 0 GROUP BY Shows.Venue, Shows.Date, Shows.Time ORDER BY Ratingtotal DESC;
-
-
+-----
+Update comedians with Ratings in Ratings tables
+UPDATE Comedians Cx INNER JOIN Ratings Rx ON Cx.Name = Rx.Name SET Cx.Rating = Rx.Rating;
+------
+Insert into individual tables
 INSERT INTO `Shows` SET `City` = "testCity1", `Venue` = "testClub", `Date` = "2024-02-02", `Time` = TIME( STR_TO_DATE( '10:00 PM', '%h:%i %p' ) );
 
 INSERT INTO `Comedians` SET `UID` = 1, `CUID` =  UUID_TO_BIN(UUID()), Name` = "Comedienne Name", `Bio` = "long blah bio", `Website` = "testSiteNice";
+
+INSERT INTO `Ratings` SET `Name` = "Dave Chappelle", `Rating` =  10;
 ---
 BEGIN;
 INSERT INTO `Shows` SET `City` = "wCity", `Venue` = "wVenue", `Date` = "2024-02-03", `Time` = TIME( STR_TO_DATE( '10:00 PM', '%h:%i %p' ) );

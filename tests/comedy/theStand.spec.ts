@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { getRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID, countShowsByVenueAndDate } from '../../utils/helpers'
+import { getRequest, formatDate, monthDiff, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID, countShowsByVenueAndDate } from '../../utils/helpers'
 
 
 

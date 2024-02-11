@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { getRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID, asyncWriteFile } from '../../utils/helpers'
+import { getRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID, asyncWriteFile, monthDiff } from '../../utils/helpers'
 
 
 
@@ -21,167 +21,218 @@ test.describe('New York Comedy Club', () => {
         let targetDays: number = navigation.reportDays
         let finalDbArray: string[][]=[]
         let validUIDs: number[] = []
+        let queryMonths: string[] = []
+        let masterJson: string = ''
         
         let dayIndex: Date = new Date()  //current index in day string
+        console.log('Raw Date:' + dayIndex)
         //dayIndex.setDate(dayIndex.getDate() + 60)
         let dateFormatted = formatDate(dayIndex)
+        console.log('Formatted Date:' + dateFormatted)
         let tempDateFormatted = dateFormatted.slice(1,8)  // change to "YYYY-MM" format
         let tempURL = url + tempDateFormatted
 
-        console.log(tempURL)
+        let dd = String(dayIndex.getDate()).padStart(2, '0')
+        let ddN = Number(dd)
+        let mm = Number(String(dayIndex.getMonth() + 1).padStart(2, '0'))-1
+        let yyyy = Number(dayIndex.getFullYear())
+        
+        let finalDate: Date = new Date() 
+        finalDate.setDate(dayIndex.getDate() + navigation.reportDays)
+        let ddF = String(finalDate.getDate()).padStart(2, '0')
+        let ddNF = Number(ddF)
+        let mmF = Number(String(finalDate.getMonth() + 1).padStart(2, '0'))-1
+        let yyyyF = Number(finalDate.getFullYear())
+
+        console.log(monthDiff(new Date(yyyy, mm, ddN), new Date(yyyyF, mmF, ddNF)))
+
+        let tempDate: Date
+        let s: number 
+        tempDate = dayIndex
+
+        // GRAB JSON STRING FOR EACH IN SCOPE MONTH AND THEN ADD TO ONE MASTER JSON STRING
+        for(s = 0; s <= monthDiff(new Date(yyyy, mm, ddN), new Date(yyyyF, mmF, ddNF)); s++ ) {
+
+            let tempJson1: string = ''
+            let queryResult: any
+            if(s == 0){
+                console.log(tempDate)
+                let mm1 = String(tempDate.getMonth() + 1).padStart(2, '0')
+                let yyyy1 = tempDate.getFullYear()
+                console.log('QUERY: ' + url + yyyy1 + '-' + mm1)
+                const [answer1] = await Promise.all([
+                    getRequest(url + yyyy1 + '-' + mm1, headers),
+                ])
+                queryResult = answer1
+                
+            } else{
+                if (tempDate.getMonth() == 11) {
+                    var current = new Date(tempDate.getFullYear() + 1, 0, 1);
+                } else {
+                    var current = new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, 1);
+                }
+            tempDate = current
+            console.log(tempDate)
+            let mm2 = String(tempDate.getMonth() + 1).padStart(2, '0')
+            let yyyy2 = tempDate.getFullYear()
+            console.log('QUERY: ' + url + yyyy2 + '-' + mm2)
+            const [answer1] = await Promise.all([
+                getRequest(url + yyyy2 + '-' + mm2, headers),
+            ])
+            queryResult = answer1
+
+            }
+            let jsonEndIndex1: number
+            let jsonStartIndex1: number
+            jsonStartIndex1 = queryResult.indexOf('ld+json') + 16
+            console.log('Start; ' + jsonStartIndex1)
+            jsonEndIndex1 = queryResult.indexOf('script>                  <!-- Google tag (gtag.js)') - 8
+            console.log('end: ' + jsonEndIndex1)
+            tempJson1 = queryResult.substring(jsonStartIndex1, jsonEndIndex1).replace(/\\n?/g, '')
+            //asyncWriteFile('\n' + 'START JSON')
+            //asyncWriteFile('\n' + tempJson1)
+            //asyncWriteFile('\n')
+            masterJson = masterJson + tempJson1
+
+        }
+
         
         let data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
         const [connection] = await Promise.all([
             dbEstablishConnection(),
         ])
-
-        const [answerZ] = await Promise.all([
-            getRequest(url, headers),
-        ])
-
-        let jsonStartIndex: number
-        let jsonEndIndex: number
-
-        let K: number = -1
-        while (K != -1){ // GRAB ALL THE TIMES substring index DATA FOR CURRENT IN SCOPE DATE
-                    
-            jsonStartIndex = answerZ.indexOf('ld+json') + 16
-            console.log('Start; ' + jsonStartIndex)
-            jsonEndIndex = answerZ.indexOf('script>                  <!-- Google tag (gtag.js)') - 8
-            console.log('end: ' + jsonEndIndex)
-            //jsonEndIndex = 3340
-
-            let tempJson: string = answerZ.substring(jsonStartIndex, jsonEndIndex).replace(/\\n?/g, '')
-            //tempJson = tempJson.replace(/<div dir=\\"\\"auto\\"\\"><br></div><div dir=\\"\\"auto\\"\\">Want a spot on the mic? Send an email to <a href=\\"\\"mailto\\":\\"ComedyMob@gmail.com\\"\\" target=\\"\\"_blank\\"\\">ComedyMob@gmail.com</a> right the hell now. Line-ups fill up FAST!</div><div dir=\\"\\"auto\\"\\"><br></div><br><br><br>\\"/g,'')
-            tempJson = tempJson.replace(/<div dir=\\"\\"auto\\"\\"><br></g,'')
-                                                 tempJson = tempJson.replace(/ Send an email to <a href=\\"\\"mailto\\":\\"ComedyMob@gmail.com\\"\\" target=\\"\\"_blank\\"\\">ComedyMob@gmail.com</g,'')
-            tempJson = tempJson.replace(/div dir="auto"/g,'')       
-            tempJson = tempJson.replace(/p dir="auto"/,'')
-            tempJson = tempJson.replace(/href="mailto:ComedyMob@gmail.com" target="_blank"/g,'')                                          
-            tempJson = tempJson.replace(/<div dir=\\"auto\\">Want a spot on the mic? Send an email to /g,'')     
-            tempJson = tempJson.replace(/<a href=\\"mailto:ComedyMob@gmail.com\\" target=\\"_blank\\">ComedyMob@gmail.com/g,'')     
-            //tempJson = tempJson.replace(//g,'')     
-
-            //<div dir="auto">Want a spot on the mic? Send an email to                                                                                                                                                                                                                                                                     tempJson = tempJson.replace(/ right the hell now. Line-ups fill up FAST!</g,'')
-                                                                                                                                                                                                                                                                          tempJson = tempJson.replace(/<div dir=\\"\\"auto\\"\\"><br>/g,'')
-                                                                                                                                                                                                                                                                                                              tempJson = tempJson.replace(/<br><br><br>\\"/g,'')
-            //let tempJson2: string = answerZ.substring(jsonStartIndex, jsonEndIndex)
-            //let tempJson2: string = answerZ.substring(318275,jsonEndIndex)
-            //tempJson = tempJson.substring(1)
-            //let newstr: string = ''
-
-            //for (let i = 0; i < tempJson.length; i++){
-              //  if (!(tempJson[i] == "\\n" || tempJson[i] == "\r")){
-                //    newstr += tempJson[i];
-               // }
-            //}
-            
-            console.log(answerZ[jsonStartIndex])
-            console.log(answerZ[jsonEndIndex])
-            console.log(tempJson)
-            //console.log('START: ' + tempJson.replace(/\\n?/g, ''))
-            //console.log('END: ' + tempJson2.replace(/\\n?/g, ''))
-            asyncWriteFile('\n' + tempJson)
-        
-            K = -1
-        }
-
-
-        jsonStartIndex = answerZ.indexOf('ld+json') + 16
-        console.log('Start; ' + jsonStartIndex)
-        jsonEndIndex = answerZ.indexOf('script>                  <!-- Google tag (gtag.js)') - 8
-        console.log('end: ' + jsonEndIndex)
-        let tempJson: string = answerZ.substring(jsonStartIndex, jsonEndIndex).replace(/\\n?/g, '')
-
-        let tempTimeIndex: number
-        let tempTimeIndex2: number
-        let tempIndexDescStart: number[]=[]
-        let tempIndexDescEnd: number[]=[]
-
-        // CLEANSE DESCRIPTION OF QUOTES(")
-        let M: number = 0 
-        while (M != -1){ // GRAB ALL description Indexes(within the quotes;    "[start] DESCRIPTION [end]"    )
-                    
-            tempTimeIndex = tempJson.indexOf('"description":',M)
-            console.log('loop start: ' +tempTimeIndex)
-                    
-            if(tempTimeIndex > 0){
-                M = tempTimeIndex + 5
-                tempTimeIndex2 = tempJson.indexOf('"organizer": {',M)
-                console.log('end: ' +tempTimeIndex2)
-
-                let tempSubString = tempJson.substring(tempTimeIndex + 16,tempTimeIndex2 - 8).replace(/['"]+/g, '')
-                tempJson = tempJson.replace(tempJson.substring(tempTimeIndex + 16,tempTimeIndex2 - 8), tempSubString)
-                asyncWriteFile('\n')
-                asyncWriteFile('\n' + tempSubString)
-                tempIndexDescStart.push(tempTimeIndex + 16)
-                tempIndexDescEnd.push(tempTimeIndex2 - 8)
-                M = tempTimeIndex2
-            } else{
-                M = tempTimeIndex
-            }
-        }
-
         
         
-        asyncWriteFile('\n' + 'START JSON')
-        
-        asyncWriteFile('\n' + tempJson)
-        
-        connection.end()        
-        
-        
-        // successfully generate json string indices for the first month in search
-        // do a check for the last month based on the search(e.g. 30 day search goes to April, then we need to query March and April)
-        // make the while loop iterate for each month implicitly extracting json portions of each month query
-        // sanitize json strings of html stuff to make it valid json
-        // convert to json and extract shows using json syntax['eg'][0]
-        throw new Error('STOP LINE')
 
         
         while ( index != targetDays){ // change this to iterate for 30 days
+            
+            // CURRENT DATE
+            //dayIndex
+            //dateFormatted
 
             let noComedians: boolean = false
             let finalLineupArray: string[]=[]  
             let finalTimeArray: string[]=[]
+            let finalRoomArray: string[]=[] //**************** NEW CODE */
             let finalComedianArray: string[][]=[]
             let finalBioArray: string[][]=[]
 
-            const [answer] = await Promise.all([
-                getRequest(url, headers),
-            ])
+            let answer = masterJson
+            //asyncWriteFile('\n' + answer)
+            
+            //if(answer.toString().indexOf('No Comedians added yet!') == -1){ // ON EACH IN SCOPE DATES
+            //let err: number = answer.toString().indexOf('"startDate": "2024-02-13')
+            console.log('IF STATEMENT CHECKS: ' + dateFormatted.slice(0,-1))
+            console.log('"startDate": ' + dateFormatted.slice(0,-1))
+            if(answer.toString().indexOf('"startDate": ' + dateFormatted.slice(0,-1)) > 0){ // ON EACH IN SCOPE DATES
 
-            asyncWriteFile('\n' + answer)
-            throw new Error('STOP LINE')
-            if(answer.toString().indexOf('No Comedians added yet!') == -1){ // ON EACH IN SCOPE DATES
-
-                // Now we're iterating on each inscope date's raw HTML as String
+                
                 //Parse string for showtime and then Comedian and loop
                 let tempIndexArrayStart: number[]=[]
                 let tempIndexArrayEnd: number[]=[]
+                let tempRoomStart: number[]=[]
+                let tempRoomEnd: number[]=[]
                 let i: number = htmlStringIndex
                 let tempTimeIndex: number = 0
+                let tempRoomIndex: number = 0
 
                 while (i != -1){ // GRAB ALL THE TIMES substring index DATA FOR CURRENT IN SCOPE DATE
-                    
-                    tempTimeIndex = answer.indexOf('<h2><span class=\\"bold\\">',i)
-                    
+                    //console.log(dateFormatted)
+                    //console.log('"startDate": ' + dateFormatted.slice(0,-1)+ 'T')
+                    tempTimeIndex = answer.indexOf('"startDate": ' + dateFormatted.slice(0,-1)+ 'T',i)
+                    //console.log(tempTimeIndex)
+                    //console.log(answer.substring(tempTimeIndex + 25,tempTimeIndex + 30))
+
                     if(tempTimeIndex > 0){
                         i = tempTimeIndex + 2
                         tempIndexArrayStart.push(tempTimeIndex + 25)
-                        tempTimeIndex = answer.indexOf('<span class=\\"hide-mobile\\">',i)
-                        tempIndexArrayEnd.push(tempTimeIndex)
+                        //tempTimeIndex = answer.indexOf('<span class=\\"hide-mobile\\">',i)
+                        tempIndexArrayEnd.push(tempTimeIndex + 30)
+                        console.log(answer.substring(tempTimeIndex + 25,tempTimeIndex + 30))
+                        tempTimeIndex = tempTimeIndex + 30
+                        
 
                     } else{
                         i = tempTimeIndex
                     }
+                    
                 } 
+                let y: number = 0
+                i = 0
+                while (i != -1){ // GRAB ALL ADDRESSES substring index DATA FOR CURRENT IN SCOPE DATE
+                    
+                    //ADDRESS/ROOM
+                    // streetAddress
+                    // addressLocality
+
+                    //tempTimeIndex = answer.indexOf('</span> | <span class=\\"show_date\\">',i)
+                    let tempStr = answer.substring(tempIndexArrayStart[y],tempIndexArrayEnd[y])
+                    let utcOffset: number = new Date().getTimezoneOffset()/60
+                    //console.log(dateFormatted.slice(1,-1))
+                    //console.log(new Date().getTimezoneOffset()/60)
+                    
+                    //console.log(dateFormatted.slice(1,-1) + 'T' + tempStr + ':00-0'+ String(utcOffset)+ ':00')
+                    let refString3: string = dateFormatted.slice(1,-1) + 'T' + tempStr + ':00-0'+ String(utcOffset)+ ':00' + '",      "location": {"@type":"Place","name":"'
+                    //console.log(refString3)
+                    tempRoomIndex = answer.indexOf(refString3,i)
+                    console.log('Start index: ' + tempRoomIndex)
+                    if(tempRoomIndex > 0){
+                        //i = tempTimeIndex + 2
+                        i = tempRoomIndex + 2
+                        
+                        //tempIndexArrayStart.push(tempTimeIndex + 38)
+                        tempRoomStart.push(tempRoomIndex + 70)
+                        
+                        //tempTimeIndex = answer.indexOf('<span> <span class=\\"list-show',i)
+                        tempRoomIndex = answer.indexOf('","address"',i)   //************** NEW CODE THAT NEEDS TO CHANGE */
+                        //tempRoomIndex = tempRoomIndex + 30
+
+                        //tempIndexArrayEnd.push(tempTimeIndex)
+                        tempRoomEnd.push(tempRoomIndex) //************** NEW CODE THAT NEEDS TO CHANGE */
+
+                    } else{
+                        i = tempRoomIndex
+                    }
+                    y = y + 1
+                }
+
+                for(let i = 0; i < tempRoomEnd.length; i++){
+                    
+                    let tempRoom: string = answer.substring(tempRoomStart[i],tempRoomEnd[i])
+
+                    if(tempRoom == 'New York Comedy Club on 4th Street'){
+                        finalRoomArray.push('East Village')
+                        console.log('ROOMS: ' + finalRoomArray[i])    
+                    } else {
+                        //finalRoomArray.push(answer.substring(tempRoomStart[i],tempRoomEnd[i]))
+                        finalRoomArray.push('Midtown')
+                        console.log('ROOMS: ' + finalRoomArray[i])   
+                                              
+                    }
+                }
+                
+                
+                
+                
                 
                 //Leverage start and end indexes to Generate final timeslot strings array
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
-                    finalTimeArray.push(answer.substring(tempIndexArrayStart[i],tempIndexArrayEnd[i]))
-                }
 
+                    let timeString: string = answer.substring(tempIndexArrayStart[i],tempIndexArrayEnd[i])
+
+                    let timeString12hr: string = new Date('1970-01-01T' + timeString + 'Z')
+                        .toLocaleTimeString('en-US',
+                            {timeZone:'UTC',hour12:true,hour:'numeric',minute:'numeric'}
+                        );
+                    //console.log(timeString12hr)
+                    finalTimeArray.push(timeString12hr)
+                    //console.log(finalTimeArray)
+                }
+                console.log(finalTimeArray)
+                console.log(finalRoomArray)
+
+                
                 // HERE WE HAVE ALL TIME SLOTS DATA in tempIndexArrayStart and End for the current day
                 //Get html substring per each time slot's starting and ending index (e.g. 1st iteration html starting index is starting index for the time to starting index of time + 1, and so on)
                 let substringArrayStart: number[]=[]
@@ -193,19 +244,30 @@ test.describe('New York Comedy Club', () => {
                     substringArrayStart.push(tempIndexArrayEnd[i])
                         
                     if( i == tempSub ){
-                        substringArrayEnd.push(answer.length)
+                        //substringArrayEnd.push(answer.length) 
+                        substringArrayEnd.push(answer.indexOf('@context',tempIndexArrayEnd[i])) 
+                        
                     } else{
                         substringArrayEnd.push(tempIndexArrayStart[i+1])
                     }
-
+                    //asyncWriteFile('\n' + '********************************************************************')
+                    //asyncWriteFile('\n' + answer.substring(substringArrayStart[i] - 10,substringArrayEnd[i]+10))
                 }
                 
+                
+
                 //Leverage start indexes to Generate final raw HTML strings array
                 let rawHtmlByTime: string[]=[]
                 for(let i = 0; i < tempIndexArrayStart.length; i++){
                     rawHtmlByTime.push(answer.substring(substringArrayStart[i],substringArrayEnd[i]))
+                    //console.log('RAWSTRINGL(' + i + '): ' + rawHtmlByTime[i])
+                    asyncWriteFile('\n' + 'RAWSTRINGL(' + i + '): ' + rawHtmlByTime[i])
                 }
-        
+                
+
+                
+
+
                 for(i = 0; i < finalTimeArray.length; i ++){
                     //iterate through all html strings, extract name and bio
                     let comedianNameArrayStart: number[]=[]
@@ -217,28 +279,30 @@ test.describe('New York Comedy Club', () => {
                     let a: number = 0
                     let tempIndex: number = 0
 
+
                     //parse for indexes of comedian name and bio ***Can add Website here if exists***
                     while (a != -1){
                         
-                        tempIndex = rawHtmlByTime[i].toString().indexOf('<p><span class=\\"name\\">',a)//get comedian name starting index
+                        tempIndex = rawHtmlByTime[i].toString().indexOf('Person","name',a)//get comedian name starting index
 
                         if(tempIndex > 0){
                             a = tempIndex + 2
-                            comedianNameArrayStart.push(tempIndex + 24)
-                            tempIndex = rawHtmlByTime[i].toString().indexOf('</span>',a) // get comedian name ending index
+                            comedianNameArrayStart.push(tempIndex + 16)
+                            tempIndex = rawHtmlByTime[i].toString().indexOf('"}',a) // get comedian name ending index
                             comedianNameArrayEnd.push(tempIndex)
                             
-                            comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO starting index
+                            //comedianBioArrayStart.push(tempIndex+7) // easily get comedian BIO starting index
 
                             
-                            a = tempIndex + 8  
-                            tempIndex = rawHtmlByTime[i].toString().indexOf('</p>',a) //Get comedian BIO ending index
-                            comedianBioArrayEnd.push(tempIndex)
+                            //a = tempIndex + 8  
+                            //tempIndex = rawHtmlByTime[i].toString().indexOf('</p>',a) //Get comedian BIO ending index
+                            //comedianBioArrayEnd.push(tempIndex)
                             a = tempIndex // <- maybe
                             
                         } else{
                             a = tempIndex
                         }
+                        //asyncWriteFile('\n' + answer.substring(comedianNameArrayStart[i],comedianNameArrayEnd[i]))
                     }
 
                     let tempString: string = ''
@@ -248,8 +312,8 @@ test.describe('New York Comedy Club', () => {
                         
                         tempString = tempString + rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b]) // comedian comma delimited list
                         tempComedianArray.push(rawHtmlByTime[i].toString().substring(comedianNameArrayStart[b],comedianNameArrayEnd[b])) // new 2d comedian name array
-                        tempchar = rawHtmlByTime[i].toString().substring(comedianBioArrayStart[b],comedianBioArrayEnd[b])
-                        tempBioArray.push(tempchar)
+                        //tempchar = rawHtmlByTime[i].toString().substring(comedianBioArrayStart[b],comedianBioArrayEnd[b])
+                        //tempBioArray.push(tempchar)
                         
                         if(b != comedianNameArrayEnd.length - 1){
                             tempString = tempString + ','
@@ -258,7 +322,8 @@ test.describe('New York Comedy Club', () => {
 
                     finalLineupArray.push(tempString)
                     finalComedianArray.push(tempComedianArray)
-                    finalBioArray.push(tempBioArray)
+                    asyncWriteFile('\n' + finalComedianArray[i])
+                    //finalBioArray.push(tempBioArray)
 
                 }    
             } // INSIDE IN SCOPE DAY
@@ -266,41 +331,44 @@ test.describe('New York Comedy Club', () => {
                 noComedians = true
             }
             
+            
+
             if(noComedians == false){
 
                 let f: number
                 for(f = 0; f < finalTimeArray.length; f ++){
                     var timeSlot = finalComedianArray[f]
-                    var bioSlot = finalBioArray[f]
+                    //var bioSlot = finalBioArray[f]
                     let g = 0
                     
                     for(g = 0; g < timeSlot.length; g ++){
 
                         //SQL CHECKS IF RECORD EXISTS
                         let showCity: string = 'NYC'
-                        let showVenue: string = 'Comedy Cellar'
+                        let showVenue: string = 'NYCC'
                         let showDate: string = dateFormatted
                         let showTime: string = finalTimeArray[f]
+                        let showRoom: string = finalRoomArray[f]
                         let comediansName: string = timeSlot[g]
-                        let comediansBio: string = bioSlot[g]
+                        //let comediansBio: string = bioSlot[g]
 
                         const [answer] = await Promise.all([
-                            dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+                            dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime, comediansName, showRoom),
                         ])
                         
                         if(answer > 0){
                             validUIDs.push(answer)
-                            finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
-                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + answer + '| NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                            finalDbArray.push(['NYC', 'NYCC', dateFormatted, showTime, comediansName, showRoom]) // added comedian BIO here
+                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + answer + '| NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + showRoom)
                         } else{
                               
                             const [answer] = await Promise.all([
-                                dbAddShow(connection, showCity, showVenue, showDate, showTime, 'ROOM_PLACE_HOLDER', comediansName, comediansBio),
+                                dbAddShow(connection, showCity, showVenue, showDate, showTime, showRoom, comediansName, 'BIO_PLACE_HOLDER'),
                             ])
                             
                             validUIDs.push(answer)
-                            finalDbArray.push(['NYC', 'Comedy Cellar', dateFormatted, showTime, comediansName, comediansBio]) // added comedian BIO here
-                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + bioSlot[g])
+                            finalDbArray.push(['NYC', 'NYCC', dateFormatted, showTime, comediansName, showRoom]) // added comedian BIO here
+                            console.log('Operation: '+finalDbArray.length+' - Adding to DB - ' +answer + ' = '+ 'NYC | NYCC | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + showRoom)
 
                         //PHASE II maybe?
                         // to Wrap, try and refactor to load up all inserts and send in one bulk query for efficiency
@@ -319,17 +387,12 @@ test.describe('New York Comedy Club', () => {
                 data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
             }
         }//iterate through all days
-        
-        
-
-
-
 
         let today: string = formatDate(new Date()) //current index in day string
         console.log('Script range: '+ today.replace(/['"]+/g, '') + ' -> ' + formatDate(dayIndex).replace(/['"]+/g, ''))
 
         const [answer] = await Promise.all([
-            queryShowsByVenueAndDate(connection,'NYC','Comedy Cellar',today, formatDate(dayIndex)),
+            queryShowsByVenueAndDate(connection,'NYC','NYCC',today, formatDate(dayIndex)),
         ])
         
         let answer1 = Object.values(JSON.parse(JSON.stringify(answer)));
@@ -357,7 +420,7 @@ test.describe('New York Comedy Club', () => {
         //db and script counts should be in sync as long as no appearences were deleted on the website(e.g. attell removed from late show on Tues)
         if (finalDbArray.length == answer1.length){
 
-            console.log('Everything in line for the NYC Comedy Cellar')
+            console.log('Everything in line for the NYC NYCC')
 
         ////if DBcount > scriptCount, then there are exra DB records that need to be deleted due to website update
         } else if (finalDbArray.length < answer1.length){

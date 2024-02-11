@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../page-objects/components/Hooks'
 import { Navigation } from '../../page-objects/components/Navigation'
-import { postRequest, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID } from '../../utils/helpers'
+import { postRequest, countShowsByVenueAndDate, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID } from '../../utils/helpers'
 
 
 
@@ -261,6 +261,12 @@ test.describe('COMEDY CELLAR', () => {
                     }
                 }
             }
+            const [answerL] = await Promise.all([
+                countShowsByVenueAndDate(connection,'NYC','Comedy Cellar',today, formatDate(dayIndex)),
+            ])
+            let result1 = Object.values(JSON.parse(JSON.stringify(answerL[0])))[0]
+            console.log("DB now has # rows: " + result1)
+            expect(finalDbArray.length == result1,'Something has gone terribly wrong ... final cleanup did not work ').toBeTruthy()
             
         } else {expect(finalDbArray.length == answer,'Something has gone terribly wrong ... not all script rows were added to the DB ').toBeTruthy()}
         
