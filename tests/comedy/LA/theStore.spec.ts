@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../../page-objects/components/Hooks'
 import { Navigation } from '../../../page-objects/components/Navigation'
-import { postRequest, countShowsByVenueAndDate, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID, getRequest, asyncWriteFile } from '../../../utils/helpers'
+import { postRequest, countShowsByVenueAndDate, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID, getRequest, asyncWriteFile, formatDate2 } from '../../../utils/helpers'
 import * as cheerio from 'cheerio'
+import { getDefaultAutoSelectFamily } from 'net'
 
 
 test.describe('COMEDY CELLAR', () => {
@@ -23,6 +24,7 @@ test.describe('COMEDY CELLAR', () => {
         let validUIDs: number[] = []
 
         let dayIndex: Date = new Date() //current index in day string
+        let dayIndexLast: Date = new Date() // will be used for last in scope day
         let dateFormatted = formatDate(dayIndex)
         let data = 'action=cc_get_shows&json={"date":'+dateFormatted+',"venue":"newyork","type":"lineup"}'
         //const [connection] = await Promise.all([
@@ -51,17 +53,30 @@ test.describe('COMEDY CELLAR', () => {
             matchXtemp[0] = process.env.tempSecret!
         }
         // TEMP VAR FOR FASTER DEV ******************************************
-        
-        //let tempS = matchX[0].slice(23,matchX[0].length - 1)
-        let tempS = matchXtemp[0].slice(23,matchXtemp[0].length - 1)
-        tempS = tempS.replace(/\\"/g, '"') // replace escaped quotes with quotes
-        tempS = '{ "elements": [' + tempS + '}'
-    
-        var obj = JSON.parse(tempS)
-        //console.log(obj['elements'][0])
 
+        //let tempS = matchX[0].slice(23,matchX[0].length - 1)
+        let tempS = matchXtemp[0].slice(23,matchXtemp[0].length - 1)    
+        
+        tempS = '{ "elements": [' + tempS.replace(/\\"/g, '"') + '}' // replace escaped quotes with quotes
+        var obj = JSON.parse(tempS)
+
+        let dayIndexFormatTimestamp = Date.parse(formatDate2(dayIndex))
+        dayIndexLast.setDate(dayIndex.getDate() + targetDays)
+        let dayIndexFormatTimestamp2 = Date.parse(formatDate2(dayIndexLast))
+        
+        let currDate: string
+        let currDateFinal: number
         for(let i = 0; i < obj['elements'].length; i++){
-            console.log(obj['elements'][i]['event_id'])
+            
+            currDate = obj['elements'][i]['event_start'].slice(0,10).replace(/-/g, '/')
+            currDate = currDate.slice(5) +'/'+currDate.slice(0,4)
+            
+            currDateFinal = Date.parse(currDate)
+            
+            if(currDateFinal >= dayIndexFormatTimestamp && currDateFinal <= dayIndexFormatTimestamp2){
+                console.log(obj['elements'][i]['event_start'])
+            }
+
         }
 
         

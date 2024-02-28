@@ -237,6 +237,23 @@ export function formatDate(today: Date): string {
 }
 
 
+export function formatDate2(today: Date): string {
+    
+  try {
+    
+    var dd = String(today.getDate()).padStart(2, '0')
+    var mm = String(today.getMonth() + 1).padStart(2, '0')
+    var yyyy = today.getFullYear()
+    let dateFormatted = '\"'+mm + '/' + dd + '/' + yyyy+'\"'
+    return dateFormatted
+
+  } catch (error) {
+      console.log(error)
+      throw new Error(' Date formatter2 Failed')
+  }
+}
+
+
 export function monthDiff(d1: any, d2: any): number {
     
   let months: any
