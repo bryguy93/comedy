@@ -66,14 +66,14 @@ test.describe('COMEDY CELLAR', () => {
         
         let currDate: string
         let currDateFinal: number
-        for(let i = 0; i < obj['elements'].length; i++){
+        for(let i = 0; i < obj['elements'].length; i++){ // iterate through all shows for ComedyStore LA
             
             currDate = obj['elements'][i]['event_start'].slice(0,10).replace(/-/g, '/')
             currDate = currDate.slice(5) +'/'+currDate.slice(0,4)
             
             currDateFinal = Date.parse(currDate)
             
-            if(currDateFinal >= dayIndexFormatTimestamp && currDateFinal <= dayIndexFormatTimestamp2){
+            if(currDateFinal >= dayIndexFormatTimestamp && currDateFinal <= dayIndexFormatTimestamp2){ // only do anything if show in scope
                 console.log(obj['elements'][i]['event_start'])
             }
 
