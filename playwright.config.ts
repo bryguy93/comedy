@@ -8,7 +8,8 @@ const config: PlaywrightTestConfig = {
     "tests/comedy/cCellar.spec.ts",
     "tests/comedy/theStand.spec.ts",
     "tests/comedy/NYCC.spec.ts",
-    "tests/comedy/kerasotes.spec.ts"
+    "tests/comedy/kerasotes.spec.ts",
+    "tests/comedy/LA/theStore.spec.ts"
     // "lighthouse/unauth.test.ts",
     // "lighthouse/auth.test.ts"
     // "tests/registerUser.test.ts",

@@ -23,6 +23,14 @@ V2
 
 
 SQL - ///////////////////////////////////////////////////////////////////////////////////////////
+if zsh can't find command: 
+export PATH=${PATH}:/usr/local/mysql-shell-8.3.0-macos14-x86-64bit/bin
+```
+mysqlsh -h database-test1.c3egi00mq4df.us-east-1.rds.amazonaws.com -P 3306 -u admin -p
+```
+\sql              // switch to sql context
+USE pocDb         // select database
+
 Shows Ordered by Comedian lineup ratings:
 SELECT Shows.Venue, Shows.Date, Shows.Time, Shows.Comedians, SUM(Comedians.Rating) AS Ratingtotal FROM Shows, Comedians WHERE Shows.UID = Comedians.UID AND Comedians.Rating > 0 GROUP BY Shows.Venue, Shows.Date, Shows.Time ORDER BY Ratingtotal DESC;
 -----

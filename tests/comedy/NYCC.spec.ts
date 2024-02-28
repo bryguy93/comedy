@@ -359,7 +359,7 @@ test.describe('New York Comedy Club', () => {
                         if(answer > 0){
                             validUIDs.push(answer)
                             finalDbArray.push(['NYC', 'NYCC', dateFormatted, showTime, comediansName, showRoom]) // added comedian BIO here
-                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + answer + '| NYC | Comedy Cellar | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + showRoom)
+                            console.log('Operation: '+finalDbArray.length+' - Nothing to add - exists in DB with UID = ' + answer + '| NYC | NYCC | ' + dateFormatted +' | ' + finalTimeArray[f] + ' | '+ timeSlot[g] + ' | ' + showRoom)
                         } else{
                               
                             const [answer] = await Promise.all([
