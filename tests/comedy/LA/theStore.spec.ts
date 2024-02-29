@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { Hooks } from '../../../page-objects/components/Hooks'
 import { Navigation } from '../../../page-objects/components/Navigation'
-import { postRequest, countShowsByVenueAndDate, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID, getRequest, asyncWriteFile, formatDate2 } from '../../../utils/helpers'
+import { postRequest, countShowsByVenueAndDate, formatDate, dbIfRecordsExist, dbEstablishConnection, dbAddShow, queryShowsByVenueAndDate, deleteByUID, getRequest, asyncWriteFile, formatDate2, aiNameDetection } from '../../../utils/helpers'
 import * as cheerio from 'cheerio'
 import { getDefaultAutoSelectFamily } from 'net'
 
@@ -66,6 +66,14 @@ test.describe('COMEDY CELLAR', () => {
         
         let currDate: string
         let currDateFinal: number
+        let control = 0
+
+        let showCity: string = 'Los Angeles'
+        let showVenue: string = 'Comedy Store'
+        let showDate: string
+        let showTime: string
+        let showRoom: string
+        
         for(let i = 0; i < obj['elements'].length; i++){ // iterate through all shows for ComedyStore LA
             
             currDate = obj['elements'][i]['event_start'].slice(0,10).replace(/-/g, '/')
@@ -74,7 +82,23 @@ test.describe('COMEDY CELLAR', () => {
             currDateFinal = Date.parse(currDate)
             
             if(currDateFinal >= dayIndexFormatTimestamp && currDateFinal <= dayIndexFormatTimestamp2){ // only do anything if show in scope
-                console.log(obj['elements'][i]['event_start'])
+                console.log(obj['elements'][i]['title'])
+                
+
+
+
+
+                if(control == 0){
+                    let tempA: string[]=[obj['elements'][i]['title'],obj['elements'][i]['event_start']]
+                    const [answerQ] = await Promise.all([
+                        //aiNameDetection(obj['elements'][i]['title'],obj['elements'][i]['event_start'] ),
+                        aiNameDetection(tempA,obj['elements'][i]['event_start']  ),
+                    ])
+                    console.log(answerQ)
+                    console.log(Object.keys(answerQ).length)
+                    console.log(answerQ[0][0])
+                    control = control + 1
+                }
             }
 
         }

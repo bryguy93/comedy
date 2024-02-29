@@ -4,6 +4,8 @@ import { join } from 'path';
 import axios from "axios";
 import mysql from 'mysql2/promise'
 //import { start } from "repl";
+import OpenAI from "openai";
+import { text } from "stream/consumers";
 
 
 export async function postRequest(url: string,header: any, data: string): Promise<string> {
@@ -282,6 +284,54 @@ export async function asyncWriteFile(data: any) {
     } catch (err) {
       console.log(err);
       return 'Something went wrong';
+    }
+  }
+
+  export async function aiNameDetection(data: string[], showDate: string): Promise<any> {
+    let helperParams: HelperParams
+    helperParams = new HelperParams()
+
+    let apiTestKey = process.env.openAiTestKey // NEED TO ADD TO CI/CD SECRETS
+    if(apiTestKey === undefined){
+        const dotenv = require('dotenv');
+        dotenv.config({path: './page-objects/components/secrets.env'})
+        apiTestKey = process.env.openAiTestKey!
+    }
+    
+    try {
+      const openai = new OpenAI({
+        apiKey: apiTestKey,
+      });
+      
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            "role": "system",
+            "content": "You'll be given a javascript string array. Create a JSON object which enumerates a set of child objects equal to the length of the input array where the keys are the array indexes and the values are tuples of all names extracted from the strings that correspond to the array index."
+          },
+          {
+            "role": "user",
+            "content": data.toString()
+          }
+        ],
+        temperature: 0.5,
+        max_tokens: 64,
+        top_p: 1,
+      });
+      // max tokens is 16K  1 token = 4 chars(roughly)
+      //console.log(response.choices[0]['message']['content'])
+      let obj = JSON.parse(response.choices[0]['message']['content']!)
+      //console.log(obj)
+      //console.log(obj['names'].length)
+      //console.log(obj['names'][0])
+      //return response.choices[0]['message']['content']
+      return obj
+
+    } catch (err) {
+      console.log(err);
+      return 'OpenAI Error for show: ' + data + ' - ' + showDate;
     }
   }
 

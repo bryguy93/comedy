@@ -22,7 +22,7 @@ export class Navigation{
         this.slowmo = 1
         this.enviroVarName = 'TEST_ENVIRO_CLI'
 
-        this.reportDays = 3
+        this.reportDays = 2
 
         this.comedyCellarUrl = 'https://www.comedycellar.com/lineup/api/'
         this.comedyCellarheaders = { 
