@@ -173,7 +173,7 @@ test.describe('COMEDY CELLAR', () => {
                         let comediansBio: string = bioSlot[g]
 
                         const [answer] = await Promise.all([
-                            dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime, comediansName, comediansBio),
+                            dbIfRecordsExist(connection, showCity, showVenue, showDate, showTime,'ROOM_PLACE_HOLDER', comediansName, comediansBio),
                         ])
                         
                         if(answer > 0){

@@ -137,7 +137,7 @@ export async function dbEstablishConnection(): Promise<any> {
 
 }
 
-export async function dbIfRecordsExist(connection: any, showCity: string, showVenue: string, showDate: string, showTime: string, comediansName: string, comediansBio: string): Promise<any> {
+export async function dbIfRecordsExist(connection: any, showCity: string, showVenue: string, showDate: string, showTime: string, showRoom: string, comediansName: string, comediansBio: string): Promise<any> {
     
   try {
 
@@ -145,7 +145,7 @@ export async function dbIfRecordsExist(connection: any, showCity: string, showVe
         //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '" AND Comedians.Bio = "'+ comediansBio + '")'  
         
         //'SELECT Shows.UID FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName +' AND Comedians.Bio' + comediansBio + '"'  
-        'SELECT Shows.UID FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName +'"'  
+        'SELECT Shows.UID FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Shows.Room = "'+showRoom+'" AND Comedians.Name = "'+ comediansName +'"'  
         //'SELECT EXISTS(SELECT 1 FROM `Shows`, `Comedians` WHERE Shows.UID = Comedians.UID AND Shows.City = "' + showCity +'" AND Shows.Venue = "'+ showVenue +'" AND Shows.Date = ' + showDate + ' AND Shows.Time = TIME( STR_TO_DATE( \''+ showTime + '\', \'%h:%i %p\' )) AND Comedians.Name = "'+ comediansName + '")'  
         
       );    
@@ -287,7 +287,7 @@ export async function asyncWriteFile(data: any) {
     }
   }
 
-  export async function aiNameDetection(data: string[], showDate: string): Promise<any> {
+  export async function aiNameDetection(data: any): Promise<any> {
     let helperParams: HelperParams
     helperParams = new HelperParams()
 
@@ -302,26 +302,27 @@ export async function asyncWriteFile(data: any) {
       const openai = new OpenAI({
         apiKey: apiTestKey,
       });
-      
+      // OLD: You'll be given a javascript array of type string. Create a JSON object which enumerates a set of child objects equal to the input array where the keys are the array indexes and the values are tuples of all names extracted from the strings that correspond to the array index. If no names are extracted, the value should be: 'N/A'. The number of strings in the input array should equal the number of child objects in the JSON output. 
       const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         response_format: { type: "json_object" },
         messages: [
           {
-            "role": "system",
-            "content": "You'll be given a javascript string array. Create a JSON object which enumerates a set of child objects equal to the length of the input array where the keys are the array indexes and the values are tuples of all names extracted from the strings that correspond to the array index."
+            "role": "system",                                                                                                                                                                                                                                                                      //no names can be extracted at all
+            "content": "You'll be given a javascript JSON object. Create a JSON object which enumerates a set of child objects equal to the number of child objects in the input object. For each child object add an attribute that contains a list of names extracted from the input strings. If a list of names is null or empty, use the name: \"N/A\". "
           },
           {
             "role": "user",
             "content": data.toString()
           }
         ],
-        temperature: 0.5,
-        max_tokens: 64,
+        temperature: 0,
+        max_tokens: 2500, // works for 15 days
         top_p: 1,
       });
       // max tokens is 16K  1 token = 4 chars(roughly)
-      //console.log(response.choices[0]['message']['content'])
+      //let obj = JSON.parse(response.choices[0]['message']['content']!)
+      console.log('RAW OUTPUT: ' + response.choices[0]['message']['content']!)
       let obj = JSON.parse(response.choices[0]['message']['content']!)
       //console.log(obj)
       //console.log(obj['names'].length)
@@ -331,7 +332,7 @@ export async function asyncWriteFile(data: any) {
 
     } catch (err) {
       console.log(err);
-      return 'OpenAI Error for show: ' + data + ' - ' + showDate;
+      return 'OpenAI Error for show(if JSON error, need to increase token size): ' + data
     }
   }
 

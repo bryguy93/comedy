@@ -31,8 +31,8 @@ mysqlsh -h database-test1.c3egi00mq4df.us-east-1.rds.amazonaws.com -P 3306 -u ad
 \sql              // switch to sql context
 USE pocDb         // select database
 
-Shows Ordered by Comedian lineup ratings:
-SELECT Shows.Venue, Shows.Date, Shows.Time, Shows.Comedians, SUM(Comedians.Rating) AS Ratingtotal FROM Shows, Comedians WHERE Shows.UID = Comedians.UID AND Comedians.Rating > 0 GROUP BY Shows.Venue, Shows.Date, Shows.Time ORDER BY Ratingtotal DESC;
+Future Shows Ordered by Comedian lineup ratings:
+SELECT Shows.Venue, Shows.Date, Shows.Time, Shows.Comedians, SUM(Comedians.Rating) AS Ratingtotal FROM Shows, Comedians WHERE Shows.UID = Comedians.UID AND Comedians.Rating > 0 AND Shows.Date >= CURDATE()  GROUP BY Shows.Venue, Shows.Date, Shows.Time ORDER BY Ratingtotal DESC;
 -----
 Update comedians with Ratings in Ratings tables
 UPDATE Comedians Cx INNER JOIN Ratings Rx ON Cx.Name = Rx.Name SET Cx.Rating = Rx.Rating;
