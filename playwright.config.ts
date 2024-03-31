@@ -25,13 +25,13 @@ const config: PlaywrightTestConfig = {
   fullyParallel: !true,
   retries: process.env.CI ? 0 : 0,
   workers: process.env.CI ? 3 : 1,
-  //reporter: process.env.CI ? [["junit", {
-  //  outputFile: "results.xml"
-  //}]] : [["json", {
-  //  outputFile: "report.json"
-  //}], ["html", {
-  //  open: "on-failure"
-  //}]],
+  reporter: process.env.CI ? [["junit", {
+    outputFile: "results.xml"
+  }]] : [["json", {
+    outputFile: "report.json"
+  }], ["html", {
+    open: "on-failure"
+  }]],
   use: {
     headless: process.env.CI ? true : true,
     baseURL: "https://bookcart.azurewebsites.net/",
