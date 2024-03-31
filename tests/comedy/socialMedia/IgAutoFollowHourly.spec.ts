@@ -63,12 +63,12 @@ test.describe('INSTAGRAM', () => {
 
 
             
-            if(followCount > 19){break}
+            if(followCount > 1){break}
             count = count + 1
             
         }
 
-        data.splice(0,20)
+        data.splice(0,2)
         console.log(data)
 
         const stringData = data.reduce((accOne, array) => {
@@ -81,6 +81,8 @@ test.describe('INSTAGRAM', () => {
           fs.writeFileSync('/Users/boyola/repos/comedy/utils/masterList.csv', stringData);
 
         // do while loop
+        await page.getByRole('link', { name: 'Settings More' }).click();
+        await page.getByRole('button', { name: 'Log out' }).click();
         
         
         
