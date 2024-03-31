@@ -9,7 +9,8 @@ const config: PlaywrightTestConfig = {
     "tests/comedy/theStand.spec.ts",
     "tests/comedy/NYCC.spec.ts",
     "tests/comedy/kerasotes.spec.ts",
-    "tests/comedy/LA/theStore.spec.ts"
+    "tests/comedy/LA/theStore.spec.ts",
+    "tests/comedy/socialMedia/IgAutoFollowHourly.spec.ts"
     // "lighthouse/unauth.test.ts",
     // "lighthouse/auth.test.ts"
     // "tests/registerUser.test.ts",
@@ -17,7 +18,7 @@ const config: PlaywrightTestConfig = {
     // "tests/addProductToCart.test.ts",
     // "tests/flipkart.test.ts"
   ],
-  timeout: 1 * 300 * 1000,
+  timeout: 1 * 90 * 1000,
   expect: {
     timeout: 5000
   },

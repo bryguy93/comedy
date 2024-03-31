@@ -9,6 +9,9 @@ export class Hooks extends AbstractPage{
     readonly comedyMobEasturl: string
     readonly comedyMobMondayurl: string
     readonly kerasotesurl: string
+    readonly instagramUrl: string
+    readonly username: any
+    readonly password: any
 
 
     constructor(page: Page){
@@ -19,6 +22,9 @@ export class Hooks extends AbstractPage{
         this.comedyMobEasturl = 'https://www.comedymob.com/comedy-mob-east'
         this.comedyMobMondayurl = 'https://www.comedymob.com/monday-night-mob'
         this.kerasotesurl = 'https://www.showplaceicon.com/Browsing/Cinemas/Compare?Cinemas=8875&Date='
+        this.instagramUrl = 'https://www.instagram.com/'
+        this.username = this.secretHelper("insta")[0]
+        this.password = this.secretHelper("insta")[1]
 
 
         
@@ -138,7 +144,43 @@ export class Hooks extends AbstractPage{
         await this.page.goto(this.comedyMobMondayurl)
         await this.page.frameLocator('internal:attr=[title="Google Docs embed"i]').frameLocator('#player').locator('html').waitFor()
         
-    }    
+    }  
+    
+    async instagramSetup(flag?: string){
+        
+        await this.page.goto(this.instagramUrl,{timeout:5000})
+        await this.page.getByLabel('Phone number, username, or email').click();
+        await this.page.getByLabel('Phone number, username, or email').fill(this.username);
+        await this.page.getByLabel('Phone number, username, or email').press('Tab');
+        await this.page.getByLabel('Password').fill(this.password);
+        await this.page.getByRole('button', { name: 'Log in' }).first().click(); 
+      
+    }
+
+    secretHelper(secretenv: string) : any[] {
+
+        let user: any = secretenv + "BryUsername"
+        let pw: string = secretenv + "BryPassword"
+        let userName = process.env[`${user}`]
+        let passWord = process.env[`${pw}`]
+                    
+                    if(userName === undefined){
+                        
+                        const dotenv = require('dotenv');
+                        dotenv.config({path: './page-objects/components/secrets.env'})
+                        userName = process.env[`${user}`]
+                    }
+
+                    if(passWord === undefined){
+                        
+                        const dotenv = require('dotenv');
+                        dotenv.config({path: './page-objects/components/secrets.env'})
+                        passWord = process.env[`${pw}`]
+                    }
+            
+        let output: any[] = [userName, passWord]
+        return output
+    }
 }
 
 
