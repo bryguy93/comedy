@@ -30,8 +30,8 @@ test.describe('INSTAGRAM', () => {
         await page.waitForTimeout(5000)
         //await page.getByRole('button', { name: 'Save info' }).first().waitFor({timeout:10000})
         
-        
-        var data = fs.readFileSync('/Users/boyola/repos/comedy/utils/masterList.csv')
+        //var data = fs.readFileSync('/Users/boyola/repos/comedy/utils/masterList.csv')
+        var data = fs.readFileSync('/comedy/utils/masterList.csv')
             .toString() // convert Buffer to string
             .split('\n') // split string to lines
             .map(e => e.trim()) // remove white spaces for each line
@@ -78,7 +78,8 @@ test.describe('INSTAGRAM', () => {
             return accOne + `${str}\n`;
           }, '');
           
-          fs.writeFileSync('/Users/boyola/repos/comedy/utils/masterList.csv', stringData);
+          //fs.writeFileSync('/Users/boyola/repos/comedy/utils/masterList.csv', stringData);
+          fs.writeFileSync('/comedy/utils/masterList.csv', stringData); 
 
         // do while loop
         await page.getByRole('link', { name: 'Settings More' }).click();
