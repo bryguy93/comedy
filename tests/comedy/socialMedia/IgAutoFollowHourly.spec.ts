@@ -28,7 +28,7 @@ test.describe('INSTAGRAM', () => {
         let followCount: number = 0
 
         await page.waitForTimeout(5000)
-        await page.getByRole('button', { name: 'Save info' }).first().waitFor({timeout:10000})
+        //await page.getByRole('button', { name: 'Save info' }).first().waitFor({timeout:10000})
         
         
         var data = fs.readFileSync('/Users/boyola/repos/comedy/utils/masterList.csv')
