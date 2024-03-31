@@ -151,6 +151,7 @@ export class Hooks extends AbstractPage{
         await this.page.goto(this.instagramUrl,{timeout:5000})
         await this.page.getByLabel('Phone number, username, or email').click();
         await this.page.getByLabel('Phone number, username, or email').fill(this.username);
+        console.log(this.username)
         await this.page.getByLabel('Phone number, username, or email').press('Tab');
         await this.page.getByLabel('Password').fill(this.password);
         await this.page.getByRole('button', { name: 'Log in' }).first().click(); 
